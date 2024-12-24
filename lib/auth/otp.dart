@@ -65,6 +65,7 @@ class _OtpState extends State<Otp> {
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: SvgPicture.asset(

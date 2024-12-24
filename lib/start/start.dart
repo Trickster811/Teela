@@ -43,6 +43,7 @@ class _StartState extends State<Start> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
         title: Text(
           appPages[currentPage]['title'],

@@ -22,6 +22,7 @@ class _ImageViewerState extends State<ImageViewer> {
     return Scaffold(
       backgroundColor: neutral1000,
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         elevation: 0.0,
