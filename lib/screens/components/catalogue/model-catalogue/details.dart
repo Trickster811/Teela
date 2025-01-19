@@ -198,10 +198,15 @@ class DetailsModele extends StatelessWidget {
                 for (String image in modele.images)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
-                    child: Image.asset(
-                      image,
-                      fit: BoxFit.cover,
-                    ),
+                    child: !image.contains('http')
+                        ? Image.asset(
+                            image,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            image,
+                            fit: BoxFit.cover,
+                          ),
                   ),
               ],
             ),

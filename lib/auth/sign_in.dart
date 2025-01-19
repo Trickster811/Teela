@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:teela/auth/otp.dart';
 import 'package:teela/auth/sign_up.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 
 class SignIn extends StatefulWidget {
@@ -90,42 +91,9 @@ class _SignInState extends State<SignIn> {
                               signed: false,
                               decimal: false,
                             ),
-                            inputDecoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10.0,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).iconTheme.color!,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                gapPadding: 0,
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).iconTheme.color!,
-                                ),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                gapPadding: 0,
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                  color: primary200,
-                                ),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                gapPadding: 0,
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                  color: primary200,
-                                ),
-                              ),
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).iconTheme.color,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              hintText: 'téléphone',
+                            inputDecoration: FormDecoration.inputDecoaration(
+                              context: context,
+                              placeholder: 'téléphone',
                             ),
                             validator: (phone) => phone != null &&
                                     _controllerPhone.text.trim().length < 13

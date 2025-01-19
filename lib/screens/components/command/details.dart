@@ -1,14 +1,21 @@
-import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:teela/screens/components/general/image_viewer.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/model.dart';
 
-class DetailsCommande extends StatelessWidget {
+class DetailsCommande extends StatefulWidget {
   final CommandeModel commande;
   const DetailsCommande({super.key, required this.commande});
+
+  @override
+  State<DetailsCommande> createState() => _DetailsCommandeState();
+}
+
+class _DetailsCommandeState extends State<DetailsCommande> {
+  bool selectedDescription = true;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,314 @@ class DetailsCommande extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => showCupertinoModalPopup(
+              context: context,
+              builder: (context) => CupertinoActionSheet(
+                message: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Actions',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat',
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          Text(
+                            'Quelle action souhaitex-vous effectuer sur cette commande?',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => CupertinoActionSheet(
+                                  message: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Ajouter le dernier paiement?',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5.0,
+                                            ),
+                                            Text(
+                                              'Le dernier paiement sera enregiste si vous confirmez cette option',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.w400,
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20.0,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        vertical: 10.0,
+                                                        horizontal: 10.0,
+                                                      ),
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      decoration: BoxDecoration(
+                                                        color: primary200,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5.0),
+                                                      ),
+                                                      child: const Text(
+                                                        'Oui',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        vertical: 10.0,
+                                                        horizontal: 10.0,
+                                                      ),
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Colors.transparent,
+                                                        border: Border.all(
+                                                          color: primary200,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5.0),
+                                                      ),
+                                                      child: const Text(
+                                                        'Non',
+                                                        style: TextStyle(
+                                                          color: primary200,
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        alignment: Alignment.centerRight,
+                                        child: GestureDetector(
+                                          onTap: () => Navigator.pop(context),
+                                          child: const Text(
+                                            'Annuler',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Montserrat',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 10.0,
+                              ),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                border: Border.all(
+                                  color: primary200,
+                                ),
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Text(
+                                'Valider le dernier paiement',
+                                style: TextStyle(
+                                  color: primary200,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          const Divider(),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 10.0,
+                              ),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: primary200,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/icons/edit.svg',
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  const Text(
+                                    'Editer',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 10.0,
+                              ),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/icons/delete.6.svg',
+                                    colorFilter: const ColorFilter.mode(
+                                      primary200,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  const Text(
+                                    'Supprimer',
+                                    style: TextStyle(
+                                      color: primary200,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             icon: const Icon(
               Icons.more_vert,
             ),
@@ -64,7 +378,7 @@ class DetailsCommande extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              commande.customerName,
+                              widget.commande.customerName,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 18,
@@ -72,7 +386,7 @@ class DetailsCommande extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              commande.customerPhone,
+                              widget.commande.customerPhone,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -85,10 +399,10 @@ class DetailsCommande extends StatelessWidget {
                             horizontal: 10.0,
                           ),
                           decoration: BoxDecoration(
-                            color: commande.date
+                            color: widget.commande.date
                                         .add(Duration(
-                                            days: commande.duration.end))
-                                        .difference(commande.date)
+                                            days: widget.commande.duration.end))
+                                        .difference(widget.commande.date)
                                         .inDays <=
                                     3
                                 ? primary200
@@ -97,14 +411,15 @@ class DetailsCommande extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Text(
-                            '${commande.date.add(Duration(days: commande.duration.end)).difference(commande.date).inDays} jour${commande.duration.end > 1 ? 's' : ''}',
+                            '${widget.commande.date.add(Duration(days: widget.commande.duration.end)).difference(widget.commande.date).inDays} jour${widget.commande.duration.end > 1 ? 's' : ''}',
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.w600,
-                              color: commande.date
+                              color: widget.commande.date
                                           .add(Duration(
-                                              days: commande.duration.end))
-                                          .difference(commande.date)
+                                              days:
+                                                  widget.commande.duration.end))
+                                          .difference(widget.commande.date)
                                           .inDays <=
                                       3
                                   ? Colors.white
@@ -119,9 +434,12 @@ class DetailsCommande extends StatelessWidget {
                     ),
                     Container(
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: neutral200,
-                        borderRadius: BorderRadius.circular(5.0),
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(50.0),
+                          right: Radius.circular(5.0),
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -130,50 +448,412 @@ class DetailsCommande extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ImageViewer(
-                                  images: commande.modele.images,
+                                  images: widget.commande.modele.images,
                                 ),
                               ),
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.asset(
-                                commande.modele.images[Random().nextInt(
-                                  commande.modele.images.length,
-                                )],
-                                height: 80.0,
-                                width: 80.0,
-                                fit: BoxFit.cover,
-                              ),
+                            child: Stack(
+                              children: [
+                                Transform.flip(
+                                  flipX: true,
+                                  child: Transform.rotate(
+                                    angle: 275,
+                                    origin: const Offset(-1, -5),
+                                    child: Container(
+                                      height: 80.0,
+                                      width: 80.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Transform.rotate(
+                                  angle: 275,
+                                  origin: const Offset(-1, -5),
+                                  child: Container(
+                                    height: 80.0,
+                                    width: 80.0,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                                SafeArea(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: !widget.commande.modele.images[0]
+                                            .contains('http')
+                                        ? Image.asset(
+                                            widget.commande.modele.images[0],
+                                            fit: BoxFit.cover,
+                                            height: 80.0,
+                                            width: 80.0,
+                                          )
+                                        : Image.network(
+                                            widget.commande.modele.images[0],
+                                            fit: BoxFit.cover,
+                                            height: 80.0,
+                                            width: 80.0,
+                                          ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                          const SizedBox(
+                            width: 20.0,
                           ),
                           Expanded(
                             child: GestureDetector(
                               onTap: () {},
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/icons/arrow-right-2.3.svg',
-                                      semanticsLabel: 'Arriw left',
-                                      colorFilter: ColorFilter.mode(
-                                        Theme.of(context).iconTheme.color!,
-                                        BlendMode.srcIn,
-                                      ),
-                                      height: 30,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.commande.modele.title,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const Text(
+                                    'Voir le modele',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/icons/arrow-right-2.3.svg',
+                                    semanticsLabel: 'Arriw left',
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).iconTheme.color!,
+                                      BlendMode.srcIn,
+                                    ),
+                                    height: 30,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Recu le :',
+                              style: TextStyle(
+                                color: neutral700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(
+                              DateFormat.yMMMd().format(widget.commande.date),
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(
+                              'A livre le :',
+                              style: TextStyle(
+                                color: neutral700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(
+                              DateFormat.yMMMd()
+                                  .format(widget.commande.date.add(
+                                Duration(
+                                  days: widget.commande.duration.end,
+                                ),
+                              )),
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Paye :',
+                              style: TextStyle(
+                                color: neutral700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(
+                              '${NumberFormat().format(
+                                widget.commande.versements.values.fold<double>(
+                                    0, (sum, amount) => sum + amount),
+                              )} Fcfa',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const Text(
+                              'A payer :',
+                              style: TextStyle(
+                                color: neutral700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
+                            ),
+                            Text(
+                              '${NumberFormat().format(
+                                widget.commande.price -
+                                    widget.commande.versements.values
+                                        .fold<double>(
+                                            0, (sum, amount) => sum + amount),
+                              )} Fcfa',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            'Total',
+                            style: TextStyle(
+                              color: neutral700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            '${NumberFormat().format(widget.commande.price)} Fcfa',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 20.0,
+                      ),
+                      child: Divider(),
+                    ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Description',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => setState(() {
+                            selectedDescription = true;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: selectedDescription
+                                  ? Colors.transparent
+                                  : neutral200,
+                              border: Border.all(
+                                color: selectedDescription
+                                    ? primary200
+                                    : neutral200,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            child: Text(
+                              'Texte',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: selectedDescription
+                                    ? primary200
+                                    : neutral500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        GestureDetector(
+                          onTap: () => setState(() {
+                            selectedDescription = false;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: !selectedDescription
+                                  ? Colors.transparent
+                                  : neutral200,
+                              border: Border.all(
+                                color: !selectedDescription
+                                    ? primary200
+                                    : neutral200,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            child: Text(
+                              'Images',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: !selectedDescription
+                                    ? primary200
+                                    : neutral500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    selectedDescription
+                        ? widget.commande.details['text'] != null
+                            ? Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  widget.commande.details['text'],
+                                  textAlign: TextAlign.justify,
+                                ),
+                              )
+                            : const Text(
+                                'Aucune description',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              )
+                        : widget.commande.details['images'] != null
+                            ? Row(
+                                children: [
+                                  for (String photo
+                                      in widget.commande.details['images'])
+                                    GestureDetector(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ImageViewer(
+                                            images: [photo],
+                                          ),
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: !photo.contains('http')
+                                            ? Image.asset(
+                                                photo,
+                                                fit: BoxFit.cover,
+                                                height: 80.0,
+                                                width: 80.0,
+                                              )
+                                            : Image.network(
+                                                photo,
+                                                fit: BoxFit.cover,
+                                                height: 80.0,
+                                                width: 80.0,
+                                              ),
+                                      ),
+                                    ),
+                                ],
+                              )
+                            : const Text(
+                                'Aucune description',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
                   ],
                 ),
               ),
@@ -196,7 +876,123 @@ class DetailsCommande extends StatelessWidget {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () async {},
+                  onTap: () => showCupertinoModalPopup(
+                    context: context,
+                    builder: (context) => CupertinoActionSheet(
+                      message: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Terminer',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Montserrat',
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                ),
+                                Text(
+                                  'Pourriez-vous confirmer que cette commande est terminee?',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 10.0,
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    decoration: BoxDecoration(
+                                      color: primary200,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: const Text(
+                                      'Terminer',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 10.0,
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                        color: primary200,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: const Text(
+                                      'Terminer et livrer',
+                                      style: TextStyle(
+                                        color: primary200,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: const Text(
+                                    'Annuler',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: 10.0,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:teela/auth/otp.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 
 class SignUp extends StatefulWidget {
@@ -83,41 +84,9 @@ class _SignUpState extends State<SignUp> {
                             TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                hintText: 'julie queen',
+                              decoration: FormDecoration.inputDecoaration(
+                                context: context,
+                                placeholder: 'julie queen',
                               ),
                               controller: _controllerFullName,
                               validator: (fullName) => fullName == null ||
@@ -164,48 +133,19 @@ class _SignUpState extends State<SignUp> {
                               cursorErrorColor: primary500,
                               obscureText: true,
                               obscuringCharacter: '#',
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                hintText: '_',
+                              decoration: FormDecoration.inputDecoaration(
+                                context: context,
+                                placeholder: '_',
                               ),
                               controller: _controllerPassword,
                               onChanged: (value) => setState(() {
                                 // _controllerPassword.text = value;
                               }),
                               validator: (fullName) => fullName == null ||
-                                      _controllerPassword.text.trim() == ''
+                                      _controllerPassword.text.trim() == '' ||
+                                      !_controllerPassword.text
+                                          .contains(RegExp(r'\d')) ||
+                                      _controllerPassword.text.length < 6
                                   ? 'votre mot de passe doit contenir au moins 06 caracteres et un chiffre'
                                   : null,
                             ),
@@ -248,49 +188,17 @@ class _SignUpState extends State<SignUp> {
                               cursorErrorColor: primary500,
                               obscureText: true,
                               obscuringCharacter: '#',
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                hintText: '_',
+                              decoration: FormDecoration.inputDecoaration(
+                                context: context,
+                                placeholder: '_',
                               ),
                               controller: _controllerConfirmPassword,
                               onChanged: (value) => setState(() {
                                 // _controllerConfirmPassword.text = value;
                               }),
                               validator: (fullName) => fullName == null ||
-                                      _controllerConfirmPassword.text.trim() ==
-                                          ''
+                                      _controllerPassword.text.trim() !=
+                                          _controllerConfirmPassword.text.trim()
                                   ? 'Veuillez comfirmer votre mot de passe'
                                   : null,
                             ),
@@ -356,10 +264,6 @@ class _SignUpState extends State<SignUp> {
                   GestureDetector(
                     onTap: () async {
                       if (!signUpFormKey.currentState!.validate()) return;
-                      if (_controllerPassword.text.trim() !=
-                              _controllerConfirmPassword.text.trim() ||
-                          !_controllerPassword.text.contains(RegExp(r'\d')) ||
-                          _controllerPassword.text.length < 6) return;
                       await registration();
                     },
                     child: Container(

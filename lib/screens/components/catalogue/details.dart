@@ -170,9 +170,9 @@ class DetailsCatalogue extends StatelessWidget {
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Text(
-                      '${catalogueModel.modeles.where((item) => item.state).toList().length} realise${catalogueModel.modeles.where((item) => item.state).toList().length > 1 ? 's' : ''}',
-                      style: const TextStyle(
+                    child: const Text(
+                      '02 realise${2 > 1 ? 's' : ''}',
+                      style: TextStyle(
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,
                       ),
@@ -190,9 +190,9 @@ class DetailsCatalogue extends StatelessWidget {
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Text(
-                      '${catalogueModel.modeles.where((item) => !item.state).toList().length} en attente${catalogueModel.modeles.where((item) => !item.state).toList().length > 1 ? 's' : ''}',
-                      style: const TextStyle(
+                    child: const Text(
+                      '04 en attente${4 > 1 ? 's' : ''}',
+                      style: TextStyle(
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,
                       ),
@@ -379,12 +379,19 @@ class DetailsCatalogue extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5.0),
-        child: Image.asset(
-          item.images[Random().nextInt(item.images.length)],
-          fit: BoxFit.cover,
-          height: Random().nextInt(250) + 100,
-          width: MediaQuery.of(context).size.width * .5 - 30.0,
-        ),
+        child: !item.images[0].contains('http')
+            ? Image.asset(
+                item.images[0],
+                fit: BoxFit.cover,
+                height: Random().nextInt(250) + 100,
+                width: MediaQuery.of(context).size.width * .5 - 30.0,
+              )
+            : Image.network(
+                item.images[0],
+                fit: BoxFit.cover,
+                height: Random().nextInt(250) + 100,
+                width: MediaQuery.of(context).size.width * .5 - 30.0,
+              ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:teela/screens/catalogue.dart';
 import 'package:teela/screens/command.dart';
+import 'package:teela/screens/components/command/add.dart';
 import 'package:teela/screens/home.dart';
 import 'package:teela/screens/profile.dart';
 import 'package:teela/utils/color_scheme.dart';
@@ -54,7 +55,9 @@ class _StartState extends State<Start> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+        ),
         child: appPages[currentPage]['route'],
       ),
       bottomNavigationBar: Container(
@@ -207,7 +210,14 @@ class _StartState extends State<Start> {
         ),
       ),
       floatingActionButton: GestureDetector(
-        onTap: () {},
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddCommande(
+              commande: null,
+            ),
+          ),
+        ),
         child: Container(
           height: 50.0,
           width: 50.0,

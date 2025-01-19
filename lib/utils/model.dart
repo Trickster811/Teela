@@ -16,15 +16,17 @@ class CommandeModel {
   final String customerName;
   final String customerPhone;
   final DateTime date;
+  final Map<String, dynamic> details;
   final SfRangeValues duration;
   final ModeleModel modele;
-  final int price;
-  final List<Map<String, int>> versements;
+  final int price; // Total to pay
+  final Map<String, int> versements;
 
   const CommandeModel({
     required this.customerName,
     required this.customerPhone,
     required this.date,
+    required this.details,
     required this.duration,
     required this.modele,
     required this.price,
@@ -35,10 +37,9 @@ class CommandeModel {
 class ModeleModel {
   final String description;
   final SfRangeValues duration;
-  final List<String> images;
+  final List<dynamic> images;
   final int maxPrice;
   final int minPrice;
-  final bool state;
   final String title;
 
   const ModeleModel({
@@ -47,7 +48,6 @@ class ModeleModel {
     required this.images,
     required this.maxPrice,
     required this.minPrice,
-    required this.state,
     required this.title,
   });
 }

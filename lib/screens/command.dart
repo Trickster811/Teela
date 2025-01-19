@@ -47,7 +47,12 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
       customerName: 'Maryline Kamgueng',
       customerPhone: '+23760786195',
       date: DateTime.now(),
-      duration: const SfRangeValues(1, 9),
+      duration: const SfRangeValues(1, 5),
+      details: {
+        'text':
+            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
+        'images': [],
+      },
       modele: const ModeleModel(
         title: 'Nom du model',
         description:
@@ -59,16 +64,22 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         ],
         minPrice: 0,
         maxPrice: 0,
-        state: false,
       ),
       price: 7000,
-      versements: [],
+      versements: {
+        '1': 1575,
+      },
     ),
     CommandeModel(
       customerName: 'Maryline Kamgueng',
       customerPhone: '+23760786195',
       date: DateTime.now(),
       duration: const SfRangeValues(1, 5),
+      details: {
+        'text':
+            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
+        'images': [],
+      },
       modele: const ModeleModel(
         title: 'Nom du model',
         description:
@@ -80,16 +91,22 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         ],
         minPrice: 0,
         maxPrice: 0,
-        state: false,
       ),
       price: 7000,
-      versements: [],
+      versements: {},
     ),
     CommandeModel(
       customerName: 'Maryline Kamgueng',
       customerPhone: '+23760786195',
       date: DateTime.now(),
       duration: const SfRangeValues(1, 5),
+      details: {
+        'text':
+            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
+        'images': [
+          'assets/images/welcome/image_5.png',
+        ],
+      },
       modele: const ModeleModel(
         title: 'Nom du model',
         description:
@@ -101,16 +118,20 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         ],
         minPrice: 0,
         maxPrice: 0,
-        state: false,
       ),
       price: 7000,
-      versements: [],
+      versements: {},
     ),
     CommandeModel(
       customerName: 'Maryline Kamgueng',
       customerPhone: '+23760786195',
       date: DateTime.now(),
       duration: const SfRangeValues(1, 5),
+      details: {
+        'text':
+            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
+        'images': [],
+      },
       modele: const ModeleModel(
         title: 'Nom du model',
         description:
@@ -122,16 +143,20 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         ],
         minPrice: 0,
         maxPrice: 0,
-        state: false,
       ),
       price: 7000,
-      versements: [],
+      versements: {},
     ),
     CommandeModel(
       customerName: 'Maryline Kamgueng',
       customerPhone: '+23760786195',
       date: DateTime.now(),
       duration: const SfRangeValues(1, 5),
+      details: {
+        'text':
+            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
+        'images': [],
+      },
       modele: const ModeleModel(
         title: 'Nom du model',
         description:
@@ -143,10 +168,9 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         ],
         minPrice: 0,
         maxPrice: 0,
-        state: false,
       ),
       price: 7000,
-      versements: [],
+      versements: {},
     )
   ];
 

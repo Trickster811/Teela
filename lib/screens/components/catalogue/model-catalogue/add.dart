@@ -28,6 +28,7 @@ class _AddModeleState extends State<AddModele> {
 
   // Form key
   final addModeleFormKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -96,9 +97,10 @@ class _AddModeleState extends State<AddModele> {
                             GestureDetector(
                               onTap: () async {
                                 images.addAll(
-                                    await FileManager.getImageFromDevice(
-                                  multiImage: true,
-                                ));
+                                  await FileManager.getImageFromDevice(
+                                    multiImage: true,
+                                  ),
+                                );
                                 setState(() {});
                               },
                               child: Container(
@@ -164,41 +166,9 @@ class _AddModeleState extends State<AddModele> {
                       TextFormField(
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                          ),
-                          hintText: 'Modeles traditionnels',
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder: 'Modeles traditionnels',
                         ),
                         controller: _controllerTitle,
                         validator: (title) =>
@@ -222,41 +192,9 @@ class _AddModeleState extends State<AddModele> {
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
                         maxLines: 5,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                          ),
-                          hintText:
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder:
                               'Des vetements refletant les coutumes de diverses regions du Cameroun',
                         ),
                         controller: _controllerDescription,
@@ -286,44 +224,12 @@ class _AddModeleState extends State<AddModele> {
                             child: TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                hintText: '3500',
+                              decoration: FormDecoration.inputDecoaration(
+                                context: context,
+                                placeholder: '3500',
                               ),
                               controller: _controllerMinPrice,
-                              validator: (description) => description == null ||
+                              validator: (amount) => amount == null ||
                                       _controllerMinPrice.text.trim() == ''
                                   ? 'Veuillez saisir un montant minimum'
                                   : null,
@@ -335,44 +241,12 @@ class _AddModeleState extends State<AddModele> {
                             child: TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).iconTheme.color!,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: const BorderSide(
-                                    color: primary200,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                hintText: '7000',
+                              decoration: FormDecoration.inputDecoaration(
+                                context: context,
+                                placeholder: '7000',
                               ),
                               controller: _controllerMaxPrice,
-                              validator: (description) => description == null ||
+                              validator: (amount) => amount == null ||
                                       _controllerMaxPrice.text.trim() == ''
                                   ? 'Veuillez saisir un montant maximum'
                                   : null,
@@ -384,7 +258,7 @@ class _AddModeleState extends State<AddModele> {
                         height: 10.0,
                       ),
                       Text(
-                        'Duree (${_duration.start} - ${_duration.end})',
+                        'Duree (${_duration.start.toInt()} - ${_duration.end.toInt()})',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                         ),

@@ -15,7 +15,6 @@ class Onboard extends StatefulWidget {
 
 class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
   TabController? _controller;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -24,13 +23,6 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
       length: 3,
       vsync: this,
     );
-
-    // Listening for tab change event
-    _controller!.addListener(() {
-      setState(() {
-        _selectedIndex = _controller!.index;
-      });
-    });
   }
 
   @override
@@ -564,8 +556,9 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                           width: 15,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10000),
-                            color:
-                                _selectedIndex >= 0 ? neutral1000 : neutral400,
+                            color: _controller!.index >= 0
+                                ? neutral1000
+                                : neutral400,
                           ),
                         ),
                       ),
@@ -577,8 +570,9 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                           width: 15,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10000),
-                            color:
-                                _selectedIndex >= 1 ? neutral1000 : neutral400,
+                            color: _controller!.index >= 1
+                                ? neutral1000
+                                : neutral400,
                           ),
                         ),
                       ),
@@ -590,8 +584,9 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                           width: 15,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10000),
-                            color:
-                                _selectedIndex >= 2 ? neutral1000 : neutral400,
+                            color: _controller!.index >= 2
+                                ? neutral1000
+                                : neutral400,
                           ),
                         ),
                       ),
@@ -599,8 +594,8 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (_selectedIndex != 2) {
-                        _controller!.animateTo(_selectedIndex += 1);
+                      if (_controller!.index != 2) {
+                        _controller!.animateTo(_controller!.index += 1);
                         return;
                       }
 
@@ -616,13 +611,13 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                     child: Row(
                       children: [
                         Text(
-                          _selectedIndex != 2 ? 'Continuer' : 'Commencer',
+                          _controller!.index != 2 ? 'Continuer' : 'Commencer',
                           style: TextStyle(
                             fontSize: 16.0,
-                            fontWeight: _selectedIndex != 2
+                            fontWeight: _controller!.index != 2
                                 ? FontWeight.normal
                                 : FontWeight.w600,
-                            color: _selectedIndex != 2
+                            color: _controller!.index != 2
                                 ? Theme.of(context).iconTheme.color
                                 : primary200,
                           ),
@@ -630,7 +625,7 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                         const SizedBox(
                           width: 5,
                         ),
-                        if (_selectedIndex != 2)
+                        if (_controller!.index != 2)
                           SvgPicture.asset(
                             'assets/icons/arrow-right.svg',
                             semanticsLabel: 'next icon',
@@ -639,7 +634,7 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                               BlendMode.srcIn,
                             ),
                           ),
-                        if (_selectedIndex == 2)
+                        if (_controller!.index == 2)
                           SvgPicture.asset(
                             'assets/images/welcome/next_icon.svg',
                             semanticsLabel: 'next icon',

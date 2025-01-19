@@ -127,7 +127,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: false,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -140,7 +139,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: false,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -153,7 +151,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: false,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -166,7 +163,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: false,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -179,7 +175,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: false,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -192,7 +187,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: true,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -205,7 +199,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: false,
                   ),
                   ModeleModel(
                     title: 'Nom du model',
@@ -218,7 +211,6 @@ class Catalogue extends StatelessWidget {
                     ],
                     minPrice: 0,
                     maxPrice: 0,
-                    state: true,
                   ),
                 ],
                 title: 'Modeles traditionels',

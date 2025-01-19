@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/model.dart';
 
@@ -84,41 +85,9 @@ class _AddCatalogueState extends State<AddCatalogue> {
                       TextFormField(
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                          ),
-                          hintText: 'Modeles traditionnels',
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder: 'Modeles traditionnels',
                         ),
                         controller: _controllerTitle,
                         validator: (title) =>
@@ -142,41 +111,9 @@ class _AddCatalogueState extends State<AddCatalogue> {
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
                         maxLines: 5,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).iconTheme.color!,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            gapPadding: 0,
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: primary200,
-                            ),
-                          ),
-                          hintStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                          ),
-                          hintText:
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder:
                               'Des vetements refletant les coutumes de diverses regions du Cameroun',
                         ),
                         controller: _controllerDescription,
