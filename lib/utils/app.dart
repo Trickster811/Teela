@@ -59,7 +59,7 @@ class Internet {
     if (checker.contains(ConnectivityResult.none)) {
       return false;
     }
-    final isInternetPresent = await InternetConnectionChecker().hasConnection;
+    final isInternetPresent = await InternetConnectionChecker.instance.hasConnection;
     if (!isInternetPresent) {
       return false;
     }
