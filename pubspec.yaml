@@ -2,7 +2,7 @@ name: teela
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ">=3.4.3 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,25 +31,31 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  cached_network_image:
   card_loading:
   carousel_slider:
   connectivity_plus:
   cupertino_icons: ^1.0.6
+  datetime_picker_formfield:
+  dotted_border:
   email_validator:
   flutter_screenutil: ^5.9.3
   flutter_svg:
+  form_field_validator:
   image_picker:
   internet_connection_checker:
   intl:
   intl_phone_number_input:
   flutter_keyboard_visibility:
+  package_info_plus:
   pinput:
   provider:
+  readmore:
   shared_preferences:
   syncfusion_flutter_sliders: ^27.2.5
+  url_launcher:
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +73,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
