@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,16 +69,17 @@ class Catalogue extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
-                  height: 80.0,
-                  width: 80.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(),
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                    size: 40.0,
+                DottedBorder(
+                  borderType: BorderType.RRect,
+                  padding: EdgeInsets.zero,
+                  radius: const Radius.circular(15.0),
+                  child: const SizedBox(
+                    height: 80.0,
+                    width: 80.0,
+                    child: Icon(
+                      Icons.add,
+                      size: 40.0,
+                    ),
                   ),
                 ),
                 const SizedBox(

@@ -23,6 +23,11 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
       length: 3,
       vsync: this,
     );
+
+    // Listening for tab change event
+    _controller!.addListener(() {
+      setState(() {});
+    });
   }
 
   @override

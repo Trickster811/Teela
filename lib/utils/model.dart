@@ -13,6 +13,7 @@ class CatalogueModel {
 }
 
 class CommandeModel {
+  final Map<String, List<Map<String, dynamic>>> customerMesures;
   final String customerName;
   final String customerPhone;
   final DateTime date;
@@ -23,6 +24,7 @@ class CommandeModel {
   final Map<String, int> versements;
 
   const CommandeModel({
+    required this.customerMesures,
     required this.customerName,
     required this.customerPhone,
     required this.date,

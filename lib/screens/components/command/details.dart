@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,14 +9,20 @@ import 'package:teela/utils/model.dart';
 
 class DetailsCommande extends StatefulWidget {
   final CommandeModel commande;
-  const DetailsCommande({super.key, required this.commande});
+  const DetailsCommande({
+    super.key,
+    required this.commande,
+  });
 
   @override
   State<DetailsCommande> createState() => _DetailsCommandeState();
 }
 
 class _DetailsCommandeState extends State<DetailsCommande> {
-  bool selectedDescription = true;
+  bool selectedDescription =
+      true; // To show either Command-Description type Text or type Image
+  bool selectedMesures =
+      true; // To show either Mesures type 'Haut du corps' or type 'Bas du corps'
 
   @override
   Widget build(BuildContext context) {
@@ -256,12 +263,16 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          const Divider(),
-                          const SizedBox(
-                            height: 10.0,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20.0,
+                            ),
+                            child: DottedBorder(
+                              padding: EdgeInsets.zero,
+                              child: const SizedBox(
+                                width: double.maxFinite,
+                              ),
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -434,6 +445,7 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                     ),
                     Container(
                       alignment: Alignment.center,
+                      margin: const EdgeInsets.only(left: 10.0),
                       decoration: const BoxDecoration(
                         color: neutral200,
                         borderRadius: BorderRadius.horizontal(
@@ -708,11 +720,148 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
                         vertical: 20.0,
                       ),
-                      child: Divider(),
+                      child: DottedBorder(
+                        padding: EdgeInsets.zero,
+                        child: const SizedBox(
+                          width: double.maxFinite,
+                        ),
+                      ),
+                    ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Mesures',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => setState(() {
+                            selectedMesures = true;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: selectedMesures
+                                  ? Colors.transparent
+                                  : neutral200,
+                              border: Border.all(
+                                color:
+                                    selectedMesures ? primary200 : neutral200,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            child: Text(
+                              'Haut du corps',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color:
+                                    selectedMesures ? primary200 : neutral500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        GestureDetector(
+                          onTap: () => setState(() {
+                            selectedMesures = false;
+                          }),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: !selectedMesures
+                                  ? Colors.transparent
+                                  : neutral200,
+                              border: Border.all(
+                                color:
+                                    !selectedMesures ? primary200 : neutral200,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            child: Text(
+                              'Bas du corps',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color:
+                                    !selectedMesures ? primary200 : neutral500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Wrap(
+                      spacing: 5.0,
+                      runSpacing: 5.0,
+                      children: [
+                        for (Map<String, dynamic> item
+                            in widget.commande.customerMesures[
+                                selectedMesures ? 'topBody' : 'downBody']!)
+                          Container(
+                            padding: const EdgeInsets.all(3.0),
+                            height: 60.0,
+                            width: 50.0,
+                            decoration: BoxDecoration(
+                              color: neutral200,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 3.0,
+                                  ),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: primary200,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Text(
+                                    item['abbr'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Text(item['value'].toString())
+                              ],
+                            ),
+                          )
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20.0,
+                      ),
+                      child: DottedBorder(
+                        padding: EdgeInsets.zero,
+                        child: const SizedBox(
+                          width: double.maxFinite,
+                        ),
+                      ),
                     ),
                     const Align(
                       alignment: Alignment.centerLeft,
@@ -725,7 +874,7 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     Row(
                       children: [

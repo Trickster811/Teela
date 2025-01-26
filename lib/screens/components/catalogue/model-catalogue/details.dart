@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -259,12 +260,16 @@ class DetailsModele extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+            Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20.0,
+                vertical: 30.0,
               ),
-              child: Divider(
-                height: 50.0,
+              child: DottedBorder(
+                padding: EdgeInsets.zero,
+                child: const SizedBox(
+                  width: double.maxFinite,
+                ),
               ),
             ),
             Padding(

@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/utils/app.dart';
@@ -22,45 +25,38 @@ class AddCommande extends StatefulWidget {
 }
 
 class _AddCommandeState extends State<AddCommande>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   // User info
   final _controllerFullName = TextEditingController();
   final _controllerPhone = TextEditingController();
+
+  // Mesures Info
+  Map<String, List<Map<String, dynamic>>> customerMesures = {
+    'topBody': [],
+    'downBody': []
+  };
+  final _controllerMesureName = TextEditingController();
+  final _controllerMesureAbbr = TextEditingController();
+  final _controllerMesureValue = TextEditingController();
 
   // Modele info
   ModeleModel? model;
   List<dynamic> images = []; // description - images
   final _controllerText = TextEditingController(); // description - text
 
-  // Paymet info
+  // Payment info
   final _controllerPrice = TextEditingController();
   final _controllerVersement = TextEditingController();
+  DateTime dueDate = DateTime.now();
   double _duration = 5.0;
 
   // Form key
   final addCommandeFormKey = GlobalKey<FormState>();
+  final addMesureFormKey = GlobalKey<FormState>();
 
   TabController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(
-      length: 3,
-      vsync: this,
-    );
-
-    // Listening for tab change event
-    _controller!.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
+  TabController?
+      _controllerTabMesures; // For the sections 'Haut du corps' & 'Bas du corps'
 
   List<CatalogueModel> listCatalogue = [
     const CatalogueModel(
@@ -168,6 +164,34 @@ class _AddCommandeState extends State<AddCommande>
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _controller = TabController(
+      length: 4,
+      vsync: this,
+    );
+    _controllerTabMesures = TabController(
+      length: 2,
+      vsync: this,
+    );
+
+    // Listening for tab change event
+    _controller!.addListener(() {
+      setState(() {});
+    });
+    _controllerTabMesures!.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller!.dispose();
+    _controllerTabMesures!.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -257,10 +281,15 @@ class _AddCommandeState extends State<AddCommande>
                               width: 2.0,
                             ),
                             Expanded(
-                              child: Divider(
+                              child: DottedBorder(
                                 color: _controller!.index >= 0
                                     ? primary200
                                     : neutral300,
+                                padding: EdgeInsets.zero,
+                                child: const Divider(
+                                  height: 0.6,
+                                  color: Colors.transparent,
+                                ),
                               ),
                             ),
                           ],
@@ -272,12 +301,12 @@ class _AddCommandeState extends State<AddCommande>
                 ),
                 Tab(
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * .6,
+                    width: MediaQuery.of(context).size.width * .7,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Modele',
+                          'Mesures',
                           style: TextStyle(
                             color: _controller!.index >= 1
                                 ? primary200
@@ -314,10 +343,15 @@ class _AddCommandeState extends State<AddCommande>
                               width: 2.0,
                             ),
                             Expanded(
-                              child: Divider(
+                              child: DottedBorder(
                                 color: _controller!.index >= 1
                                     ? primary200
                                     : neutral300,
+                                padding: EdgeInsets.zero,
+                                child: const Divider(
+                                  height: 0.6,
+                                  color: Colors.transparent,
+                                ),
                               ),
                             ),
                           ],
@@ -329,12 +363,12 @@ class _AddCommandeState extends State<AddCommande>
                 ),
                 Tab(
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * .7,
+                    width: MediaQuery.of(context).size.width * .6,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Modalites',
+                          'Modele',
                           style: TextStyle(
                             color: _controller!.index >= 2
                                 ? primary200
@@ -367,6 +401,68 @@ class _AddCommandeState extends State<AddCommande>
                                 ),
                               ),
                             ),
+                            const SizedBox(
+                              width: 2.0,
+                            ),
+                            Expanded(
+                              child: DottedBorder(
+                                color: _controller!.index >= 2
+                                    ? primary200
+                                    : neutral300,
+                                padding: EdgeInsets.zero,
+                                child: const Divider(
+                                  height: 0.6,
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * .7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Modalites',
+                          style: TextStyle(
+                            color: _controller!.index >= 3
+                                ? primary200
+                                : neutral300,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Container(
+                              padding: _controller!.index >= 3
+                                  ? const EdgeInsets.all(5.0)
+                                  : EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                border: _controller!.index >= 3
+                                    ? Border.all(color: primary200)
+                                    : Border.all(width: 0),
+                                borderRadius: BorderRadius.circular(5000),
+                              ),
+                              child: Container(
+                                height: _controller!.index >= 3 ? 10.0 : 15.0,
+                                width: _controller!.index >= 3 ? 10.0 : 15.0,
+                                decoration: BoxDecoration(
+                                  color: _controller!.index >= 3
+                                      ? primary200
+                                      : neutral300,
+                                  borderRadius: BorderRadius.circular(5000),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         const Spacer(),
@@ -375,9 +471,6 @@ class _AddCommandeState extends State<AddCommande>
                   ),
                 ),
               ],
-            ),
-            const SizedBox(
-              height: 30.0,
             ),
             Expanded(
               child: Padding(
@@ -391,6 +484,9 @@ class _AddCommandeState extends State<AddCommande>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(
+                            height: 30.0,
+                          ),
                           const Text(
                             'Nom du client',
                             style: TextStyle(
@@ -466,10 +562,312 @@ class _AddCommandeState extends State<AddCommande>
                         ],
                       ),
                     ),
+                    Column(
+                      children: [
+                        TabBar(
+                          controller: _controllerTabMesures,
+                          padding: EdgeInsets.zero,
+                          indicatorColor: Colors.transparent,
+                          dividerHeight: 0,
+                          dividerColor: Colors.transparent,
+                          tabs: [
+                            Tab(
+                              iconMargin: EdgeInsets.zero,
+                              icon: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Haut du corps',
+                                    style: TextStyle(
+                                      color: _controllerTabMesures!.index == 0
+                                          ? primary200
+                                          : Theme.of(context).iconTheme.color,
+                                    ),
+                                  ),
+                                  if (_controllerTabMesures!.index == 0)
+                                    Container(
+                                      height: 6,
+                                      width: 6,
+                                      decoration: BoxDecoration(
+                                        color: primary200,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              iconMargin: EdgeInsets.zero,
+                              icon: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Bas du corps',
+                                    style: TextStyle(
+                                      color: _controllerTabMesures!.index == 1
+                                          ? primary200
+                                          : Theme.of(context).iconTheme.color,
+                                    ),
+                                  ),
+                                  if (_controllerTabMesures!.index == 1)
+                                    Container(
+                                      height: 6,
+                                      width: 6,
+                                      decoration: BoxDecoration(
+                                        color: primary200,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: double.maxFinite,
+                          child: SvgPicture.asset(
+                            'assets/images/general/pattern_2.svg',
+                            colorFilter: const ColorFilter.mode(
+                              neutral700,
+                              BlendMode.srcIn,
+                            ),
+                            fit: BoxFit.cover,
+                            // width: MediaQuery.of(context).size.height,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _controllerTabMesures,
+                            children: [
+                              Column(
+                                children: [
+                                  for (Map<String, dynamic> mesure
+                                      in customerMesures['topBody']!) ...[
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0,
+                                        vertical: 10.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: neutral200,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: primary200,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${mesure['abbr']} : ',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              mesure['name'],
+                                              overflow: TextOverflow.clip,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0,
+                                              vertical: 3.0,
+                                            ),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: primary200,
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            child: Text(
+                                              mesure['value'],
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5.0,
+                                          ),
+                                          SvgPicture.asset(
+                                            'assets/icons/check-circle-bold.svg',
+                                            semanticsLabel: 'Arriw left',
+                                            colorFilter: const ColorFilter.mode(
+                                              primary200,
+                                              BlendMode.srcIn,
+                                            ),
+                                            height: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                  ],
+                                  const SizedBox(
+                                    height: 50.0,
+                                  ),
+                                  DottedBorder(
+                                    borderType: BorderType.RRect,
+                                    padding: const EdgeInsets.all(10.0),
+                                    radius: const Radius.circular(5.0),
+                                    child: GestureDetector(
+                                      onTap: () => addMesure(
+                                        context: context,
+                                        addTo:
+                                            'topBody', // add to 'Haut du corps' or 'Bas du corps'
+                                      ),
+                                      child: const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.add,
+                                          ),
+                                          SizedBox(
+                                            width: 5.0,
+                                          ),
+                                          Text(
+                                            'Ajouter une nouvelle mesure',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  for (Map<String, dynamic> mesure
+                                      in customerMesures['downBody']!) ...[
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0,
+                                        vertical: 10.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: neutral200,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: primary200,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '${mesure['abbr']} : ',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              mesure['name'],
+                                              overflow: TextOverflow.clip,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0,
+                                              vertical: 3.0,
+                                            ),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: primary200,
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            child: Text(
+                                              mesure['value'],
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 5.0,
+                                          ),
+                                          SvgPicture.asset(
+                                            'assets/icons/check-circle-bold.svg',
+                                            semanticsLabel: 'Arriw left',
+                                            colorFilter: const ColorFilter.mode(
+                                              primary200,
+                                              BlendMode.srcIn,
+                                            ),
+                                            height: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    ),
+                                  ],
+                                  const SizedBox(
+                                    height: 50.0,
+                                  ),
+                                  DottedBorder(
+                                    borderType: BorderType.RRect,
+                                    padding: const EdgeInsets.all(10.0),
+                                    radius: const Radius.circular(5.0),
+                                    child: GestureDetector(
+                                      onTap: () => addMesure(
+                                        context: context,
+                                        addTo:
+                                            'downBody', // add to 'Haut du corps' or 'Bas du corps'
+                                      ),
+                                      child: const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.add,
+                                          ),
+                                          SizedBox(
+                                            width: 5.0,
+                                          ),
+                                          Text(
+                                            'Ajouter une nouvelle mesure',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(
+                            height: 30.0,
+                          ),
                           const Text(
                             'Photos du modele',
                             style: TextStyle(
@@ -502,18 +900,22 @@ class _AddCommandeState extends State<AddCommande>
                                             children: [
                                               Row(
                                                 children: [
-                                                  SvgPicture.asset(
-                                                    'assets/icons/arrow-left-2.4.svg',
-                                                    semanticsLabel:
-                                                        'Arriw left',
-                                                    colorFilter:
-                                                        ColorFilter.mode(
-                                                      Theme.of(context)
-                                                          .iconTheme
-                                                          .color!,
-                                                      BlendMode.srcIn,
+                                                  GestureDetector(
+                                                    onTap: () =>
+                                                        Navigator.pop(context),
+                                                    child: SvgPicture.asset(
+                                                      'assets/icons/arrow-left-2.4.svg',
+                                                      semanticsLabel:
+                                                          'Arriw left',
+                                                      colorFilter:
+                                                          ColorFilter.mode(
+                                                        Theme.of(context)
+                                                            .iconTheme
+                                                            .color!,
+                                                        BlendMode.srcIn,
+                                                      ),
+                                                      height: 30,
                                                     ),
-                                                    height: 30,
                                                   ),
                                                   const Spacer(),
                                                   const Text(
@@ -584,7 +986,6 @@ class _AddCommandeState extends State<AddCommande>
                                                     multiImage: false,
                                                     source: ImageSource.camera,
                                                   );
-                                                  Navigator.pop(context);
                                                   setState(() {
                                                     model = ModeleModel(
                                                       description: '',
@@ -596,34 +997,37 @@ class _AddCommandeState extends State<AddCommande>
                                                       minPrice: 0,
                                                       title: 'Modele Anonyme',
                                                     );
+                                                    Navigator.pop(context);
                                                   });
                                                 },
                                                 child: Row(
                                                   children: [
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      height: 80.0,
-                                                      width: 80.0,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15.0),
-                                                        border: Border.all(),
-                                                      ),
-                                                      child: SvgPicture.asset(
-                                                        'assets/icons/camera.svg',
-                                                        semanticsLabel:
-                                                            'Arriw left',
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                          Theme.of(context)
-                                                              .iconTheme
-                                                              .color!,
-                                                          BlendMode.srcIn,
+                                                    DottedBorder(
+                                                      borderType:
+                                                          BorderType.RRect,
+                                                      padding: EdgeInsets.zero,
+                                                      radius:
+                                                          const Radius.circular(
+                                                              15.0),
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(20.0),
+                                                        height: 80.0,
+                                                        width: 80.0,
+                                                        child: SvgPicture.asset(
+                                                          'assets/icons/camera.svg',
+                                                          semanticsLabel:
+                                                              'Arriw left',
+                                                          colorFilter:
+                                                              ColorFilter.mode(
+                                                            Theme.of(context)
+                                                                .iconTheme
+                                                                .color!,
+                                                            BlendMode.srcIn,
+                                                          ),
+                                                          // height: 30,
                                                         ),
-                                                        // height: 30,
                                                       ),
                                                     ),
                                                     const SizedBox(
@@ -759,16 +1163,17 @@ class _AddCommandeState extends State<AddCommande>
                                     );
                                     setState(() {});
                                   },
-                                  child: Container(
-                                    height: 80.0,
-                                    width: 80.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      border: Border.all(),
-                                    ),
-                                    child: const Icon(
-                                      Icons.add,
-                                      size: 40.0,
+                                  child: DottedBorder(
+                                    borderType: BorderType.RRect,
+                                    padding: EdgeInsets.zero,
+                                    radius: const Radius.circular(15.0),
+                                    child: const SizedBox(
+                                      height: 80.0,
+                                      width: 80.0,
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 40.0,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -851,16 +1256,17 @@ class _AddCommandeState extends State<AddCommande>
                                     );
                                     setState(() {});
                                   },
-                                  child: Container(
-                                    height: 80.0,
-                                    width: 80.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      border: Border.all(),
-                                    ),
-                                    child: const Icon(
-                                      Icons.add,
-                                      size: 40.0,
+                                  child: DottedBorder(
+                                    borderType: BorderType.RRect,
+                                    padding: EdgeInsets.zero,
+                                    radius: const Radius.circular(15.0),
+                                    child: const SizedBox(
+                                      height: 80.0,
+                                      width: 80.0,
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 40.0,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -935,6 +1341,9 @@ class _AddCommandeState extends State<AddCommande>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(
+                            height: 30.0,
+                          ),
                           const Text(
                             'Prix (Fcfa)',
                             style: TextStyle(
@@ -947,6 +1356,8 @@ class _AddCommandeState extends State<AddCommande>
                           TextFormField(
                             cursorColor: Theme.of(context).iconTheme.color,
                             cursorErrorColor: primary500,
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
                             decoration: FormDecoration.inputDecoaration(
                               context: context,
                               placeholder: '3500',
@@ -972,6 +1383,8 @@ class _AddCommandeState extends State<AddCommande>
                           TextFormField(
                             cursorColor: Theme.of(context).iconTheme.color,
                             cursorErrorColor: primary500,
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
                             decoration: FormDecoration.inputDecoaration(
                               context: context,
                               placeholder: '7000',
@@ -986,7 +1399,7 @@ class _AddCommandeState extends State<AddCommande>
                             height: 10.0,
                           ),
                           Text(
-                            'Duree (${_duration.toInt()} jours)',
+                            'Duree (${dueDate.difference(DateTime.now()).inDays} jours)',
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
@@ -994,20 +1407,117 @@ class _AddCommandeState extends State<AddCommande>
                           const SizedBox(
                             height: 5.0,
                           ),
-                          SfSlider(
-                            onChanged: (dynamic newValue) {
-                              setState(() {
-                                _duration = newValue;
-                              });
-                            },
-                            min: 1,
-                            max: 30,
-                            value: _duration,
-                            interval: 1,
-                            stepSize: 1,
-                            showDividers: true,
-                            enableTooltip: true,
-                            activeColor: primary200,
+                          DottedBorder(
+                            borderType: BorderType.RRect,
+                            padding: const EdgeInsets.all(10.0),
+                            radius: const Radius.circular(5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormat.yMMMd().format(dueDate),
+                                ),
+                                GestureDetector(
+                                  onTap: () => showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) => CupertinoActionSheet(
+                                      message: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .4,
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: CupertinoDatePicker(
+                                                dateOrder:
+                                                    DatePickerDateOrder.dmy,
+                                                showDayOfWeek: true,
+                                                use24hFormat: true,
+                                                minimumYear:
+                                                    DateTime.now().year,
+                                                minimumDate: DateTime.now(),
+                                                maximumYear:
+                                                    DateTime.now().year,
+                                                onDateTimeChanged:
+                                                    (pickedDate) =>
+                                                        setState(() {
+                                                  dueDate = pickedDate;
+                                                }),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20.0,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 10.0,
+                                                  horizontal: 10.0,
+                                                ),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: primary200,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                ),
+                                                child: const Text(
+                                                  'Terminer',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: GestureDetector(
+                                                onTap: () =>
+                                                    Navigator.pop(context),
+                                                child: const Text(
+                                                  'Annuler',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0,
+                                      vertical: 5.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: primary200,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: const Text(
+                                      'Changer',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -1022,7 +1532,7 @@ class _AddCommandeState extends State<AddCommande>
       bottomNavigationBar: GestureDetector(
         onTap: () async {
           if (!addCommandeFormKey.currentState!.validate()) return;
-          if (_controller!.index != 2) {
+          if (_controller!.index != 3) {
             _controller!.animateTo(_controller!.index + 1);
             return;
           }
@@ -1036,11 +1546,170 @@ class _AddCommandeState extends State<AddCommande>
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Text(
-            _controller!.index != 2 ? 'Continuer' : 'Enregistrer',
+            _controller!.index != 3 ? 'Continuer' : 'Enregistrer',
             style: TextStyle(
               color: Theme.of(context).scaffoldBackgroundColor,
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> addMesure({
+    required BuildContext context,
+    required String addTo,
+  }) {
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        message: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Form(
+            key: addMesureFormKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ajouter une nouvelle mesure',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Montserrat',
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                    Text(
+                      'Entrer les informations de la mesure',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                TextFormField(
+                  cursorColor: Theme.of(context).iconTheme.color,
+                  cursorErrorColor: primary500,
+                  decoration: FormDecoration.inputDecoaration(
+                    context: context,
+                    placeholder: 'Nom de la mesure',
+                  ),
+                  controller: _controllerMesureName,
+                  validator: (name) =>
+                      name == null || _controllerMesureName.text.trim() == ''
+                          ? 'Veuillez saisir le nom de la mesure'
+                          : null,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  cursorColor: Theme.of(context).iconTheme.color,
+                  cursorErrorColor: primary500,
+                  decoration: FormDecoration.inputDecoaration(
+                    context: context,
+                    placeholder: 'Abbreviation',
+                  ),
+                  controller: _controllerMesureAbbr,
+                  validator: (abbr) =>
+                      abbr == null || _controllerMesureAbbr.text.trim() == ''
+                          ? 'Veuillez saisir l\'abbreviation de votre mesure'
+                          : null,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  keyboardType: const TextInputType.numberWithOptions(),
+                  cursorColor: Theme.of(context).iconTheme.color,
+                  cursorErrorColor: primary500,
+                  decoration: FormDecoration.inputDecoaration(
+                    context: context,
+                    placeholder: 'Valeur : 83 (cm)',
+                  ),
+                  controller: _controllerMesureValue,
+                  validator: (value) =>
+                      value == null || _controllerMesureValue.text.trim() == ''
+                          ? 'Veuillez saisir la valeur de la mesure'
+                          : null,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (!addMesureFormKey.currentState!.validate()) {
+                          return;
+                        }
+
+                        setState(() {
+                          customerMesures[addTo]!.add(
+                            {
+                              'name': _controllerMesureName.text.trim(),
+                              'abbr': _controllerMesureAbbr.text.trim(),
+                              'value': _controllerMesureValue.text.trim(),
+                            },
+                          );
+                          _controllerMesureName.clear();
+                          _controllerMesureAbbr.clear();
+                          _controllerMesureValue.clear();
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 10.0,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: primary200,
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: const Text(
+                          'Valider',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Text(
+                        'Annuler',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
