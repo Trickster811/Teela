@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/auth/otp.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 
 class SignUp extends StatefulWidget {
   final String phone;
@@ -22,6 +26,7 @@ class _SignUpState extends State<SignUp> {
   final _controllerConfirmPassword = TextEditingController();
   // Form key
   final signUpFormKey = GlobalKey<FormState>();
+  bool onGoingProcess = false;
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +268,10 @@ class _SignUpState extends State<SignUp> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      if (!signUpFormKey.currentState!.validate()) return;
+                      if (onGoingProcess ||
+                          !signUpFormKey.currentState!.validate()) {
+                        return;
+                      }
                       await registration();
                     },
                     child: Container(
@@ -275,14 +283,24 @@ class _SignUpState extends State<SignUp> {
                         color: primary200,
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      child: Text(
-                        'Commencer',
-                        style: TextStyle(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      child: onGoingProcess
+                          ? SizedBox(
+                              height: 20.0,
+                              width: 20.0,
+                              child: CupertinoActivityIndicator(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                            )
+                          : Text(
+                              'Commencer',
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                     ),
                   ),
                 ],
@@ -295,13 +313,51 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future registration() async {
-    return Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Otp(
-          phone: widget.phone,
-        ),
-      ),
-    );
+    setState(() {
+      onGoingProcess = true;
+    });
+    try {
+      if (!await Internet.checkInternetAccess()) {
+        LocalPreferences.showFlashMessage(
+          'Pas d\'internet',
+          Colors.red,
+        );
+        setState(() {
+          onGoingProcess = false;
+        });
+      }
+      final user = await Auth.signUp(
+        username: _controllerFullName.text.trim(),
+        phone: widget.phone,
+        password: _controllerPassword.text.trim(),
+      );
+      if (user != null) {
+        setState(() {
+          onGoingProcess = false;
+        });
+
+        return Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Otp(
+              phone: widget.phone,
+            ),
+          ),
+        );
+      }
+    } on AuthException catch (e) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      LocalPreferences.showFlashMessage(
+        e.message,
+        Colors.red,
+      );
+    } catch (erno) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      debugPrint(erno.toString());
+    }
   }
 }

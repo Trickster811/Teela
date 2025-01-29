@@ -116,6 +116,7 @@ class Catalogue extends StatelessWidget {
           for (var item in [1, 2, 3, 4, 5, 6, 6]) ...[
             catalogueItemBuilder(
               catalogue: const CatalogueModel(
+                id: '1',
                 description: 'Des vetements refletants les coutumes',
                 modeles: [
                   ModeleModel(

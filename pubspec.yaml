@@ -56,6 +56,7 @@ dependencies:
   shared_preferences:
   syncfusion_flutter_sliders: ^27.2.5
   url_launcher:
+  supabase_flutter: ^2.8.3
 
 dev_dependencies:
   flutter_test:

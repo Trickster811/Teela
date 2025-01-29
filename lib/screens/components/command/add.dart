@@ -60,6 +60,7 @@ class _AddCommandeState extends State<AddCommande>
 
   List<CatalogueModel> listCatalogue = [
     const CatalogueModel(
+      id: '1',
       description: 'Des vetements refletants les coutumes',
       modeles: [
         ModeleModel(

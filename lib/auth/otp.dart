@@ -1,11 +1,16 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinput/pinput.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/auth/otp_success.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 
 class Otp extends StatefulWidget {
   final String phone;
@@ -26,6 +31,7 @@ class _OtpState extends State<Otp> {
   final focusNode = FocusNode();
 
   final otpFormKey = GlobalKey<FormState>();
+  bool onGoingProcess = false;
 
   // Manage Time Count Down to resend the sms verification code
   static const Duration countdownDuration = Duration(minutes: 0, seconds: 30);
@@ -147,14 +153,14 @@ class _OtpState extends State<Otp> {
                           Form(
                             key: otpFormKey,
                             child: Pinput(
-                              length: 5,
+                              length: 6,
                               controller: pinSMSCodeController,
                               focusNode: focusNode,
                               defaultPinTheme: defaultPinTheme,
                               separatorBuilder: (index) =>
                                   const SizedBox(width: 8),
                               validator: (value) {
-                                return value == null || value.length != 5
+                                return value == null || value.length != 6
                                     ? 'Code incomplet'
                                     : null;
                               },
@@ -270,23 +276,12 @@ class _OtpState extends State<Otp> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    if (wrongPin) return;
+                  onTap: () async {
                     focusNode.unfocus();
-                    if (!otpFormKey.currentState!.validate()) return;
-                    if (pinSMSCodeController.text.trim() != '12345') {
-                      setState(() {
-                        wrongPin = true;
-                      });
-                      focusNode.nextFocus();
+                    if (wrongPin || !otpFormKey.currentState!.validate()) {
                       return;
                     }
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OtpSuccess(),
-                      ),
-                    );
+                    return await verifyOtp();
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -298,16 +293,24 @@ class _OtpState extends State<Otp> {
                       color: wrongPin ? neutral200 : primary200,
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: Text(
-                      wrongPin ? 'Code incorrect' : 'Verifier',
-                      style: TextStyle(
-                        color: wrongPin
-                            ? neutral800
-                            : Theme.of(context).scaffoldBackgroundColor,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    child: onGoingProcess
+                        ? SizedBox(
+                            height: 20.0,
+                            width: 20.0,
+                            child: CupertinoActivityIndicator(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                            ),
+                          )
+                        : Text(
+                            wrongPin ? 'Code incorrect' : 'Verifier',
+                            style: TextStyle(
+                              color: wrongPin
+                                  ? neutral800
+                                  : Theme.of(context).scaffoldBackgroundColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -329,6 +332,54 @@ class _OtpState extends State<Otp> {
       durationNotifier.value = countdownDuration;
     } else {
       durationNotifier.value = Duration(seconds: seconds);
+    }
+  }
+
+  Future verifyOtp() async {
+    setState(() {
+      onGoingProcess = true;
+    });
+    try {
+      if (!await Internet.checkInternetAccess()) {
+        LocalPreferences.showFlashMessage(
+          'Pas d\'internet',
+          Colors.red,
+        );
+        setState(() {
+          onGoingProcess = false;
+        });
+      }
+      final verifyOTPToken = await Auth.verifyOTP(
+        otp: OtpType.signup,
+        phone: widget.phone,
+        token: pinSMSCodeController.text.trim(),
+      );
+      if (verifyOTPToken != null) {
+        setState(() {
+          onGoingProcess = false;
+        });
+
+        return Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OtpSuccess(),
+          ),
+        );
+      }
+    } on AuthException catch (e) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      LocalPreferences.showFlashMessage(
+        e.message,
+        Colors.red,
+      );
+      print(e);
+    } catch (erno) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      debugPrint(erno.toString());
     }
   }
 }

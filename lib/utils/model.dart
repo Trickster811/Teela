@@ -2,11 +2,13 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class CatalogueModel {
   final String description;
+  final String id;
   final List<ModeleModel> modeles;
   final String title;
 
   const CatalogueModel({
     required this.description,
+    required this.id,
     required this.modeles,
     required this.title,
   });
