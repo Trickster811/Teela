@@ -7,9 +7,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
 
 class AddCommande extends StatefulWidget {
@@ -40,7 +43,7 @@ class _AddCommandeState extends State<AddCommande>
   final _controllerMesureValue = TextEditingController();
 
   // Modele info
-  ModeleModel? model;
+  ModeleModel? selectedModele;
   List<dynamic> images = []; // description - images
   final _controllerText = TextEditingController(); // description - text
 
@@ -64,6 +67,7 @@ class _AddCommandeState extends State<AddCommande>
       description: 'Des vetements refletants les coutumes',
       modeles: [
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -76,6 +80,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -88,6 +93,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -100,6 +106,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -112,6 +119,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -124,6 +132,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -136,6 +145,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -148,6 +158,7 @@ class _AddCommandeState extends State<AddCommande>
           maxPrice: 0,
         ),
         ModeleModel(
+          id: '',
           title: 'Nom du model',
           description:
               'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -163,6 +174,19 @@ class _AddCommandeState extends State<AddCommande>
       title: 'Modeles traditionels',
     ),
   ];
+
+  // Manage Modele selection
+  int documentLimit = 15;
+
+  // Check the app is currently fetching modele data
+  bool isFetchingModele = false;
+
+  bool _hasNextModele = true;
+  final scrollController = ScrollController();
+  bool internetAccess = true;
+
+  // List of modele
+  List<Map<String, dynamic>> modeleList = ModeleTeela.modeles;
 
   @override
   void initState() {
@@ -183,13 +207,31 @@ class _AddCommandeState extends State<AddCommande>
     _controllerTabMesures!.addListener(() {
       setState(() {});
     });
+
+    // For Modele selection modal
+    scrollController.addListener(scrollListener);
+    if (ModeleTeela.modeles.isEmpty) {
+      retrieveModele();
+    } else {
+      _hasNextModele = false;
+    }
   }
 
   @override
   void dispose() {
     _controller!.dispose();
     _controllerTabMesures!.dispose();
+    scrollController.dispose();
     super.dispose();
+  }
+
+  void scrollListener() {
+    if (scrollController.offset >=
+            scrollController.position.maxScrollExtent / 2 &&
+        !scrollController.position.outOfRange &&
+        _hasNextModele) {
+      retrieveModele();
+    }
   }
 
   @override
@@ -985,15 +1027,17 @@ class _AddCommandeState extends State<AddCommande>
                                                   File photo = await FileManager
                                                       .getImageFromDevice(
                                                     multiImage: false,
-                                                    source: ImageSource.camera,
+                                                    source: ImageSource.gallery,
                                                   );
                                                   setState(() {
-                                                    model = ModeleModel(
+                                                    selectedModele =
+                                                        ModeleModel(
                                                       description: '',
                                                       duration:
                                                           const SfRangeValues(
                                                               0, 0),
                                                       images: [photo],
+                                                      id: '',
                                                       maxPrice: 0,
                                                       minPrice: 0,
                                                       title: 'Modele Anonyme',
@@ -1070,10 +1114,40 @@ class _AddCommandeState extends State<AddCommande>
                                               const SizedBox(
                                                 height: 10.0,
                                               ),
-                                              for (CatalogueModel catalogue
-                                                  in listCatalogue)
+                                              if (modeleList.isEmpty)
+                                                const Center(
+                                                  child: SizedBox(
+                                                    height: 50.0,
+                                                    width: 50.0,
+                                                    child:
+                                                        CupertinoActivityIndicator(),
+                                                  ),
+                                                ),
+                                              for (Map<String, dynamic> model
+                                                  in ModeleTeela.modeles)
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedModele =
+                                                          ModeleModel(
+                                                        description: model[
+                                                            'description'],
+                                                        duration: SfRangeValues(
+                                                            model['duration']
+                                                                [0],
+                                                            model['duration']
+                                                                [1]),
+                                                        images: model['images'],
+                                                        id: model['id'],
+                                                        maxPrice:
+                                                            model['max_price'],
+                                                        minPrice:
+                                                            model['min_price'],
+                                                        title: model['title'],
+                                                      );
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
                                                   child: Row(
                                                     children: [
                                                       ClipRRect(
@@ -1081,8 +1155,7 @@ class _AddCommandeState extends State<AddCommande>
                                                             BorderRadius
                                                                 .circular(15.0),
                                                         child: Image.asset(
-                                                          catalogue.modeles[0]
-                                                              .images[0],
+                                                          model['images'][0],
                                                           height: 80.0,
                                                           width: 80.0,
                                                           fit: BoxFit.cover,
@@ -1103,7 +1176,7 @@ class _AddCommandeState extends State<AddCommande>
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                catalogue.title,
+                                                                model['title'],
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
@@ -1116,40 +1189,40 @@ class _AddCommandeState extends State<AddCommande>
                                                                 ),
                                                               ),
                                                               Text(
-                                                                catalogue
-                                                                    .description,
+                                                                model[
+                                                                    'description'],
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
                                                               ),
-                                                              Container(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .symmetric(
-                                                                  horizontal:
-                                                                      10.0,
-                                                                ),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  border: Border
-                                                                      .all(),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                ),
-                                                                child: Text(
-                                                                  '${catalogue.modeles.length} modele${catalogue.modeles.length > 1 ? 's' : ''}',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontSize:
-                                                                        14.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                ),
-                                                              ),
+                                                              // Container(
+                                                              //   padding:
+                                                              //       const EdgeInsets
+                                                              //           .symmetric(
+                                                              //     horizontal:
+                                                              //         10.0,
+                                                              //   ),
+                                                              //   decoration:
+                                                              //       BoxDecoration(
+                                                              //     border: Border
+                                                              //         .all(),
+                                                              //     borderRadius:
+                                                              //         BorderRadius
+                                                              //             .circular(
+                                                              //                 10.0),
+                                                              //   ),
+                                                              //   child: Text(
+                                                              //     '${catalogue.modeles.length} modele${catalogue.modeles.length > 1 ? 's' : ''}',
+                                                              //     style:
+                                                              //         const TextStyle(
+                                                              //       fontSize:
+                                                              //           14.0,
+                                                              //       fontWeight:
+                                                              //           FontWeight
+                                                              //               .w600,
+                                                              //     ),
+                                                              // ),
+                                                              // ),
                                                             ],
                                                           ),
                                                         ),
@@ -1181,8 +1254,9 @@ class _AddCommandeState extends State<AddCommande>
                                 const SizedBox(
                                   width: 10.0,
                                 ),
-                                if (model != null)
-                                  for (dynamic image in model!.images) ...[
+                                if (selectedModele != null)
+                                  for (dynamic image
+                                      in selectedModele!.images) ...[
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(15.0),
                                       child: image is String &&
@@ -1716,5 +1790,55 @@ class _AddCommandeState extends State<AddCommande>
         ),
       ),
     );
+  }
+
+  Future retrieveModele() async {
+    if (!await Internet.checkInternetAccess()) {
+      LocalPreferences.showFlashMessage(
+        'Pas d\'internet',
+        Colors.red,
+      );
+      setState(() {
+        internetAccess = false;
+      });
+      return;
+    }
+
+    if (isFetchingModele) return;
+    isFetchingModele = true;
+
+    if (!_hasNextModele) {
+      setState(() {
+        _hasNextModele = true;
+      });
+    }
+
+    try {
+      await ModeleTeela.retrieveMultiModele(
+        limit: documentLimit,
+        // startAfter: ModeleTeela.catalogues.isNotEmpty
+        //     ? ModeleTeela.catalogues.last['id']
+        //     : null,
+      );
+      modeleList = ModeleTeela.modeles;
+      print(modeleList);
+      if (ModeleTeela.modeles.length < documentLimit) {
+        setState(() {
+          _hasNextModele = false;
+        });
+      }
+    } on PostgrestException catch (errno) {
+      debugPrint(errno.code.toString());
+      LocalPreferences.showFlashMessage(
+        errno.message.toString(),
+        Colors.red,
+      );
+      setState(() {
+        _hasNextModele = false;
+      });
+    }
+    setState(() {
+      isFetchingModele = false;
+    });
   }
 }

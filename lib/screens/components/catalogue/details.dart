@@ -208,7 +208,8 @@ class DetailsCatalogue extends StatelessWidget {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const AddModele(
+            builder: (context) => AddModele(
+              catalogue: catalogueModel,
               modele: null,
             ),
           ),
@@ -236,6 +237,7 @@ class DetailsCatalogue extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (context) => DetailsModele(
+            catalogue: catalogueModel,
             modele: item,
           ),
         ),
@@ -288,6 +290,7 @@ class DetailsCatalogue extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AddModele(
+                              catalogue: catalogueModel,
                               modele: item,
                             ),
                           ),
@@ -381,7 +384,8 @@ class DetailsCatalogue extends StatelessWidget {
         borderRadius: BorderRadius.circular(5.0),
         child: !item.images[0].contains('http')
             ? Image.asset(
-                item.images[0],
+                'assets/images/catalogue/img_1.png',
+                // item.images[0],
                 fit: BoxFit.cover,
                 height: Random().nextInt(250) + 100,
                 width: MediaQuery.of(context).size.width * .5 - 30.0,

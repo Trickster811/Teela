@@ -125,6 +125,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         'images': [],
       },
       modele: const ModeleModel(
+        id: '',
         title: 'Nom du model',
         description:
             'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -223,6 +224,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         'images': [],
       },
       modele: const ModeleModel(
+        id: '',
         title: 'Nom du model',
         description:
             'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -321,6 +323,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         'images': [],
       },
       modele: const ModeleModel(
+        id: '',
         title: 'Nom du model',
         description:
             'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -419,6 +422,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         'images': [],
       },
       modele: const ModeleModel(
+        id: '',
         title: 'Nom du model',
         description:
             'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
@@ -517,6 +521,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         'images': [],
       },
       modele: const ModeleModel(
+        id: '',
         title: 'Nom du model',
         description:
             'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',

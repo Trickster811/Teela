@@ -8,9 +8,11 @@ import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/model.dart';
 
 class DetailsModele extends StatelessWidget {
+  final CatalogueModel catalogue;
   final ModeleModel modele;
   const DetailsModele({
     super.key,
+    required this.catalogue,
     required this.modele,
   });
 
@@ -334,6 +336,7 @@ class DetailsModele extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => AddModele(
+              catalogue: catalogue,
               modele: modele,
             ),
           ),

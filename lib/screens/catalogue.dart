@@ -4,15 +4,62 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/screens/components/catalogue/add.dart';
 import 'package:teela/screens/components/catalogue/details.dart';
 import 'package:teela/screens/components/catalogue/search.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
 
-class Catalogue extends StatelessWidget {
+class Catalogue extends StatefulWidget {
   const Catalogue({super.key});
+
+  @override
+  State<Catalogue> createState() => _CatalogueState();
+}
+
+class _CatalogueState extends State<Catalogue> {
+  int documentLimit = 15;
+
+  // Check the app is currently fetching catalogue data
+  bool isFetchingCatalogue = false;
+
+  bool _hasNextCatalogue = true;
+  final scrollController = ScrollController();
+  bool internetAccess = true;
+
+  // List of catalogue
+  List<Map<String, dynamic>> ownerCatalogue = CatalogueTeela.catalogues;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(scrollListener);
+    if (CatalogueTeela.catalogues.isEmpty) {
+      retrieveCatalogue();
+    } else {
+      _hasNextCatalogue = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollListener() {
+    if (scrollController.offset >=
+            scrollController.position.maxScrollExtent / 2 &&
+        !scrollController.position.outOfRange &&
+        _hasNextCatalogue) {
+      retrieveCatalogue();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,110 +160,37 @@ class Catalogue extends StatelessWidget {
           const SizedBox(
             height: 10.0,
           ),
-          for (var item in [1, 2, 3, 4, 5, 6, 6]) ...[
+          if (ownerCatalogue.isEmpty)
+            const Center(
+              child: SizedBox(
+                height: 50.0,
+                width: 50.0,
+                child: CupertinoActivityIndicator(),
+              ),
+            ),
+          for (var item in ownerCatalogue) ...[
             catalogueItemBuilder(
-              catalogue: const CatalogueModel(
-                id: '1',
-                description: 'Des vetements refletants les coutumes',
-                modeles: [
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                  ModeleModel(
-                    title: 'Nom du model',
-                    description:
-                        'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-                    duration: SfRangeValues(1, 5),
-                    images: [
-                      'assets/images/catalogue/img_1.png',
-                      'assets/images/catalogue/img_2.png',
-                    ],
-                    minPrice: 0,
-                    maxPrice: 0,
-                  ),
-                ],
-                title: 'Modeles traditionels',
+              catalogue: CatalogueModel(
+                id: item['id'],
+                description: item['description'],
+                modeles: ModeleTeela.modeles
+                    .where((modele) => modele['catalogue'] == item['id'])
+                    .map(
+                      (element) => ModeleModel(
+                        description: element['description'],
+                        duration: SfRangeValues(
+                          element['duration'][0],
+                          element['duration'][1],
+                        ),
+                        id: element['id'],
+                        images: element['images'],
+                        maxPrice: element['max_price'],
+                        minPrice: element['min_price'],
+                        title: element['title'],
+                      ),
+                    )
+                    .toList(),
+                title: item['title'],
               ),
               context: context,
             ),
@@ -236,8 +210,6 @@ class Catalogue extends StatelessWidget {
     required BuildContext context,
     required CatalogueModel catalogue,
   }) {
-    int randomModeleToDisplay = Random().nextInt(catalogue.modeles.length);
-
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -388,10 +360,18 @@ class Catalogue extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
-            child: Image.asset(
-              catalogue.modeles[randomModeleToDisplay].images[Random().nextInt(
-                catalogue.modeles[randomModeleToDisplay].images.length,
-              )],
+            child:
+                // catalogue.modeles.isNotEmpty
+                // ? Image.network(
+                //     Auth.supabase.storage.from('modele_images').getPublicUrl(
+                //         catalogue.modeles[0].images[0].substring(14)),
+                //     height: 80.0,
+                //     width: 80.0,
+                //     fit: BoxFit.cover,
+                //   )
+                // :
+                Image.asset(
+              'assets/images/catalogue/img_1.png',
               height: 80.0,
               width: 80.0,
               fit: BoxFit.cover,
@@ -442,5 +422,55 @@ class Catalogue extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future retrieveCatalogue() async {
+    if (!await Internet.checkInternetAccess()) {
+      LocalPreferences.showFlashMessage(
+        'Pas d\'internet',
+        Colors.red,
+      );
+      setState(() {
+        internetAccess = false;
+      });
+      return;
+    }
+
+    if (isFetchingCatalogue) return;
+    isFetchingCatalogue = true;
+
+    if (!_hasNextCatalogue) {
+      setState(() {
+        _hasNextCatalogue = true;
+      });
+    }
+
+    try {
+      await CatalogueTeela.retrieveMultiCatalogue(
+        limit: documentLimit,
+        // startAfter: CatalogueTeela.catalogues.isNotEmpty
+        //     ? CatalogueTeela.catalogues.last['id']
+        //     : null,
+        owner: Auth.user!.id,
+      );
+      ownerCatalogue = CatalogueTeela.catalogues;
+      if (CatalogueTeela.catalogues.length < documentLimit) {
+        setState(() {
+          _hasNextCatalogue = false;
+        });
+      }
+    } on PostgrestException catch (errno) {
+      debugPrint(errno.code.toString());
+      LocalPreferences.showFlashMessage(
+        errno.message.toString(),
+        Colors.red,
+      );
+      setState(() {
+        _hasNextCatalogue = false;
+      });
+    }
+    setState(() {
+      isFetchingCatalogue = false;
+    });
   }
 }

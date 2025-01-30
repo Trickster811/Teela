@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/utils/color_scheme.dart';
 
 class FormDecoration {
@@ -70,6 +71,9 @@ class Internet {
 }
 
 class FileManager {
+  // Get a reference your Supabase client
+  static SupabaseClient supabase = Supabase.instance.client;
+
   /// Get from Camera
   static Future getImageFromDevice({
     required bool multiImage,
@@ -94,6 +98,17 @@ class FileManager {
     } on PlatformException catch (e) {
       debugPrint('Failed to pick image: $e');
     }
+  }
+
+  static Future uploadFile({
+    required File image,
+    required String uploadPath,
+  }) async {
+    return await supabase.storage.from('modele_images').upload(
+          uploadPath,
+          image,
+          fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+        );
   }
 }
 

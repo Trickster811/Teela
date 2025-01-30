@@ -350,7 +350,7 @@ class _OtpState extends State<Otp> {
         });
       }
       final verifyOTPToken = await Auth.verifyOTP(
-        otp: OtpType.signup,
+        otp: OtpType.sms,
         phone: widget.phone,
         token: pinSMSCodeController.text.trim(),
       );
@@ -358,6 +358,7 @@ class _OtpState extends State<Otp> {
         setState(() {
           onGoingProcess = false;
         });
+        await LocalPreferences.setFirstTime(true);
 
         return Navigator.pushReplacement(
           context,

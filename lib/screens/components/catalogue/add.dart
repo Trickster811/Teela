@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
 
 class AddCatalogue extends StatefulWidget {
@@ -22,6 +26,8 @@ class _AddCatalogueState extends State<AddCatalogue> {
 
   // Form key
   final addCatalogueFormKey = GlobalKey<FormState>();
+  bool onGoingProcess = false;
+
   @override
   void initState() {
     super.initState();
@@ -129,8 +135,11 @@ class _AddCatalogueState extends State<AddCatalogue> {
             ),
             GestureDetector(
               onTap: () async {
-                if (!addCatalogueFormKey.currentState!.validate()) return;
-                await addCatalogue();
+                if (onGoingProcess ||
+                    !addCatalogueFormKey.currentState!.validate()) {
+                  return;
+                }
+                await addOrUpdateCatalogue();
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -141,14 +150,24 @@ class _AddCatalogueState extends State<AddCatalogue> {
                   color: primary200,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Text(
-                  widget.catalogueModel != null ? 'Mettre a jour' : 'Ajouter',
-                  style: TextStyle(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: onGoingProcess
+                    ? SizedBox(
+                        height: 20.0,
+                        width: 20.0,
+                        child: CupertinoActivityIndicator(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                      )
+                    : Text(
+                        widget.catalogueModel != null
+                            ? 'Mettre a jour'
+                            : 'Ajouter',
+                        style: TextStyle(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -157,7 +176,60 @@ class _AddCatalogueState extends State<AddCatalogue> {
     );
   }
 
-  Future addCatalogue() async {
-    Navigator.pop(context);
+  Future addOrUpdateCatalogue() async {
+    setState(() {
+      onGoingProcess = true;
+    });
+    try {
+      if (!await Internet.checkInternetAccess()) {
+        LocalPreferences.showFlashMessage(
+          'Pas d\'internet',
+          Colors.red,
+        );
+        setState(() {
+          onGoingProcess = false;
+        });
+      }
+      if (widget.catalogueModel != null) {
+        await CatalogueTeela.updateCatalogue(data: {
+          'description': _controllerDescription.text.trim(),
+          'title': _controllerTitle.text.trim(),
+        }, id: widget.catalogueModel!.id);
+        LocalPreferences.showFlashMessage(
+          'Catalogue mis a jour avec succès',
+          Colors.blue,
+        );
+      } else {
+        await CatalogueTeela.createCatalogue(
+          data: {
+            'description': _controllerDescription.text.trim(),
+            'title': _controllerTitle.text.trim(),
+            'user': Auth.user!.id,
+          },
+        );
+        LocalPreferences.showFlashMessage(
+          'Catalogue créé avec succès',
+          Colors.green,
+        );
+      }
+
+      setState(() {
+        onGoingProcess = false;
+      });
+      Navigator.pop(context);
+    } on PostgrestException catch (e) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      LocalPreferences.showFlashMessage(
+        e.message,
+        Colors.red,
+      );
+    } catch (erno) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      debugPrint(erno.toString());
+    }
   }
 }

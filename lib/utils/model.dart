@@ -41,6 +41,7 @@ class CommandeModel {
 class ModeleModel {
   final String description;
   final SfRangeValues duration;
+  final String id;
   final List<dynamic> images;
   final int maxPrice;
   final int minPrice;
@@ -49,6 +50,7 @@ class ModeleModel {
   const ModeleModel({
     required this.description,
     required this.duration,
+    required this.id,
     required this.images,
     required this.maxPrice,
     required this.minPrice,

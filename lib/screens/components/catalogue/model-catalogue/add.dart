@@ -1,17 +1,24 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
+import 'package:path/path.dart' as p;
 
 class AddModele extends StatefulWidget {
+  final CatalogueModel catalogue;
   final ModeleModel? modele;
   const AddModele({
     super.key,
+    required this.catalogue,
     required this.modele,
   });
 
@@ -29,6 +36,7 @@ class _AddModeleState extends State<AddModele> {
 
   // Form key
   final addModeleFormKey = GlobalKey<FormState>();
+  bool onGoingProcess = false;
 
   @override
   void initState() {
@@ -291,8 +299,14 @@ class _AddModeleState extends State<AddModele> {
             ),
             GestureDetector(
               onTap: () async {
-                if (!addModeleFormKey.currentState!.validate()) return;
-                await addModele();
+                if (onGoingProcess ||
+                    !addModeleFormKey.currentState!.validate()) {
+                  return;
+                }
+                setState(() {
+                  onGoingProcess = true;
+                });
+                await uploadPhotos();
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -303,14 +317,22 @@ class _AddModeleState extends State<AddModele> {
                   color: primary200,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: Text(
-                  widget.modele != null ? 'Mettre a jour' : 'Ajouter',
-                  style: TextStyle(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: onGoingProcess
+                    ? SizedBox(
+                        height: 20.0,
+                        width: 20.0,
+                        child: CupertinoActivityIndicator(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                      )
+                    : Text(
+                        widget.modele != null ? 'Mettre a jour' : 'Ajouter',
+                        style: TextStyle(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -319,7 +341,119 @@ class _AddModeleState extends State<AddModele> {
     );
   }
 
-  Future addModele() async {
-    Navigator.pop(context);
+  Future uploadPhotos() async {
+    try {
+      // Upload images if they were picked from internal storage
+      List<String> imageModeleDownloadLinks = [];
+      File f;
+      for (dynamic image in images) {
+        if (image is! String) {
+          final photosLink = await FileManager.uploadFile(
+            image: image,
+            uploadPath:
+                '${Auth.user!.id}/${_controllerTitle.text.trim()}/${p.basename(image.path)}',
+          );
+          if (photosLink != null) {
+            imageModeleDownloadLinks.add(photosLink);
+          }
+        }
+      }
+      return await addOrUpdateModele(
+        imageModeleDownloadLinks: imageModeleDownloadLinks,
+      );
+    } on StorageException catch (e) {
+      LocalPreferences.showFlashMessage(
+        e.message.toString(),
+        Colors.red,
+      );
+      print(e);
+    } catch (e) {
+      LocalPreferences.showFlashMessage(
+        '$e',
+        Colors.red,
+      );
+    }
+  }
+
+  Future addOrUpdateModele({
+    List<String>? imageModeleDownloadLinks,
+  }) async {
+    try {
+      if (!await Internet.checkInternetAccess()) {
+        LocalPreferences.showFlashMessage(
+          'Pas d\'internet',
+          Colors.red,
+        );
+        setState(() {
+          onGoingProcess = false;
+        });
+      }
+      if (widget.modele != null) {
+        await ModeleTeela.updateModele(data: {
+          'description': _controllerDescription.text.trim(),
+          'duration': [
+            _duration.start,
+            _duration.end,
+          ],
+          'images': [],
+          'max_price': _controllerMaxPrice.text.trim(),
+          'min_price': _controllerMinPrice.text.trim(),
+          'title': _controllerTitle.text.trim(),
+        }, id: widget.modele!.id);
+        LocalPreferences.showFlashMessage(
+          'Modele mis a jour avec succès',
+          Colors.blue,
+        );
+      } else {
+        print(
+          {
+            'description': _controllerDescription.text.trim(),
+            'duration': [
+              _duration.start,
+              _duration.end,
+            ],
+            'images': imageModeleDownloadLinks,
+            'max_price': _controllerMaxPrice.text.trim(),
+            'min_price': _controllerMinPrice.text.trim(),
+            'title': _controllerTitle.text.trim(),
+            'catalogue': widget.catalogue.id
+          },
+        );
+        await ModeleTeela.createModele(
+          data: {
+            'description': _controllerDescription.text.trim(),
+            'duration': [_duration.start, _duration.end],
+            'images': imageModeleDownloadLinks,
+            'max_price': _controllerMaxPrice.text.trim(),
+            'min_price': _controllerMinPrice.text.trim(),
+            'title': _controllerTitle.text.trim(),
+            'catalogue': widget.catalogue.id
+          },
+        );
+        LocalPreferences.showFlashMessage(
+          'Modele créé avec succès',
+          Colors.green,
+        );
+      }
+
+      setState(() {
+        onGoingProcess = false;
+      });
+      Navigator.pop(context);
+    } on PostgrestException catch (e) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      LocalPreferences.showFlashMessage(
+        e.message,
+        Colors.red,
+      );
+      print(e);
+    } catch (erno) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      debugPrint(erno.toString());
+    }
   }
 }

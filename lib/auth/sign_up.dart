@@ -353,6 +353,7 @@ class _SignUpState extends State<SignUp> {
         e.message,
         Colors.red,
       );
+      print(e.message);
     } catch (erno) {
       setState(() {
         onGoingProcess = false;
