@@ -345,11 +345,11 @@ class _AddModeleState extends State<AddModele> {
     try {
       // Upload images if they were picked from internal storage
       List<String> imageModeleDownloadLinks = [];
-      File f;
       for (dynamic image in images) {
         if (image is! String) {
           final photosLink = await FileManager.uploadFile(
             image: image,
+            folder: 'modele_images',
             uploadPath:
                 '${Auth.user!.id}/${_controllerTitle.text.trim()}/${p.basename(image.path)}',
           );
@@ -366,7 +366,6 @@ class _AddModeleState extends State<AddModele> {
         e.message.toString(),
         Colors.red,
       );
-      print(e);
     } catch (e) {
       LocalPreferences.showFlashMessage(
         '$e',
@@ -405,20 +404,6 @@ class _AddModeleState extends State<AddModele> {
           Colors.blue,
         );
       } else {
-        print(
-          {
-            'description': _controllerDescription.text.trim(),
-            'duration': [
-              _duration.start,
-              _duration.end,
-            ],
-            'images': imageModeleDownloadLinks,
-            'max_price': _controllerMaxPrice.text.trim(),
-            'min_price': _controllerMinPrice.text.trim(),
-            'title': _controllerTitle.text.trim(),
-            'catalogue': widget.catalogue.id
-          },
-        );
         await ModeleTeela.createModele(
           data: {
             'description': _controllerDescription.text.trim(),
@@ -438,8 +423,8 @@ class _AddModeleState extends State<AddModele> {
 
       setState(() {
         onGoingProcess = false;
+        Navigator.pop(context);
       });
-      Navigator.pop(context);
     } on PostgrestException catch (e) {
       setState(() {
         onGoingProcess = false;
@@ -448,7 +433,6 @@ class _AddModeleState extends State<AddModele> {
         e.message,
         Colors.red,
       );
-      print(e);
     } catch (erno) {
       setState(() {
         onGoingProcess = false;

@@ -33,13 +33,13 @@ class _CatalogueState extends State<Catalogue> {
   bool internetAccess = true;
 
   // List of catalogue
-  List<Map<String, dynamic>> ownerCatalogue = CatalogueTeela.catalogues;
+  List<Map<String, dynamic>> ownerCatalogue = CatalogueTeela.ownerCatalogues;
 
   @override
   void initState() {
     super.initState();
     scrollController.addListener(scrollListener);
-    if (CatalogueTeela.catalogues.isEmpty) {
+    if (CatalogueTeela.ownerCatalogues.isEmpty) {
       retrieveCatalogue();
     } else {
       _hasNextCatalogue = false;
@@ -63,145 +63,277 @@ class _CatalogueState extends State<Catalogue> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          TextField(
-            onTap: () => showSearch(
-              context: context,
-              delegate: Search(searchKey: 'Catalogue'),
-            ),
-            readOnly: true,
-            decoration: InputDecoration(
-              prefixIcon: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                child: SvgPicture.asset(
-                  'assets/icons/search.5.svg',
-                  colorFilter: const ColorFilter.mode(
-                    neutral700,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              contentPadding: const EdgeInsets.only(
-                right: 10.0,
-              ),
-              filled: true,
-              fillColor: neutral200,
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: neutral200),
-              ),
-              focusedBorder: OutlineInputBorder(
-                gapPadding: 0,
-                borderRadius: BorderRadius.circular(5.0),
-                borderSide: const BorderSide(color: neutral200),
-              ),
-              hintStyle: const TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
-              hintText: 'Rechercher...',
-            ),
+    return RefreshIndicator(
+      onRefresh: () async {
+        CatalogueTeela.ownerCatalogues = [];
+        ModeleTeela.modeles = [];
+        retrieveCatalogue();
+        await Future.delayed(
+          const Duration(
+            milliseconds: 500,
           ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AddCatalogue(
-                  catalogueModel: null,
-                ),
+        );
+      },
+      color: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).iconTheme.color,
+      child: SingleChildScrollView(
+        controller: scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            TextField(
+              onTap: () => showSearch(
+                context: context,
+                delegate: Search(searchKey: 'Catalogue'),
               ),
-            ),
-            child: Row(
-              children: [
-                DottedBorder(
-                  borderType: BorderType.RRect,
-                  padding: EdgeInsets.zero,
-                  radius: const Radius.circular(15.0),
-                  child: const SizedBox(
-                    height: 80.0,
-                    width: 80.0,
-                    child: Icon(
-                      Icons.add,
-                      size: 40.0,
+              readOnly: true,
+              decoration: InputDecoration(
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                  child: SvgPicture.asset(
+                    'assets/icons/search.5.svg',
+                    colorFilter: const ColorFilter.mode(
+                      neutral700,
+                      BlendMode.srcIn,
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10.0,
+                contentPadding: const EdgeInsets.only(
+                  right: 10.0,
                 ),
-                const Expanded(
-                  child: SizedBox(
-                    height: 80.0,
+                filled: true,
+                fillColor: neutral200,
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: neutral200),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  gapPadding: 0,
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: const BorderSide(color: neutral200),
+                ),
+                hintStyle: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+                hintText: 'Rechercher...',
+              ),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddCatalogue(
+                    catalogueModel: null,
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  DottedBorder(
+                    borderType: BorderType.RRect,
+                    padding: EdgeInsets.zero,
+                    radius: const Radius.circular(15.0),
+                    child: const SizedBox(
+                      height: 80.0,
+                      width: 80.0,
+                      child: Icon(
+                        Icons.add,
+                        size: 40.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  const Expanded(
+                    child: SizedBox(
+                      height: 80.0,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nouveau',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            'Ajouter un nouveau catalogue',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            !internetAccess
+                ? Container(
+                    alignment: Alignment.center,
+                    height: MediaQuery.of(context).size.height / 1.5,
+                    width: MediaQuery.of(context).size.width,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Nouveau',
+                        SvgPicture.asset(
+                          'assets/icons/no-internet.svg',
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).iconTheme.color!,
+                            BlendMode.srcIn,
+                          ),
+                          height: 75,
+                          width: 75,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          'Pas d\'accès internet',
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Text(
-                          'Ajouter un nouveau catalogue',
-                          overflow: TextOverflow.ellipsis,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          // alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40.0,
+                            vertical: 10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).iconTheme.color,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                internetAccess = true;
+                              });
+                              retrieveCatalogue();
+                            },
+                            child: Text(
+                              'Réessayer',
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          if (ownerCatalogue.isEmpty)
-            const Center(
-              child: SizedBox(
-                height: 50.0,
-                width: 50.0,
-                child: CupertinoActivityIndicator(),
-              ),
-            ),
-          for (var item in ownerCatalogue) ...[
-            catalogueItemBuilder(
-              catalogue: CatalogueModel(
-                id: item['id'],
-                description: item['description'],
-                modeles: ModeleTeela.modeles
-                    .where((modele) => modele['catalogue'] == item['id'])
-                    .map(
-                      (element) => ModeleModel(
-                        description: element['description'],
-                        duration: SfRangeValues(
-                          element['duration'][0],
-                          element['duration'][1],
+                  )
+                : ownerCatalogue.isEmpty && !_hasNextCatalogue
+                    ? Container(
+                        alignment: Alignment.center,
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        width: MediaQuery.of(context).size.width,
+                        child: GestureDetector(
+                          onTap: retrieveCatalogue,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/no-data.svg',
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).iconTheme.color!,
+                                  BlendMode.srcIn,
+                                ),
+                                height: 75,
+                                width: 75,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text(
+                                'Aucun Catalogue à afficher',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 40.0,
+                                  vertical: 10.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).iconTheme.color,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Text(
+                                  'Actualiser',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        id: element['id'],
-                        images: element['images'],
-                        maxPrice: element['max_price'],
-                        minPrice: element['min_price'],
-                        title: element['title'],
+                      )
+                    : Column(
+                        children: [
+                          for (var item in ownerCatalogue) ...[
+                            catalogueItemBuilder(
+                              catalogue: CatalogueModel(
+                                id: item['id'],
+                                description: item['description'],
+                                modeles: [
+                                  for (var element in item['Modele'])
+                                    ModeleModel(
+                                      description: element['description'],
+                                      duration: SfRangeValues(
+                                        element['duration'][0],
+                                        element['duration'][1],
+                                      ),
+                                      id: element['id'],
+                                      images: element['images'],
+                                      maxPrice: element['max_price'],
+                                      minPrice: element['min_price'],
+                                      title: element['title'],
+                                    ),
+                                ],
+                                title: item['title'],
+                              ),
+                              context: context,
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                          ],
+                          if (_hasNextCatalogue)
+                            const Center(
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CupertinoActivityIndicator(),
+                              ),
+                            ),
+                        ],
                       ),
-                    )
-                    .toList(),
-                title: item['title'],
-              ),
-              context: context,
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
           ],
-          const SizedBox(
-            height: 20.0,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -448,13 +580,14 @@ class _CatalogueState extends State<Catalogue> {
     try {
       await CatalogueTeela.retrieveMultiCatalogue(
         limit: documentLimit,
-        // startAfter: CatalogueTeela.catalogues.isNotEmpty
-        //     ? CatalogueTeela.catalogues.last['id']
+        // startAfter: CatalogueTeela.ownerCatalogues.isNotEmpty
+        //     ? CatalogueTeela.ownerCatalogues.last['id']
         //     : null,
         owner: Auth.user!.id,
       );
-      ownerCatalogue = CatalogueTeela.catalogues;
-      if (CatalogueTeela.catalogues.length < documentLimit) {
+      ownerCatalogue = CatalogueTeela.ownerCatalogues;
+
+      if (CatalogueTeela.ownerCatalogues.length < documentLimit) {
         setState(() {
           _hasNextCatalogue = false;
         });

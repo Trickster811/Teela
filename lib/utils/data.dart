@@ -82,9 +82,10 @@ class CatalogueTeela {
   // Get a reference your Supabase client
   static SupabaseClient supabase = Supabase.instance.client;
   static List<Map<String, dynamic>> catalogues = [];
+  static List<Map<String, dynamic>> ownerCatalogues = [];
 
   //Set of all Catalogue
-  static Future retrieveMultiCatalogue({
+  static Future<List<Map<String, dynamic>>> retrieveMultiCatalogue({
     required int limit,
     int? startAfter,
     String? owner,
@@ -92,15 +93,19 @@ class CatalogueTeela {
     List<Map<String, dynamic>> refCatalogue;
 
     if (owner != null) {
-      refCatalogue = await supabase.from('Catalogue').select();
+      refCatalogue = await supabase.from('Catalogue').select('*, Modele(*)');
       // .range(startAfter + 1, startAfter + limit);
+      catalogues.addAll(refCatalogue);
     } else {
-      refCatalogue =
-          await supabase.from('Catalogue').select().eq('user', owner!);
+      refCatalogue = await supabase
+          .from('Catalogue')
+          .select('*, Modele(*)')
+          .eq('user', owner!);
       // .range(startAfter + 1, startAfter + limit);
+      ownerCatalogues.addAll(refCatalogue);
     }
 
-    catalogues.addAll(refCatalogue);
+    return refCatalogue;
   }
 
   static Future createCatalogue({required Map<String, dynamic> data}) async {
@@ -123,7 +128,7 @@ class CatalogueTeela {
   }
 }
 
-class Commande {
+class CommandeTeela {
   // Get a reference your Supabase client
   static SupabaseClient supabase = Supabase.instance.client;
   static List<Map<String, dynamic>> commandes = [];
@@ -173,7 +178,6 @@ class ModeleTeela {
   }) async {
     final refModele = await supabase.from('Modele').select();
     // .range(startAfter + 1, startAfter + limit);
-    print(refModele);
     modeles.addAll(refModele);
   }
 

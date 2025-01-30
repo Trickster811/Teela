@@ -412,7 +412,7 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                           decoration: BoxDecoration(
                             color: widget.commande.date
                                         .add(Duration(
-                                            days: widget.commande.duration.end))
+                                            days: widget.commande.duration))
                                         .difference(widget.commande.date)
                                         .inDays <=
                                     3
@@ -422,14 +422,13 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Text(
-                            '${widget.commande.date.add(Duration(days: widget.commande.duration.end)).difference(widget.commande.date).inDays} jour${widget.commande.duration.end > 1 ? 's' : ''}',
+                            '${widget.commande.date.add(Duration(days: widget.commande.duration)).difference(widget.commande.date).inDays} jour${widget.commande.duration > 1 ? 's' : ''}',
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.w600,
                               color: widget.commande.date
                                           .add(Duration(
-                                              days:
-                                                  widget.commande.duration.end))
+                                              days: widget.commande.duration))
                                           .difference(widget.commande.date)
                                           .inDays <=
                                       3
@@ -616,7 +615,7 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                               DateFormat.yMMMd()
                                   .format(widget.commande.date.add(
                                 Duration(
-                                  days: widget.commande.duration.end,
+                                  days: widget.commande.duration,
                                 ),
                               )),
                               overflow: TextOverflow.ellipsis,

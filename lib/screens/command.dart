@@ -118,408 +118,13 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
       customerName: 'Maryline Kamgueng',
       customerPhone: '+23760786195',
       date: DateTime.now(),
-      duration: const SfRangeValues(1, 5),
       details: {
         'text':
             'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
         'images': [],
       },
-      modele: const ModeleModel(
-        id: '',
-        title: 'Nom du model',
-        description:
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-        duration: SfRangeValues(1, 9),
-        images: [
-          'assets/images/catalogue/img_1.png',
-          'assets/images/catalogue/img_2.png',
-        ],
-        minPrice: 0,
-        maxPrice: 0,
-      ),
-      price: 7000,
-      versements: {
-        '1': 1575,
-      },
-    ),
-    CommandeModel(
-      customerMesures: {
-        'topBody': [
-          {
-            'name': 'Epaule',
-            'abbr': 'E',
-            'value': 76,
-          },
-          {
-            'name': 'Tour de Poitrine',
-            'abbr': 'P',
-            'value': 98,
-          },
-          {
-            'name': 'Ventre',
-            'abbr': 'V',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-        'downBody': [
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-      },
-      customerName: 'Maryline Kamgueng',
-      customerPhone: '+23760786195',
-      date: DateTime.now(),
-      duration: const SfRangeValues(1, 5),
-      details: {
-        'text':
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
-        'images': [],
-      },
-      modele: const ModeleModel(
-        id: '',
-        title: 'Nom du model',
-        description:
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-        duration: SfRangeValues(1, 9),
-        images: [
-          'assets/images/catalogue/img_1.png',
-          'assets/images/catalogue/img_2.png',
-        ],
-        minPrice: 0,
-        maxPrice: 0,
-      ),
-      price: 7000,
-      versements: {
-        '1': 1575,
-      },
-    ),
-    CommandeModel(
-      customerMesures: {
-        'topBody': [
-          {
-            'name': 'Epaule',
-            'abbr': 'E',
-            'value': 76,
-          },
-          {
-            'name': 'Tour de Poitrine',
-            'abbr': 'P',
-            'value': 98,
-          },
-          {
-            'name': 'Ventre',
-            'abbr': 'V',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-        'downBody': [
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-      },
-      customerName: 'Maryline Kamgueng',
-      customerPhone: '+23760786195',
-      date: DateTime.now(),
-      duration: const SfRangeValues(1, 5),
-      details: {
-        'text':
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
-        'images': [],
-      },
-      modele: const ModeleModel(
-        id: '',
-        title: 'Nom du model',
-        description:
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-        duration: SfRangeValues(1, 9),
-        images: [
-          'assets/images/catalogue/img_1.png',
-          'assets/images/catalogue/img_2.png',
-        ],
-        minPrice: 0,
-        maxPrice: 0,
-      ),
-      price: 7000,
-      versements: {
-        '1': 1575,
-      },
-    ),
-    CommandeModel(
-      customerMesures: {
-        'topBody': [
-          {
-            'name': 'Epaule',
-            'abbr': 'E',
-            'value': 76,
-          },
-          {
-            'name': 'Tour de Poitrine',
-            'abbr': 'P',
-            'value': 98,
-          },
-          {
-            'name': 'Ventre',
-            'abbr': 'V',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-        'downBody': [
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-      },
-      customerName: 'Maryline Kamgueng',
-      customerPhone: '+23760786195',
-      date: DateTime.now(),
-      duration: const SfRangeValues(1, 5),
-      details: {
-        'text':
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
-        'images': [],
-      },
-      modele: const ModeleModel(
-        id: '',
-        title: 'Nom du model',
-        description:
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-        duration: SfRangeValues(1, 9),
-        images: [
-          'assets/images/catalogue/img_1.png',
-          'assets/images/catalogue/img_2.png',
-        ],
-        minPrice: 0,
-        maxPrice: 0,
-      ),
-      price: 7000,
-      versements: {
-        '1': 1575,
-      },
-    ),
-    CommandeModel(
-      customerMesures: {
-        'topBody': [
-          {
-            'name': 'Epaule',
-            'abbr': 'E',
-            'value': 76,
-          },
-          {
-            'name': 'Tour de Poitrine',
-            'abbr': 'P',
-            'value': 98,
-          },
-          {
-            'name': 'Ventre',
-            'abbr': 'V',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-        'downBody': [
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-      },
-      customerName: 'Maryline Kamgueng',
-      customerPhone: '+23760786195',
-      date: DateTime.now(),
-      duration: const SfRangeValues(1, 5),
-      details: {
-        'text':
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
-        'images': [],
-      },
+      duration: 5,
+      id: '1',
       modele: const ModeleModel(
         id: '',
         title: 'Nom du model',
@@ -760,7 +365,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                     ),
                     decoration: BoxDecoration(
                       color: commande.date
-                                  .add(Duration(days: commande.duration.end))
+                                  .add(Duration(days: commande.duration))
                                   .difference(commande.date)
                                   .inDays <=
                               3
@@ -770,12 +375,12 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Text(
-                      '${commande.date.add(Duration(days: commande.duration.end)).difference(commande.date).inDays} jour${commande.duration.end > 1 ? 's' : ''}',
+                      '${commande.date.add(Duration(days: commande.duration)).difference(commande.date).inDays} jour${commande.duration > 1 ? 's' : ''}',
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w600,
                         color: commande.date
-                                    .add(Duration(days: commande.duration.end))
+                                    .add(Duration(days: commande.duration))
                                     .difference(commande.date)
                                     .inDays <=
                                 3
@@ -798,7 +403,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   top: -10,
                   right: 0,
                   child: Text(
-                    '${commande.date.add(Duration(days: commande.duration.end)).day}',
+                    '${commande.date.add(Duration(days: commande.duration)).day}',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 49),
@@ -809,8 +414,8 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   right: 0,
                   bottom: -10,
                   child: Text(
-                    DateFormat.MMM().format(commande.date
-                        .add(Duration(days: commande.duration.end))),
+                    DateFormat.MMM().format(
+                        commande.date.add(Duration(days: commande.duration))),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,

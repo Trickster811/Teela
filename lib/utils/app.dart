@@ -102,9 +102,10 @@ class FileManager {
 
   static Future uploadFile({
     required File image,
+    required String folder,
     required String uploadPath,
   }) async {
-    return await supabase.storage.from('modele_images').upload(
+    return await supabase.storage.from(folder).upload(
           uploadPath,
           image,
           fileOptions: const FileOptions(cacheControl: '3600', upsert: false),

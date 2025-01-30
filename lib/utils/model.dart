@@ -20,7 +20,8 @@ class CommandeModel {
   final String customerPhone;
   final DateTime date;
   final Map<String, dynamic> details;
-  final SfRangeValues duration;
+  final int duration;
+  final String id;
   final ModeleModel modele;
   final int price; // Total to pay
   final Map<String, int> versements;
@@ -32,6 +33,7 @@ class CommandeModel {
     required this.date,
     required this.details,
     required this.duration,
+    required this.id,
     required this.modele,
     required this.price,
     required this.versements,

@@ -14,6 +14,7 @@ import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
 import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
+import 'package:path/path.dart' as p;
 
 class AddCommande extends StatefulWidget {
   final CommandeModel? commande;
@@ -51,11 +52,11 @@ class _AddCommandeState extends State<AddCommande>
   final _controllerPrice = TextEditingController();
   final _controllerVersement = TextEditingController();
   DateTime dueDate = DateTime.now();
-  double _duration = 5.0;
 
   // Form key
   final addCommandeFormKey = GlobalKey<FormState>();
   final addMesureFormKey = GlobalKey<FormState>();
+  bool onGoingProcess = false;
 
   TabController? _controller;
   TabController?
@@ -175,18 +176,18 @@ class _AddCommandeState extends State<AddCommande>
     ),
   ];
 
-  // Manage Modele selection
+  // Manage Catalogue selection
   int documentLimit = 15;
 
-  // Check the app is currently fetching modele data
-  bool isFetchingModele = false;
+  // Check the app is currently fetching Catalogue data
+  bool isFetchingCatalogue = false;
 
-  bool _hasNextModele = true;
+  bool _hasNextCatalogue = true;
   final scrollController = ScrollController();
   bool internetAccess = true;
 
-  // List of modele
-  List<Map<String, dynamic>> modeleList = ModeleTeela.modeles;
+  // List of Catalogue
+  List<Map<String, dynamic>> ownerCatalogue = CatalogueTeela.catalogues;
 
   @override
   void initState() {
@@ -210,10 +211,10 @@ class _AddCommandeState extends State<AddCommande>
 
     // For Modele selection modal
     scrollController.addListener(scrollListener);
-    if (ModeleTeela.modeles.isEmpty) {
-      retrieveModele();
+    if (CatalogueTeela.ownerCatalogues.isEmpty) {
+      retrieveCatalogue();
     } else {
-      _hasNextModele = false;
+      _hasNextCatalogue = false;
     }
   }
 
@@ -229,8 +230,8 @@ class _AddCommandeState extends State<AddCommande>
     if (scrollController.offset >=
             scrollController.position.maxScrollExtent / 2 &&
         !scrollController.position.outOfRange &&
-        _hasNextModele) {
-      retrieveModele();
+        _hasNextCatalogue) {
+      retrieveCatalogue();
     }
   }
 
@@ -1114,122 +1115,308 @@ class _AddCommandeState extends State<AddCommande>
                                               const SizedBox(
                                                 height: 10.0,
                                               ),
-                                              if (modeleList.isEmpty)
-                                                const Center(
-                                                  child: SizedBox(
-                                                    height: 50.0,
-                                                    width: 50.0,
-                                                    child:
-                                                        CupertinoActivityIndicator(),
-                                                  ),
-                                                ),
-                                              for (Map<String, dynamic> model
-                                                  in ModeleTeela.modeles)
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      selectedModele =
-                                                          ModeleModel(
-                                                        description: model[
-                                                            'description'],
-                                                        duration: SfRangeValues(
-                                                            model['duration']
-                                                                [0],
-                                                            model['duration']
-                                                                [1]),
-                                                        images: model['images'],
-                                                        id: model['id'],
-                                                        maxPrice:
-                                                            model['max_price'],
-                                                        minPrice:
-                                                            model['min_price'],
-                                                        title: model['title'],
-                                                      );
-                                                      Navigator.pop(context);
-                                                    });
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15.0),
-                                                        child: Image.asset(
-                                                          model['images'][0],
-                                                          height: 80.0,
-                                                          width: 80.0,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10.0,
-                                                      ),
-                                                      Expanded(
-                                                        child: SizedBox(
-                                                          height: 80.0,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                model['title'],
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                              !internetAccess
+                                                  ? Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              1.5,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            'assets/icons/no-internet.svg',
+                                                            colorFilter:
+                                                                ColorFilter
+                                                                    .mode(
+                                                              Theme.of(context)
+                                                                  .iconTheme
+                                                                  .color!,
+                                                              BlendMode.srcIn,
+                                                            ),
+                                                            height: 75,
+                                                            width: 75,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          const Text(
+                                                            'Pas d\'accès internet',
+                                                            style: TextStyle(
+                                                              fontSize: 15,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Container(
+                                                            // alignment: Alignment.center,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 40.0,
+                                                              vertical: 10.0,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .iconTheme
+                                                                  .color,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  internetAccess =
+                                                                      true;
+                                                                });
+                                                                retrieveCatalogue();
+                                                              },
+                                                              child: Text(
+                                                                'Réessayer',
                                                                 style:
-                                                                    const TextStyle(
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
+                                                                    TextStyle(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .scaffoldBackgroundColor,
+                                                                  fontSize: 16,
                                                                 ),
                                                               ),
-                                                              Text(
-                                                                model[
-                                                                    'description'],
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                              // Container(
-                                                              //   padding:
-                                                              //       const EdgeInsets
-                                                              //           .symmetric(
-                                                              //     horizontal:
-                                                              //         10.0,
-                                                              //   ),
-                                                              //   decoration:
-                                                              //       BoxDecoration(
-                                                              //     border: Border
-                                                              //         .all(),
-                                                              //     borderRadius:
-                                                              //         BorderRadius
-                                                              //             .circular(
-                                                              //                 10.0),
-                                                              //   ),
-                                                              //   child: Text(
-                                                              //     '${catalogue.modeles.length} modele${catalogue.modeles.length > 1 ? 's' : ''}',
-                                                              //     style:
-                                                              //         const TextStyle(
-                                                              //       fontSize:
-                                                              //           14.0,
-                                                              //       fontWeight:
-                                                              //           FontWeight
-                                                              //               .w600,
-                                                              //     ),
-                                                              // ),
-                                                              // ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : ownerCatalogue.isEmpty &&
+                                                          !_hasNextCatalogue
+                                                      ? Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              1.5,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap:
+                                                                retrieveCatalogue,
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  'assets/icons/no-data.svg',
+                                                                  colorFilter:
+                                                                      ColorFilter
+                                                                          .mode(
+                                                                    Theme.of(
+                                                                            context)
+                                                                        .iconTheme
+                                                                        .color!,
+                                                                    BlendMode
+                                                                        .srcIn,
+                                                                  ),
+                                                                  height: 75,
+                                                                  width: 75,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                const Text(
+                                                                  'Aucun Catalogue à afficher',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Container(
+                                                                  // alignment: Alignment.center,
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                    horizontal:
+                                                                        40.0,
+                                                                    vertical:
+                                                                        10.0,
+                                                                  ),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .iconTheme
+                                                                        .color,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5.0),
+                                                                  ),
+                                                                  child: Text(
+                                                                    'Actualiser',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .scaffoldBackgroundColor,
+                                                                      fontSize:
+                                                                          16,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Column(children: [
+                                                          for (Map<String,
+                                                                  dynamic> model
+                                                              in ModeleTeela
+                                                                  .modeles)
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  selectedModele =
+                                                                      ModeleModel(
+                                                                    description:
+                                                                        model[
+                                                                            'description'],
+                                                                    duration: SfRangeValues(
+                                                                        model['duration']
+                                                                            [0],
+                                                                        model['duration']
+                                                                            [
+                                                                            1]),
+                                                                    images: model[
+                                                                        'images'],
+                                                                    id: model[
+                                                                        'id'],
+                                                                    maxPrice: model[
+                                                                        'max_price'],
+                                                                    minPrice: model[
+                                                                        'min_price'],
+                                                                    title: model[
+                                                                        'title'],
+                                                                  );
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            15.0),
+                                                                    child: Image
+                                                                        .asset(
+                                                                      model['images']
+                                                                          [0],
+                                                                      height:
+                                                                          80.0,
+                                                                      width:
+                                                                          80.0,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width: 10.0,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        SizedBox(
+                                                                      height:
+                                                                          80.0,
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            model['title'],
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            style:
+                                                                                const TextStyle(
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            model['description'],
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                          // Container(
+                                                                          //   padding:
+                                                                          //       const EdgeInsets
+                                                                          //           .symmetric(
+                                                                          //     horizontal:
+                                                                          //         10.0,
+                                                                          //   ),
+                                                                          //   decoration:
+                                                                          //       BoxDecoration(
+                                                                          //     border: Border
+                                                                          //         .all(),
+                                                                          //     borderRadius:
+                                                                          //         BorderRadius
+                                                                          //             .circular(
+                                                                          //                 10.0),
+                                                                          //   ),
+                                                                          //   child: Text(
+                                                                          //     '${catalogue.modeles.length} modele${catalogue.modeles.length > 1 ? 's' : ''}',
+                                                                          //     style:
+                                                                          //         const TextStyle(
+                                                                          //       fontSize:
+                                                                          //           14.0,
+                                                                          //       fontWeight:
+                                                                          //           FontWeight
+                                                                          //               .w600,
+                                                                          //     ),
+                                                                          // ),
+                                                                          // ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )
+                                                        ])
                                             ],
                                           ),
                                         );
@@ -1465,10 +1652,10 @@ class _AddCommandeState extends State<AddCommande>
                               placeholder: '7000',
                             ),
                             controller: _controllerVersement,
-                            validator: (amount) => amount == null ||
-                                    _controllerVersement.text.trim() == ''
-                                ? 'Veuillez saisir un montant maximum'
-                                : null,
+                            // validator: (amount) => amount == null ||
+                            //         _controllerVersement.text.trim() == ''
+                            //     ? 'Veuillez saisir un montant'
+                            //     : null,
                           ),
                           const SizedBox(
                             height: 10.0,
@@ -1606,11 +1793,16 @@ class _AddCommandeState extends State<AddCommande>
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
-          if (!addCommandeFormKey.currentState!.validate()) return;
+          if (onGoingProcess || !addCommandeFormKey.currentState!.validate()) {
+            return;
+          }
           if (_controller!.index != 3) {
             _controller!.animateTo(_controller!.index + 1);
             return;
           }
+          setState(() {
+            onGoingProcess = true;
+          });
         },
         child: Container(
           margin: const EdgeInsets.all(20.0),
@@ -1620,14 +1812,26 @@ class _AddCommandeState extends State<AddCommande>
             color: primary200,
             borderRadius: BorderRadius.circular(5.0),
           ),
-          child: Text(
-            _controller!.index != 3 ? 'Continuer' : 'Enregistrer',
-            style: TextStyle(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          child: onGoingProcess
+              ? SizedBox(
+                  height: 20.0,
+                  width: 20.0,
+                  child: CupertinoActivityIndicator(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
+                )
+              : Text(
+                  _controller!.index != 3
+                      ? 'Continuer'
+                      : widget.commande != null
+                          ? 'Mettre a jour'
+                          : 'Enregistrer',
+                  style: TextStyle(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
         ),
       ),
     );
@@ -1792,7 +1996,7 @@ class _AddCommandeState extends State<AddCommande>
     );
   }
 
-  Future retrieveModele() async {
+  Future retrieveCatalogue() async {
     if (!await Internet.checkInternetAccess()) {
       LocalPreferences.showFlashMessage(
         'Pas d\'internet',
@@ -1804,27 +2008,29 @@ class _AddCommandeState extends State<AddCommande>
       return;
     }
 
-    if (isFetchingModele) return;
-    isFetchingModele = true;
+    if (isFetchingCatalogue) return;
+    isFetchingCatalogue = true;
 
-    if (!_hasNextModele) {
+    if (!_hasNextCatalogue) {
       setState(() {
-        _hasNextModele = true;
+        _hasNextCatalogue = true;
       });
     }
 
     try {
-      await ModeleTeela.retrieveMultiModele(
+      List<Map<String, dynamic>> snap =
+          await CatalogueTeela.retrieveMultiCatalogue(
         limit: documentLimit,
-        // startAfter: ModeleTeela.catalogues.isNotEmpty
-        //     ? ModeleTeela.catalogues.last['id']
+        // startAfter: CatalogueTeela.catalogues.isNotEmpty
+        //     ? CatalogueTeela.catalogues.last['id']
         //     : null,
+        owner: Auth.user!.id,
       );
-      modeleList = ModeleTeela.modeles;
-      print(modeleList);
-      if (ModeleTeela.modeles.length < documentLimit) {
+      ownerCatalogue = CatalogueTeela.catalogues;
+
+      if (snap.length < documentLimit) {
         setState(() {
-          _hasNextModele = false;
+          _hasNextCatalogue = false;
         });
       }
     } on PostgrestException catch (errno) {
@@ -1834,11 +2040,114 @@ class _AddCommandeState extends State<AddCommande>
         Colors.red,
       );
       setState(() {
-        _hasNextModele = false;
+        _hasNextCatalogue = false;
       });
     }
     setState(() {
-      isFetchingModele = false;
+      isFetchingCatalogue = false;
     });
+  }
+
+  Future uploadPhotos({required List<dynamic> imagesToUpload}) async {
+    try {
+      // Upload images if they were picked from internal storage
+      List<String> downloadLinks = [];
+      for (dynamic image in images) {
+        if (image is! String) {
+          final photosLink = await FileManager.uploadFile(
+            image: image,
+            folder: 'commande_images',
+            uploadPath:
+                '${Auth.user!.id}/${_controllerFullName.text.trim()}/${p.basename(image.path)}',
+          );
+          if (photosLink != null) {
+            downloadLinks.add(photosLink);
+          }
+        }
+      }
+      return downloadLinks;
+    } on StorageException catch (e) {
+      LocalPreferences.showFlashMessage(
+        e.message.toString(),
+        Colors.red,
+      );
+    } catch (e) {
+      LocalPreferences.showFlashMessage(
+        '$e',
+        Colors.red,
+      );
+    }
+  }
+
+  Future addOrUpdateCommande({
+    List<String>? imageCommandeDownloadLinks,
+  }) async {
+    try {
+      if (!await Internet.checkInternetAccess()) {
+        LocalPreferences.showFlashMessage(
+          'Pas d\'internet',
+          Colors.red,
+        );
+        setState(() {
+          onGoingProcess = false;
+        });
+      }
+      Map<String, dynamic> commandeDetails = {
+        'customerMesures': customerMesures,
+        'customerName': _controllerFullName.text.trim(),
+        'customerPhone': _controllerPhone.text.trim(),
+        'date': dueDate,
+        'details': {
+          'text': _controllerText.text.trim(),
+          'images': await uploadPhotos(imagesToUpload: images),
+        },
+        'duration': dueDate.difference(DateTime.now()).inDays,
+        'modele': selectedModele!.id,
+        'price': _controllerPrice.text.trim(),
+        'versements': _controllerVersement.text.trim() == ''
+            ? {}
+            : {
+                '1': _controllerVersement.text.trim(),
+              },
+      };
+      if (widget.commande != null) {
+        await CommandeTeela.updateCommande(
+          data: commandeDetails,
+          id: widget.commande!.id,
+        );
+        LocalPreferences.showFlashMessage(
+          'Modele mis a jour avec succès',
+          Colors.blue,
+        );
+      } else {
+        print(
+          commandeDetails,
+        );
+        await CommandeTeela.createCommande(data: commandeDetails);
+        LocalPreferences.showFlashMessage(
+          'Modele créé avec succès',
+          Colors.green,
+        );
+      }
+
+      setState(() {
+        onGoingProcess = false;
+        Navigator.pop(context);
+      });
+    } on PostgrestException catch (e) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      LocalPreferences.showFlashMessage(
+        e.message,
+        Colors.red,
+      );
+      debugPrint(e.toString());
+    } catch (erno) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      debugPrint(erno.toString());
+    }
   }
 }
