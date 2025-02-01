@@ -51,7 +51,7 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .65,
+                      height: MediaQuery.of(context).size.height * .6,
                       child: Stack(
                         children: [
                           SafeArea(
@@ -174,7 +174,7 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .65,
+                      height: MediaQuery.of(context).size.height * .6,
                       child: Stack(
                         children: [
                           SafeArea(
@@ -332,7 +332,7 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .65,
+                      height: MediaQuery.of(context).size.height * .6,
                       child: Stack(
                         children: [
                           Positioned(

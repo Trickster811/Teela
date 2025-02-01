@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/local.dart';
 
 class FormDecoration {
   static InputDecoration inputDecoaration({
@@ -105,11 +106,23 @@ class FileManager {
     required String folder,
     required String uploadPath,
   }) async {
-    return await supabase.storage.from(folder).upload(
-          uploadPath,
-          image,
-          fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-        );
+    try {
+      return await supabase.storage.from(folder).upload(
+            uploadPath,
+            image,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+          );
+    } on StorageException catch (e) {
+      LocalPreferences.showFlashMessage(
+        e.message.toString(),
+        Colors.red,
+      );
+    } catch (e) {
+      LocalPreferences.showFlashMessage(
+        '$e',
+        Colors.red,
+      );
+    }
   }
 }
 

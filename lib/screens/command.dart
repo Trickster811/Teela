@@ -1,12 +1,17 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/screens/components/catalogue/search.dart';
 import 'package:teela/screens/components/command/details.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
 
 class Command extends StatefulWidget {
@@ -18,7 +23,17 @@ class Command extends StatefulWidget {
 
 class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
   TabController? _controller;
-  int _selectedIndex = 0;
+  int documentLimit = 15;
+
+  // Check the app is currently fetching commande data
+  bool isFetchingCommande = false;
+
+  bool _hasNextCommande = true;
+  final scrollController = ScrollController();
+  bool internetAccess = true;
+
+  // List of commande
+  List<Map<String, dynamic>> ownerCommande = CommandeTeela.ownerCommandes;
 
   @override
   void initState() {
@@ -30,120 +45,32 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
 
     // Listening for tab change event
     _controller!.addListener(() {
-      setState(() {
-        _selectedIndex = _controller!.index;
-      });
+      setState(() {});
     });
+    scrollController.addListener(scrollListener);
+    if (CommandeTeela.ownerCommandes.isEmpty) {
+      retrieveCommande();
+    } else {
+      _hasNextCommande = false;
+    }
   }
 
   @override
   void dispose() {
     _controller!.dispose();
+
+    scrollController.dispose();
     super.dispose();
   }
 
-  List<CommandeModel> commandes = [
-    CommandeModel(
-      customerMesures: {
-        'topBody': [
-          {
-            'name': 'Epaule',
-            'abbr': 'E',
-            'value': 76,
-          },
-          {
-            'name': 'Tour de Poitrine',
-            'abbr': 'P',
-            'value': 98,
-          },
-          {
-            'name': 'Ventre',
-            'abbr': 'V',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-        'downBody': [
-          {
-            'name': 'Longueur Manche',
-            'abbr': 'LM',
-            'value': 98,
-          },
-          {
-            'name': 'Largeur Manche',
-            'abbr': 'Lam',
-            'value': 98,
-          },
-          {
-            'name': 'Bassin',
-            'abbr': 'B',
-            'value': 98,
-          },
-          {
-            'name': 'Longueur Pied',
-            'abbr': 'LP',
-            'value': 103,
-          },
-          {
-            'name': 'Largeur Pied',
-            'abbr': 'LaP',
-            'value': 98,
-          }
-        ],
-      },
-      customerName: 'Maryline Kamgueng',
-      customerPhone: '+23760786195',
-      date: DateTime.now(),
-      details: {
-        'text':
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placer',
-        'images': [],
-      },
-      duration: 5,
-      id: '1',
-      modele: const ModeleModel(
-        id: '',
-        title: 'Nom du model',
-        description:
-            'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-        duration: SfRangeValues(1, 9),
-        images: [
-          'assets/images/catalogue/img_1.png',
-          'assets/images/catalogue/img_2.png',
-        ],
-        minPrice: 0,
-        maxPrice: 0,
-      ),
-      price: 7000,
-      versements: {
-        '1': 1575,
-      },
-    ),
-  ];
+  void scrollListener() {
+    if (scrollController.offset >=
+            scrollController.position.maxScrollExtent / 2 &&
+        !scrollController.position.outOfRange &&
+        _hasNextCommande) {
+      retrieveCommande();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,12 +130,12 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     'En attente',
                     style: TextStyle(
-                      color: _selectedIndex == 0
+                      color: _controller!.index == 0
                           ? primary200
                           : Theme.of(context).iconTheme.color,
                     ),
                   ),
-                  if (_selectedIndex == 0)
+                  if (_controller!.index == 0)
                     Container(
                       height: 6,
                       width: 6,
@@ -228,12 +155,12 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     'Termines',
                     style: TextStyle(
-                      color: _selectedIndex == 1
+                      color: _controller!.index == 1
                           ? primary200
                           : Theme.of(context).iconTheme.color,
                     ),
                   ),
-                  if (_selectedIndex == 1)
+                  if (_controller!.index == 1)
                     Container(
                       height: 6,
                       width: 6,
@@ -253,12 +180,12 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     'Livres',
                     style: TextStyle(
-                      color: _selectedIndex == 2
+                      color: _controller!.index == 2
                           ? primary200
                           : Theme.of(context).iconTheme.color,
                     ),
                   ),
-                  if (_selectedIndex == 2)
+                  if (_controller!.index == 2)
                     Container(
                       height: 6,
                       width: 6,
@@ -287,31 +214,206 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         const SizedBox(
           height: 10.0,
         ),
-        Expanded(
-          child: TabBarView(
-            controller: _controller,
-            children: [
-              Column(
-                children: [
-                  for (CommandeModel commande in commandes) ...[
-                    commandeItemBuilder(context, commande),
-                    const SizedBox(
-                      height: 20.0,
+        !internetAccess
+            ? Expanded(
+                child: TabBarView(
+                  controller: _controller,
+                  children: [
+                    for (var index in [1, 2, 3])
+                      Container(
+                        key: Key(index.toString()),
+                        alignment: Alignment.center,
+                        height: MediaQuery.of(context).size.height / 1.5,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/no-internet.svg',
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).iconTheme.color!,
+                                BlendMode.srcIn,
+                              ),
+                              height: 75,
+                              width: 75,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Pas d\'accès internet',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              // alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 40.0,
+                                vertical: 10.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).iconTheme.color,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    internetAccess = true;
+                                  });
+                                  retrieveCommande();
+                                },
+                                child: Text(
+                                  'Réessayer',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              )
+            : ownerCommande.isEmpty && !_hasNextCommande
+                ? Expanded(
+                    child: TabBarView(
+                      controller: _controller,
+                      children: [
+                        for (var index in [1, 2, 3])
+                          Container(
+                            key: Key(index.toString()),
+                            alignment: Alignment.center,
+                            height: MediaQuery.of(context).size.height / 1.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icons/no-data.svg',
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).iconTheme.color!,
+                                    BlendMode.srcIn,
+                                  ),
+                                  height: 75,
+                                  width: 75,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const Text(
+                                  'Aucun Commande à afficher',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      internetAccess = true;
+                                    });
+                                    retrieveCommande();
+                                  },
+                                  child: Container(
+                                    // alignment: Alignment.center,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 40.0,
+                                      vertical: 10.0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).iconTheme.color,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Text(
+                                      'Actualiser',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
                     ),
-                  ]
-                ],
-              ),
-              const Column(),
-              const Column(),
-            ],
-          ),
-        )
+                  )
+                : Expanded(
+                    child: TabBarView(
+                      controller: _controller,
+                      children: [
+                        Column(
+                          children: [
+                            for (Map<String, dynamic> commande
+                                in ownerCommande.where((item) => true)) ...[
+                              commandeItemBuilder(
+                                context: context,
+                                commande: CommandeModel(
+                                  customerMesures: commande['customerMesures'],
+                                  customerName: commande['customerName'],
+                                  customerPhone: commande['customerPhone'],
+                                  date: DateTime.parse(commande['date']),
+                                  details: commande['details'],
+                                  duration: commande['duration'],
+                                  id: commande['id'],
+                                  modele: ModeleModel(
+                                      description: commande['Modele']
+                                          ['description'],
+                                      duration: SfRangeValues(
+                                          commande['Modele']['duration'][0],
+                                          commande['Modele']['duration'][0]),
+                                      id: commande['Modele']['id'],
+                                      images: commande['Modele']['images'],
+                                      maxPrice: commande['Modele']['max_price'],
+                                      minPrice: commande['Modele']['min_price'],
+                                      title: commande['Modele']['title']),
+                                  price: commande['price'],
+                                  versements: commande['versements'],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                            ],
+                            if (_hasNextCommande)
+                              const Center(
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CupertinoActivityIndicator(),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const Column(),
+                        const Column(),
+                      ],
+                    ),
+                  )
       ],
     );
   }
 
-  GestureDetector commandeItemBuilder(
-      BuildContext context, CommandeModel commande) {
+  GestureDetector commandeItemBuilder({
+    required BuildContext context,
+    required CommandeModel commande,
+  }) {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -321,25 +423,27 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: Image.asset(
-              commande.modele.images[Random().nextInt(
-                commande.modele.images.length,
-              )],
-              height: 80.0,
-              width: 80.0,
-              fit: BoxFit.cover,
+      child: SizedBox(
+        height: 80.0,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15.0),
+              child: Image.network(
+                // commande.modele.images[Random().nextInt(
+                //   commande.modele.images.length,
+                // )],
+                'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                height: 80.0,
+                width: 80.0,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 10.0,
-          ),
-          Expanded(
-            child: SizedBox(
-              height: 80.0,
+            const SizedBox(
+              width: 10.0,
+            ),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -392,42 +496,93 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                 ],
               ),
             ),
-          ),
-          SizedBox(
-            height: 80.0,
-            width: 60,
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 0,
-                  top: -10,
-                  right: 0,
-                  child: Text(
-                    '${commande.date.add(Duration(days: commande.duration)).day}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 49),
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: -10,
-                  child: Text(
-                    DateFormat.MMM().format(
-                        commande.date.add(Duration(days: commande.duration))),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 29,
+            SizedBox(
+              height: 80.0,
+              width: 60,
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 0,
+                    top: -10,
+                    right: 0,
+                    child: Text(
+                      '${commande.date.add(Duration(days: commande.duration)).day}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 49),
                     ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: -10,
+                    child: Text(
+                      DateFormat.MMM().format(
+                          commande.date.add(Duration(days: commande.duration))),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 29,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Future retrieveCommande() async {
+    if (!await Internet.checkInternetAccess()) {
+      LocalPreferences.showFlashMessage(
+        'Pas d\'internet',
+        Colors.red,
+      );
+      setState(() {
+        internetAccess = false;
+      });
+      return;
+    }
+
+    if (isFetchingCommande) return;
+    isFetchingCommande = true;
+
+    if (!_hasNextCommande) {
+      setState(() {
+        _hasNextCommande = true;
+      });
+    }
+
+    try {
+      final commandeSnap = await CommandeTeela.retrieveMultiCommande(
+        limit: documentLimit,
+        // startAfter: CatalogueTeela.ownerCommandes.isNotEmpty
+        //     ? CatalogueTeela.ownerCommandes.last['id']
+        //     : null,
+        owner: Auth.user!.id,
+      );
+      print(commandeSnap);
+      ownerCommande = CommandeTeela.ownerCommandes;
+      if (commandeSnap.length < documentLimit) {
+        setState(() {
+          _hasNextCommande = false;
+        });
+      }
+    } on PostgrestException catch (errno) {
+      debugPrint(errno.toString());
+      LocalPreferences.showFlashMessage(
+        errno.message.toString(),
+        Colors.red,
+      );
+      setState(() {
+        _hasNextCommande = false;
+      });
+    }
+    setState(() {
+      isFetchingCommande = false;
+    });
   }
 }

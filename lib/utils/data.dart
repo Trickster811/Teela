@@ -92,17 +92,25 @@ class CatalogueTeela {
   }) async {
     List<Map<String, dynamic>> refCatalogue;
 
-    if (owner != null) {
+    if (owner == null) {
       refCatalogue = await supabase.from('Catalogue').select('*, Modele(*)');
       // .range(startAfter + 1, startAfter + limit);
-      catalogues.addAll(refCatalogue);
+      catalogues.addAll(
+        refCatalogue.where(
+          (item) => !catalogues.contains(item),
+        ),
+      );
     } else {
       refCatalogue = await supabase
           .from('Catalogue')
           .select('*, Modele(*)')
-          .eq('user', owner!);
+          .eq('user', owner);
       // .range(startAfter + 1, startAfter + limit);
-      ownerCatalogues.addAll(refCatalogue);
+      ownerCatalogues.addAll(
+        refCatalogue.where(
+          (item) => !ownerCatalogues.contains(item),
+        ),
+      );
     }
 
     return refCatalogue;
@@ -132,18 +140,39 @@ class CommandeTeela {
   // Get a reference your Supabase client
   static SupabaseClient supabase = Supabase.instance.client;
   static List<Map<String, dynamic>> commandes = [];
+  static List<Map<String, dynamic>> ownerCommandes = [];
 
   //Set of all Commande
-  static Future retrieveMultiCommande({
+  static Future<List<Map<String, dynamic>>> retrieveMultiCommande({
     required int limit,
-    required int startAfter,
+    int? startAfter,
+    String? owner,
   }) async {
-    final refCommande = await supabase
-        .from('Commande')
-        .select()
-        .range(startAfter + 1, startAfter + limit);
+    List<Map<String, dynamic>> refCommande;
 
-    commandes.addAll(refCommande);
+    if (owner == null) {
+      refCommande = await supabase.from('Commande').select('*,Modele(*)');
+      // .range(startAfter + 1, startAfter + limit);
+
+      commandes.addAll(
+        refCommande.where(
+          (item) => !commandes.contains(item),
+        ),
+      );
+    } else {
+      refCommande = await supabase
+          .from('Commande')
+          .select('*,Modele(*, Catalogue(*))')
+          .eq('Modele.Catalogue.user', owner);
+      // .range(startAfter + 1, startAfter + limit);
+
+      ownerCommandes.addAll(
+        refCommande.where(
+          (item) => !ownerCommandes.contains(item),
+        ),
+      );
+    }
+    return refCommande;
   }
 
   static Future createCommande({required Map<String, dynamic> data}) async {

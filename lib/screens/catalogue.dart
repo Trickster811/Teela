@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +68,7 @@ class _CatalogueState extends State<Catalogue> {
         retrieveCatalogue();
         await Future.delayed(
           const Duration(
-            milliseconds: 500,
+            milliseconds: 1000,
           ),
         );
       },
@@ -241,35 +239,40 @@ class _CatalogueState extends State<Catalogue> {
                         alignment: Alignment.center,
                         height: MediaQuery.of(context).size.height / 1.5,
                         width: MediaQuery.of(context).size.width,
-                        child: GestureDetector(
-                          onTap: retrieveCatalogue,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icons/no-data.svg',
-                                colorFilter: ColorFilter.mode(
-                                  Theme.of(context).iconTheme.color!,
-                                  BlendMode.srcIn,
-                                ),
-                                height: 75,
-                                width: 75,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/no-data.svg',
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).iconTheme.color!,
+                                BlendMode.srcIn,
                               ),
-                              const SizedBox(
-                                height: 10,
+                              height: 75,
+                              width: 75,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Aucun Catalogue à afficher',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w700,
                               ),
-                              const Text(
-                                'Aucun Catalogue à afficher',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Container(
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  internetAccess = true;
+                                });
+                                retrieveCatalogue();
+                              },
+                              child: Container(
                                 // alignment: Alignment.center,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 40.0,
@@ -288,8 +291,8 @@ class _CatalogueState extends State<Catalogue> {
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       )
                     : Column(
@@ -578,7 +581,7 @@ class _CatalogueState extends State<Catalogue> {
     }
 
     try {
-      await CatalogueTeela.retrieveMultiCatalogue(
+      final catalogueSnap = await CatalogueTeela.retrieveMultiCatalogue(
         limit: documentLimit,
         // startAfter: CatalogueTeela.ownerCatalogues.isNotEmpty
         //     ? CatalogueTeela.ownerCatalogues.last['id']
@@ -586,14 +589,14 @@ class _CatalogueState extends State<Catalogue> {
         owner: Auth.user!.id,
       );
       ownerCatalogue = CatalogueTeela.ownerCatalogues;
-
-      if (CatalogueTeela.ownerCatalogues.length < documentLimit) {
+      // CatalogueTeela.ownerCatalogues = ownerCatalogue = catalogueSnap;
+      if (catalogueSnap.length < documentLimit) {
         setState(() {
           _hasNextCatalogue = false;
         });
       }
     } on PostgrestException catch (errno) {
-      debugPrint(errno.code.toString());
+      debugPrint(errno.toString());
       LocalPreferences.showFlashMessage(
         errno.message.toString(),
         Colors.red,

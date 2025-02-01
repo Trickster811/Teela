@@ -44,7 +44,7 @@ class LocalPreferences {
       dismissDirection: DismissDirection.down,
       behavior: SnackBarBehavior.floating,
       content: Container(
-        height: 40,
+        // height: 40,
         // width: deviceSize.width,
         margin: const EdgeInsets.all(10), padding: const EdgeInsets.all(10.0),
         alignment: Alignment.center,

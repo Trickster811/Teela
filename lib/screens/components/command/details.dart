@@ -498,20 +498,13 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                                 SafeArea(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    child: !widget.commande.modele.images[0]
-                                            .contains('http')
-                                        ? Image.asset(
-                                            widget.commande.modele.images[0],
-                                            fit: BoxFit.cover,
-                                            height: 80.0,
-                                            width: 80.0,
-                                          )
-                                        : Image.network(
-                                            widget.commande.modele.images[0],
-                                            fit: BoxFit.cover,
-                                            height: 80.0,
-                                            width: 80.0,
-                                          ),
+                                    child: Image.network(
+                                      // widget.commande.modele.images[0],
+                                      'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                                      fit: BoxFit.cover,
+                                      height: 80.0,
+                                      width: 80.0,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -650,7 +643,8 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                             Text(
                               '${NumberFormat().format(
                                 widget.commande.versements.values.fold<double>(
-                                    0, (sum, amount) => sum + amount),
+                                    0,
+                                    (sum, amount) => sum + int.parse(amount)),
                               )} Fcfa',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -678,7 +672,9 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                                 widget.commande.price -
                                     widget.commande.versements.values
                                         .fold<double>(
-                                            0, (sum, amount) => sum + amount),
+                                            0,
+                                            (sum, amount) =>
+                                                sum + int.parse(amount)),
                               )} Fcfa',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

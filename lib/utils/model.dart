@@ -15,7 +15,7 @@ class CatalogueModel {
 }
 
 class CommandeModel {
-  final Map<String, List<Map<String, dynamic>>> customerMesures;
+  final Map<String, dynamic> customerMesures;
   final String customerName;
   final String customerPhone;
   final DateTime date;
@@ -24,7 +24,7 @@ class CommandeModel {
   final String id;
   final ModeleModel modele;
   final int price; // Total to pay
-  final Map<String, int> versements;
+  final Map<String, dynamic> versements;
 
   const CommandeModel({
     required this.customerMesures,
