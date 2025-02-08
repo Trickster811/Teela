@@ -14,9 +14,11 @@ import 'package:teela/utils/local.dart';
 
 class Otp extends StatefulWidget {
   final String phone;
+  final bool register;
   const Otp({
     super.key,
     required this.phone,
+    required this.register,
   });
 
   @override
@@ -134,6 +136,7 @@ class _OtpState extends State<Otp> {
                           ),
                           const Text(
                             'Regardez votre telephone',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,

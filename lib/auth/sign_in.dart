@@ -256,10 +256,12 @@ class _SignInState extends State<SignIn> {
           onGoingProcess = false;
         });
       }
-      final user = await Auth.signIn(
+      final user = await Auth.signUp(
+        password: 'password',
         phone: _controllerPhone.text.trim(),
+        username: '',
       );
-      if (user != null) {
+      if (user == null) {
         setState(() {
           onGoingProcess = false;
         });
@@ -269,6 +271,7 @@ class _SignInState extends State<SignIn> {
           MaterialPageRoute(
             builder: (context) => Otp(
               phone: _controllerPhone.text.trim(),
+              register: true,
             ),
           ),
         );
@@ -281,7 +284,27 @@ class _SignInState extends State<SignIn> {
         e.message,
         Colors.red,
       );
-      print(e.message);
+      if (e.message.startsWith('User already registered')) {
+        final user = await Auth.signIn(
+          phone: _controllerPhone.text.trim(),
+        );
+        if (user != null) {
+          // if (1 != 1) {
+          setState(() {
+            onGoingProcess = false;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Otp(
+                  phone: _controllerPhone.text.trim(),
+                  register: false,
+                ),
+              ),
+            );
+          });
+        }
+      }
+      print(e);
     } catch (erno) {
       setState(() {
         onGoingProcess = false;

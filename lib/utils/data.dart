@@ -6,7 +6,6 @@ class Auth {
   static Session? session = supabase.auth.currentSession;
   static User? user = supabase.auth.currentUser;
 
-  // Checks if the user is already registered. If they are, it sends an OTP to their phone for verification.
   static Future<bool> login(String phoneNumber) async {
     // final response = await _supabase
     //     .from(SupabaseTables.appUsers)
@@ -22,6 +21,10 @@ class Auth {
 
   static Future signIn({required String phone}) async {
     try {
+      // Checks if the user is already registered. If they are, it sends an OTP to their phone for verification.
+      // final userExists =
+      //     await supabase.from('users').select().eq('phone', phone);
+
       await supabase.auth.signInWithOtp(
         phone: phone,
         shouldCreateUser: false,
@@ -56,6 +59,22 @@ class Auth {
       password: password,
     );
     session = res.session;
+    user = res.user;
+    return res;
+  }
+
+  static Future updateUser({
+    required String username,
+    required String password,
+  }) async {
+    final res = await supabase.auth.updateUser(
+      UserAttributes(
+        data: {
+          'username': username,
+        },
+        password: password,
+      ),
+    );
     user = res.user;
     return res;
   }

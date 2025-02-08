@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/auth/otp.dart';
+import 'package:teela/auth/otp_success.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -326,24 +327,20 @@ class _SignUpState extends State<SignUp> {
           onGoingProcess = false;
         });
       }
-      final user = await Auth.signUp(
+      final user = await Auth.updateUser(
         username: _controllerFullName.text.trim(),
-        phone: widget.phone,
         password: _controllerPassword.text.trim(),
       );
       if (user != null) {
         setState(() {
           onGoingProcess = false;
-        });
-
-        return Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Otp(
-              phone: widget.phone,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OtpSuccess(),
             ),
-          ),
-        );
+          );
+        });
       }
     } on AuthException catch (e) {
       setState(() {

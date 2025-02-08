@@ -36,6 +36,107 @@ class _AddCommandeState extends State<AddCommande>
   final _controllerPhone = TextEditingController();
 
   // Mesures Info
+  Map<String, List<Map<String, dynamic>>> defaultMesures = {
+    'topBody': [
+      {
+        'name': 'Epaule',
+        'abbr': 'E',
+        'value': null,
+      },
+      {
+        'name': 'Tour de poitrine',
+        'abbr': 'P',
+        'value': null,
+      },
+      {
+        'name': 'Carrure avant',
+        'abbr': 'Ca',
+        'value': null,
+      },
+      {
+        'name': 'Carrure arriere',
+        'abbr': 'Cd',
+        'value': null,
+      },
+      {
+        'name': 'Tour de ventre',
+        'abbr': 'V',
+        'value': null,
+      },
+      {
+        'name': 'Longueur de la manche',
+        'abbr': 'L',
+        'value': null,
+      },
+      {
+        'name': 'Tour de la manche',
+        'abbr': 'Tm',
+        'value': null,
+      },
+      {
+        'name': 'Longueur du vetement',
+        'abbr': 'Lv',
+        'value': null,
+      },
+      {
+        'name': 'Tour de cou',
+        'abbr': 'C',
+        'value': null,
+      },
+      {
+        'name': 'Tour de poignet',
+        'abbr': 'P',
+        'value': null,
+      },
+      {
+        'name': 'Tour de rein',
+        'abbr': 'R',
+        'value': null,
+      },
+      {
+        'name': 'Longueur du corps',
+        'abbr': 'Lc',
+        'value': null,
+      },
+    ],
+    'downBody': [
+      {
+        'name': 'Tour de hanche',
+        'abbr': 'Lh',
+        'value': null,
+      },
+      {
+        'name': 'Tour de cuisse',
+        'abbr': 'Tc',
+        'value': null,
+      },
+      {
+        'name': 'Tour de bassin',
+        'abbr': 'Tb',
+        'value': null,
+      },
+      {
+        'name': 'Longueur du pantalon',
+        'abbr': 'Lp',
+        'value': null,
+      },
+      {
+        'name': 'Bas du pantalon',
+        'abbr': "B",
+        'value': null,
+      },
+      {
+        'name': 'Tour de molaire',
+        'abbr': "M",
+        'value': null,
+      },
+      {
+        'name': 'Tour du pied',
+        'abbr': 'LpD',
+        'value': null,
+      },
+    ]
+  };
   Map<String, List<Map<String, dynamic>>> customerMesures = {
     'topBody': [],
     'downBody': []
@@ -691,217 +792,418 @@ class _AddCommandeState extends State<AddCommande>
                           child: TabBarView(
                             controller: _controllerTabMesures,
                             children: [
-                              Column(
-                                children: [
-                                  for (Map<String, dynamic> mesure
-                                      in customerMesures['topBody']!) ...[
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0,
-                                        vertical: 10.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: neutral200,
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: primary200,
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    for (Map<String, dynamic> mesure
+                                        in customerMesures['topBody']!) ...[
+                                      mesureItemBuilder(
+                                        addTo: 'topBody',
+                                        context: context,
+                                        mesure: mesure,
+                                        onLongPress: () => showModalBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (context) =>
+                                              CupertinoActionSheet(
+                                            message: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: Form(
+                                                key: addMesureFormKey,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Supprimer',
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                            fontSize: 24,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .iconTheme
+                                                                .color,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          'Voulez-vous supprimer cette mesure',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .iconTheme
+                                                                .color,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20.0,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              customerMesures[
+                                                                      'topBody']!
+                                                                  .remove(
+                                                                      mesure);
+                                                              defaultMesures[
+                                                                      'topBody']!
+                                                                  .add(mesure.update(
+                                                                      'value',
+                                                                      (value) =>
+                                                                          null));
+                                                            });
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              vertical: 10.0,
+                                                              horizontal: 10.0,
+                                                            ),
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: primary200,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.0),
+                                                            ),
+                                                            child: const Text(
+                                                              'Valider',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10.0,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () =>
+                                                              Navigator.pop(
+                                                                  context),
+                                                          child: const Text(
+                                                            'Annuler',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '${mesure['abbr']} : ',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                    ],
+                                    const SizedBox(
+                                      height: 50.0,
+                                    ),
+                                    DottedBorder(
+                                      borderType: BorderType.RRect,
+                                      padding: const EdgeInsets.all(10.0),
+                                      radius: const Radius.circular(5.0),
+                                      child: GestureDetector(
+                                        onTap: () => addMesure(
+                                          context: context,
+                                          addTo:
+                                              'topBody', // add to 'Haut du corps' or 'Bas du corps'
+                                        ),
+                                        child: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.add,
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              mesure['name'],
-                                              overflow: TextOverflow.clip,
-                                              style: const TextStyle(
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Text(
+                                              'Ajouter une nouvelle mesure',
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                               ),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0,
-                                              vertical: 3.0,
-                                            ),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: primary200,
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                            ),
-                                            child: Text(
-                                              mesure['value'],
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5.0,
-                                          ),
-                                          SvgPicture.asset(
-                                            'assets/icons/check-circle-bold.svg',
-                                            semanticsLabel: 'Arriw left',
-                                            colorFilter: const ColorFilter.mode(
-                                              primary200,
-                                              BlendMode.srcIn,
-                                            ),
-                                            height: 20,
-                                          ),
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(
-                                      height: 10.0,
+                                      height: 20.0,
                                     ),
-                                  ],
-                                  const SizedBox(
-                                    height: 50.0,
-                                  ),
-                                  DottedBorder(
-                                    borderType: BorderType.RRect,
-                                    padding: const EdgeInsets.all(10.0),
-                                    radius: const Radius.circular(5.0),
-                                    child: GestureDetector(
-                                      onTap: () => addMesure(
+                                    for (Map<String, dynamic> mesure
+                                        in defaultMesures['topBody']!) ...[
+                                      mesureItemBuilder(
+                                        addTo: 'topBody',
                                         context: context,
-                                        addTo:
-                                            'topBody', // add to 'Haut du corps' or 'Bas du corps'
+                                        mesure: mesure,
+                                        onLongPress: () {},
                                       ),
-                                      child: const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                          ),
-                                          SizedBox(
-                                            width: 5.0,
-                                          ),
-                                          Text(
-                                            'Ajouter une nouvelle mesure',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        ],
+                                      const SizedBox(
+                                        height: 10.0,
                                       ),
-                                    ),
-                                  ),
-                                ],
+                                    ],
+                                  ],
+                                ),
                               ),
-                              Column(
-                                children: [
-                                  for (Map<String, dynamic> mesure
-                                      in customerMesures['downBody']!) ...[
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15.0,
-                                        vertical: 10.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: neutral200,
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: primary200,
+                              SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    for (Map<String, dynamic> mesure
+                                        in customerMesures['downBody']!) ...[
+                                      mesureItemBuilder(
+                                        addTo: 'topBody',
+                                        context: context,
+                                        mesure: mesure,
+                                        onLongPress: () => showModalBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (context) =>
+                                              CupertinoActionSheet(
+                                            message: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: Form(
+                                                key: addMesureFormKey,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'Supprimer',
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                            fontSize: 24,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .iconTheme
+                                                                .color,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          'Voulez-vous supprimer cette mesure',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .iconTheme
+                                                                .color,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20.0,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              customerMesures[
+                                                                      'downBody']!
+                                                                  .remove(
+                                                                      mesure);
+                                                            });
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              vertical: 10.0,
+                                                              horizontal: 10.0,
+                                                            ),
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.0),
+                                                            ),
+                                                            child: Row(
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  'assets/icons/delete.6.svg',
+                                                                  colorFilter:
+                                                                      const ColorFilter
+                                                                          .mode(
+                                                                    primary200,
+                                                                    BlendMode
+                                                                        .srcIn,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 10.0,
+                                                                ),
+                                                                const Text(
+                                                                  'Supprimer',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        primary200,
+                                                                    fontSize:
+                                                                        16.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10.0,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () =>
+                                                              Navigator.pop(
+                                                                  context),
+                                                          child: const Text(
+                                                            'Annuler',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '${mesure['abbr']} : ',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                    ],
+                                    const SizedBox(
+                                      height: 50.0,
+                                    ),
+                                    DottedBorder(
+                                      borderType: BorderType.RRect,
+                                      padding: const EdgeInsets.all(10.0),
+                                      radius: const Radius.circular(5.0),
+                                      child: GestureDetector(
+                                        onTap: () => addMesure(
+                                          context: context,
+                                          addTo:
+                                              'downBody', // add to 'Haut du corps' or 'Bas du corps'
+                                        ),
+                                        child: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.add,
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              mesure['name'],
-                                              overflow: TextOverflow.clip,
-                                              style: const TextStyle(
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Text(
+                                              'Ajouter une nouvelle mesure',
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                               ),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0,
-                                              vertical: 3.0,
-                                            ),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: primary200,
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                            ),
-                                            child: Text(
-                                              mesure['value'],
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5.0,
-                                          ),
-                                          SvgPicture.asset(
-                                            'assets/icons/check-circle-bold.svg',
-                                            semanticsLabel: 'Arriw left',
-                                            colorFilter: const ColorFilter.mode(
-                                              primary200,
-                                              BlendMode.srcIn,
-                                            ),
-                                            height: 20,
-                                          ),
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(
-                                      height: 10.0,
+                                      height: 20.0,
                                     ),
-                                  ],
-                                  const SizedBox(
-                                    height: 50.0,
-                                  ),
-                                  DottedBorder(
-                                    borderType: BorderType.RRect,
-                                    padding: const EdgeInsets.all(10.0),
-                                    radius: const Radius.circular(5.0),
-                                    child: GestureDetector(
-                                      onTap: () => addMesure(
+                                    for (Map<String, dynamic> mesure
+                                        in defaultMesures['downBody']!) ...[
+                                      mesureItemBuilder(
+                                        addTo: 'downBody',
                                         context: context,
-                                        addTo:
-                                            'downBody', // add to 'Haut du corps' or 'Bas du corps'
+                                        mesure: mesure,
+                                        onLongPress: () {},
                                       ),
-                                      child: const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                          ),
-                                          SizedBox(
-                                            width: 5.0,
-                                          ),
-                                          Text(
-                                            'Ajouter une nouvelle mesure',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        ],
+                                      const SizedBox(
+                                        height: 10.0,
                                       ),
-                                    ),
-                                  ),
-                                ],
+                                    ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -1923,158 +2225,387 @@ class _AddCommandeState extends State<AddCommande>
     );
   }
 
+  GestureDetector mesureItemBuilder({
+    required String addTo,
+    required BuildContext context,
+    required Map<String, dynamic> mesure,
+    required Function() onLongPress,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        _controllerMesureValue.text = mesure['value'] ?? '0.0';
+        showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (context) => CupertinoActionSheet(
+            message: Padding(
+              padding: EdgeInsets.only(
+                left: 10.0,
+                top: 10.0,
+                right: 10.0,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: addMesureFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${mesure['abbr']}: ${mesure['name']}',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat',
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          Text(
+                            'Entrer la valeur',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      TextFormField(
+                        keyboardType: const TextInputType.numberWithOptions(),
+                        cursorColor: Theme.of(context).iconTheme.color,
+                        cursorErrorColor: primary500,
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder:
+                              'Valeur : ${mesure['value'] ?? 0.0} (cm)',
+                        ),
+                        controller: _controllerMesureValue,
+                        validator: (value) => value == null ||
+                                _controllerMesureValue.text.trim() == ''
+                            ? 'Veuillez saisir la valeur de la mesure'
+                            : null,
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (!addMesureFormKey.currentState!.validate()) {
+                                return;
+                              }
+                              if (mesure['value'] == null) {
+                                setState(() {
+                                  customerMesures[addTo]!.add(
+                                    {
+                                      'name': mesure['name'],
+                                      'abbr': mesure['abbr'],
+                                      'value':
+                                          _controllerMesureValue.text.trim(),
+                                    },
+                                  );
+                                  defaultMesures[addTo]!.remove(mesure);
+                                  _controllerMesureValue.clear();
+                                });
+                              } else {
+                                setState(() {
+                                  customerMesures['topBody']![
+                                          customerMesures['topBody']!
+                                              .indexOf(mesure)]
+                                      .update(
+                                          'value',
+                                          (value) => _controllerMesureValue.text
+                                              .trim());
+
+                                  _controllerMesureValue.clear();
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 10.0,
+                              ),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: primary200,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Text(
+                                'Valider',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: const Text(
+                              'Annuler',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      onLongPress: onLongPress,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15.0,
+          vertical: 10.0,
+        ),
+        decoration: BoxDecoration(
+          color: neutral200,
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(
+            width: 2,
+            color: mesure['value'] == null ? neutral200 : primary200,
+          ),
+        ),
+        child: Row(
+          children: [
+            Text(
+              '${mesure['abbr']} : ',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                mesure['name'],
+                overflow: TextOverflow.clip,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (mesure['value'] != null)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 3.0,
+                ),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: primary200,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Text(
+                  mesure['value'],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            const SizedBox(
+              width: 5.0,
+            ),
+            SvgPicture.asset(
+              'assets/icons/check-circle-bold.svg',
+              semanticsLabel: 'Arriw left',
+              colorFilter: ColorFilter.mode(
+                mesure['value'] == null ? neutral300 : primary200,
+                BlendMode.srcIn,
+              ),
+              height: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<dynamic> addMesure({
     required BuildContext context,
     required String addTo,
   }) {
     return showModalBottomSheet(
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) => CupertinoActionSheet(
         message: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Form(
-            key: addMesureFormKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ajouter une nouvelle mesure',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                        color: Theme.of(context).iconTheme.color,
+          padding: EdgeInsets.only(
+            left: 10.0,
+            top: 10.0,
+            right: 10.0,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Form(
+              key: addMesureFormKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Ajouter une nouvelle mesure',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Entrer les informations de la mesure',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).iconTheme.color,
+                      Text(
+                        'Entrer les informations de la mesure',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                    cursorColor: Theme.of(context).iconTheme.color,
+                    cursorErrorColor: primary500,
+                    decoration: FormDecoration.inputDecoaration(
+                      context: context,
+                      placeholder: 'Nom de la mesure',
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                TextFormField(
-                  cursorColor: Theme.of(context).iconTheme.color,
-                  cursorErrorColor: primary500,
-                  decoration: FormDecoration.inputDecoaration(
-                    context: context,
-                    placeholder: 'Nom de la mesure',
+                    controller: _controllerMesureName,
+                    validator: (name) =>
+                        name == null || _controllerMesureName.text.trim() == ''
+                            ? 'Veuillez saisir le nom de la mesure'
+                            : null,
                   ),
-                  controller: _controllerMesureName,
-                  validator: (name) =>
-                      name == null || _controllerMesureName.text.trim() == ''
-                          ? 'Veuillez saisir le nom de la mesure'
-                          : null,
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                TextFormField(
-                  cursorColor: Theme.of(context).iconTheme.color,
-                  cursorErrorColor: primary500,
-                  decoration: FormDecoration.inputDecoaration(
-                    context: context,
-                    placeholder: 'Abbreviation',
+                  const SizedBox(
+                    height: 10.0,
                   ),
-                  controller: _controllerMesureAbbr,
-                  validator: (abbr) =>
-                      abbr == null || _controllerMesureAbbr.text.trim() == ''
-                          ? 'Veuillez saisir l\'abbreviation de votre mesure'
-                          : null,
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                TextFormField(
-                  keyboardType: const TextInputType.numberWithOptions(),
-                  cursorColor: Theme.of(context).iconTheme.color,
-                  cursorErrorColor: primary500,
-                  decoration: FormDecoration.inputDecoaration(
-                    context: context,
-                    placeholder: 'Valeur : 83 (cm)',
+                  TextFormField(
+                    cursorColor: Theme.of(context).iconTheme.color,
+                    cursorErrorColor: primary500,
+                    decoration: FormDecoration.inputDecoaration(
+                      context: context,
+                      placeholder: 'Abbreviation',
+                    ),
+                    controller: _controllerMesureAbbr,
+                    validator: (abbr) =>
+                        abbr == null || _controllerMesureAbbr.text.trim() == ''
+                            ? 'Veuillez saisir l\'abbreviation de votre mesure'
+                            : null,
                   ),
-                  controller: _controllerMesureValue,
-                  validator: (value) =>
-                      value == null || _controllerMesureValue.text.trim() == ''
-                          ? 'Veuillez saisir la valeur de la mesure'
-                          : null,
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (!addMesureFormKey.currentState!.validate()) {
-                          return;
-                        }
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  TextFormField(
+                    keyboardType: const TextInputType.numberWithOptions(),
+                    cursorColor: Theme.of(context).iconTheme.color,
+                    cursorErrorColor: primary500,
+                    decoration: FormDecoration.inputDecoaration(
+                      context: context,
+                      placeholder: 'Valeur : 83 (cm)',
+                    ),
+                    controller: _controllerMesureValue,
+                    validator: (value) => value == null ||
+                            _controllerMesureValue.text.trim() == ''
+                        ? 'Veuillez saisir la valeur de la mesure'
+                        : null,
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (!addMesureFormKey.currentState!.validate()) {
+                            return;
+                          }
 
-                        setState(() {
-                          customerMesures[addTo]!.add(
-                            {
-                              'name': _controllerMesureName.text.trim(),
-                              'abbr': _controllerMesureAbbr.text.trim(),
-                              'value': _controllerMesureValue.text.trim(),
-                            },
-                          );
-                          _controllerMesureName.clear();
-                          _controllerMesureAbbr.clear();
-                          _controllerMesureValue.clear();
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 10.0,
+                          setState(() {
+                            customerMesures[addTo]!.add(
+                              {
+                                'name': _controllerMesureName.text.trim(),
+                                'abbr': _controllerMesureAbbr.text.trim(),
+                                'value': _controllerMesureValue.text.trim(),
+                              },
+                            );
+                            _controllerMesureName.clear();
+                            _controllerMesureAbbr.clear();
+                            _controllerMesureValue.clear();
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 10.0,
+                          ),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: primary200,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: const Text(
+                            'Valider',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
                         ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: primary200,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
                         child: const Text(
-                          'Valider',
+                          'Annuler',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Montserrat',
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Text(
-                        'Annuler',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Montserrat',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
