@@ -66,11 +66,7 @@ class _CatalogueState extends State<Catalogue> {
         CatalogueTeela.ownerCatalogues = [];
         ModeleTeela.modeles = [];
         retrieveCatalogue();
-        await Future.delayed(
-          const Duration(
-            milliseconds: 1000,
-          ),
-        );
+        await Future.delayed(const Duration(milliseconds: 1000));
       },
       color: Theme.of(context).scaffoldBackgroundColor,
       backgroundColor: Theme.of(context).iconTheme.color,
@@ -80,10 +76,11 @@ class _CatalogueState extends State<Catalogue> {
         child: Column(
           children: [
             TextField(
-              onTap: () => showSearch(
-                context: context,
-                delegate: Search(searchKey: 'Catalogue'),
-              ),
+              onTap:
+                  () => showSearch(
+                    context: context,
+                    delegate: Search(searchKey: 'Catalogue'),
+                  ),
               readOnly: true,
               decoration: InputDecoration(
                 prefixIcon: Padding(
@@ -96,9 +93,7 @@ class _CatalogueState extends State<Catalogue> {
                     ),
                   ),
                 ),
-                contentPadding: const EdgeInsets.only(
-                  right: 10.0,
-                ),
+                contentPadding: const EdgeInsets.only(right: 10.0),
                 filled: true,
                 fillColor: neutral200,
                 enabledBorder: const OutlineInputBorder(
@@ -109,24 +104,20 @@ class _CatalogueState extends State<Catalogue> {
                   borderRadius: BorderRadius.circular(5.0),
                   borderSide: const BorderSide(color: neutral200),
                 ),
-                hintStyle: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
+                hintStyle: const TextStyle(fontWeight: FontWeight.normal),
                 hintText: 'Rechercher...',
               ),
             ),
-            const SizedBox(
-              height: 30.0,
-            ),
+            const SizedBox(height: 30.0),
             GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddCatalogue(
-                    catalogueModel: null,
+              onTap:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => const AddCatalogue(catalogueModel: null),
+                    ),
                   ),
-                ),
-              ),
               child: Row(
                 children: [
                   DottedBorder(
@@ -136,15 +127,10 @@ class _CatalogueState extends State<Catalogue> {
                     child: const SizedBox(
                       height: 80.0,
                       width: 80.0,
-                      child: Icon(
-                        Icons.add,
-                        size: 40.0,
-                      ),
+                      child: Icon(Icons.add, size: 40.0),
                     ),
                   ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
+                  const SizedBox(width: 10.0),
                   const Expanded(
                     child: SizedBox(
                       height: 80.0,
@@ -166,45 +152,104 @@ class _CatalogueState extends State<Catalogue> {
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10.0,
-            ),
+            const SizedBox(height: 10.0),
             !internetAccess
                 ? Container(
-                    alignment: Alignment.center,
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/no-internet.svg',
-                          colorFilter: ColorFilter.mode(
-                            Theme.of(context).iconTheme.color!,
-                            BlendMode.srcIn,
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/no-internet.svg',
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).iconTheme.color!,
+                          BlendMode.srcIn,
+                        ),
+                        height: 75,
+                        width: 75,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Pas d\'accès internet',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        // alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40.0,
+                          vertical: 10.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).iconTheme.color,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              internetAccess = true;
+                              _hasNextCatalogue = true;
+                            });
+                            retrieveCatalogue();
+                          },
+                          child: Text(
+                            'Réessayer',
+                            style: TextStyle(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              fontSize: 16,
+                            ),
                           ),
-                          height: 75,
-                          width: 75,
                         ),
-                        const SizedBox(
-                          height: 10,
+                      ),
+                    ],
+                  ),
+                )
+                : ownerCatalogue.isEmpty && !_hasNextCatalogue
+                ? Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/no-data.svg',
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).iconTheme.color!,
+                          BlendMode.srcIn,
                         ),
-                        const Text(
-                          'Pas d\'accès internet',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w700,
-                          ),
+                        height: 75,
+                        width: 75,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Aucun Catalogue à afficher',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            internetAccess = true;
+                            _hasNextCatalogue = true;
+                          });
+                          retrieveCatalogue();
+                        },
+                        child: Container(
                           // alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40.0,
@@ -212,129 +257,64 @@ class _CatalogueState extends State<Catalogue> {
                           ),
                           decoration: BoxDecoration(
                             color: Theme.of(context).iconTheme.color,
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                internetAccess = true;
-                              });
-                              retrieveCatalogue();
-                            },
-                            child: Text(
-                              'Réessayer',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                fontSize: 16,
-                              ),
+                          child: Text(
+                            'Actualiser',
+                            style: TextStyle(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              fontSize: 16,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  )
-                : ownerCatalogue.isEmpty && !_hasNextCatalogue
-                    ? Container(
-                        alignment: Alignment.center,
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/no-data.svg',
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).iconTheme.color!,
-                                BlendMode.srcIn,
-                              ),
-                              height: 75,
-                              width: 75,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                              'Aucun Catalogue à afficher',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  internetAccess = true;
-                                });
-                                retrieveCatalogue();
-                              },
-                              child: Container(
-                                // alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 40.0,
-                                  vertical: 10.0,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).iconTheme.color,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Text(
-                                  'Actualiser',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Column(
-                        children: [
-                          for (var item in ownerCatalogue) ...[
-                            catalogueItemBuilder(
-                              catalogue: CatalogueModel(
-                                id: item['id'],
-                                description: item['description'],
-                                modeles: [
-                                  for (var element in item['Modele'])
-                                    ModeleModel(
-                                      description: element['description'],
-                                      duration: SfRangeValues(
-                                        element['duration'][0],
-                                        element['duration'][1],
-                                      ),
-                                      id: element['id'],
-                                      images: element['images'],
-                                      maxPrice: element['max_price'],
-                                      minPrice: element['min_price'],
-                                      title: element['title'],
-                                    ),
-                                ],
-                                title: item['title'],
-                              ),
-                              context: context,
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                          ],
-                          if (_hasNextCatalogue)
-                            const Center(
-                              child: SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CupertinoActivityIndicator(),
-                              ),
-                            ),
-                        ],
                       ),
+                    ],
+                  ),
+                )
+                : Column(
+                  children: [
+                    for (var item in ownerCatalogue) ...[
+                      catalogueItemBuilder(
+                        catalogue: CatalogueModel(
+                          id: item['_id'].toString().substring(
+                            10,
+                            item['_id'].toString().length - 2,
+                          ),
+                          description: item['description'],
+                          modeles: [
+                            // for (var element in item['Modele'])
+                            //   ModeleModel(
+                            //     description: element['description'],
+                            //     duration: SfRangeValues(
+                            //       element['duration'][0],
+                            //       element['duration'][1],
+                            //     ),
+                            //     id: element['_id'].toString().substring(
+                            //       10,
+                            //       element['_id'].toString().length - 2,
+                            //     ),
+                            //     images: element['images'],
+                            //     maxPrice: element['max_price'],
+                            //     minPrice: element['min_price'],
+                            //     title: element['title'],
+                            //   ),
+                          ],
+                          title: item['title'],
+                        ),
+                        context: context,
+                      ),
+                      const SizedBox(height: 20.0),
+                    ],
+                    if (_hasNextCatalogue)
+                      const Center(
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      ),
+                  ],
+                ),
           ],
         ),
       ),
@@ -346,175 +326,167 @@ class _CatalogueState extends State<Catalogue> {
     required CatalogueModel catalogue,
   }) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DetailsCatalogue(
-            catalogueModel: catalogue,
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailsCatalogue(catalogueModel: catalogue),
+            ),
           ),
-        ),
-      ),
-      onLongPress: () => showCupertinoModalPopup(
-        context: context,
-        builder: (context) => CupertinoActionSheet(
-          message: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Actions',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                    ),
-                    Text(
-                      'Quelle action souhaitex-vous effectuer sur ce catalogue?',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 5.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddCatalogue(
-                              catalogueModel: catalogue,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 10.0,
-                        ),
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                          color: primary200,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
+      onLongPress:
+          () => showCupertinoModalPopup(
+            context: context,
+            builder:
+                (context) => CupertinoActionSheet(
+                  message: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SvgPicture.asset(
-                              'assets/icons/edit.svg',
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
+                            Text(
+                              'Actions',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat',
+                                color: Theme.of(context).iconTheme.color,
                               ),
                             ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            const Text(
-                              'Editer',
+                            Text(
+                              'Quelle action souhaitex-vous effectuer sur ce catalogue?',
+                              textAlign: TextAlign.left,
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
                                 fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context).iconTheme.color,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 10.0,
-                        ),
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
+                      const SizedBox(height: 5.0),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            SvgPicture.asset(
-                              'assets/icons/delete.6.svg',
-                              colorFilter: const ColorFilter.mode(
-                                primary200,
-                                BlendMode.srcIn,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => AddCatalogue(
+                                          catalogueModel: catalogue,
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                  horizontal: 10.0,
+                                ),
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                  color: primary200,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/edit.svg',
+                                      colorFilter: const ColorFilter.mode(
+                                        Colors.white,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10.0),
+                                    const Text(
+                                      'Editer',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            const Text(
-                              'Supprimer',
-                              style: TextStyle(
-                                color: primary200,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Montserrat',
+                            const SizedBox(height: 5.0),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                  horizontal: 10.0,
+                                ),
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/delete.6.svg',
+                                      colorFilter: const ColorFilter.mode(
+                                        primary200,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10.0),
+                                    const Text(
+                                      'Supprimer',
+                                      style: TextStyle(
+                                        color: primary200,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
           ),
-        ),
-      ),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
             child:
-                // catalogue.modeles.isNotEmpty
-                // ? Image.network(
-                //     Auth.supabase.storage.from('modele_images').getPublicUrl(
-                //         catalogue.modeles[0].images[0].substring(14)),
-                //     height: 80.0,
-                //     width: 80.0,
-                //     fit: BoxFit.cover,
-                //   )
-                // :
-                Image.asset(
+            // catalogue.modeles.isNotEmpty
+            // ? Image.network(
+            //     Auth.supabase.storage.from('modele_images').getPublicUrl(
+            //         catalogue.modeles[0].images[0].substring(14)),
+            //     height: 80.0,
+            //     width: 80.0,
+            //     fit: BoxFit.cover,
+            //   )
+            // :
+            Image.asset(
               'assets/images/catalogue/img_1.png',
               height: 80.0,
               width: 80.0,
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(
-            width: 10.0,
-          ),
+          const SizedBox(width: 10.0),
           Expanded(
             child: SizedBox(
               height: 80.0,
@@ -530,14 +502,9 @@ class _CatalogueState extends State<Catalogue> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    catalogue.description,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  Text(catalogue.description, overflow: TextOverflow.ellipsis),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(10.0),
@@ -553,7 +520,7 @@ class _CatalogueState extends State<Catalogue> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -561,10 +528,7 @@ class _CatalogueState extends State<Catalogue> {
 
   Future retrieveCatalogue() async {
     if (!await Internet.checkInternetAccess()) {
-      LocalPreferences.showFlashMessage(
-        'Pas d\'internet',
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
       setState(() {
         internetAccess = false;
       });
@@ -579,14 +543,15 @@ class _CatalogueState extends State<Catalogue> {
         _hasNextCatalogue = true;
       });
     }
-
+    print(Auth.user!['_id']);
     try {
       final catalogueSnap = await CatalogueTeela.retrieveMultiCatalogue(
         limit: documentLimit,
-        // startAfter: CatalogueTeela.ownerCatalogues.isNotEmpty
-        //     ? CatalogueTeela.ownerCatalogues.last['id']
-        //     : null,
-        owner: Auth.user!.id,
+        // startAfter:
+        //     CatalogueTeela.ownerCatalogues.isNotEmpty
+        //         ? CatalogueTeela.ownerCatalogues.last['id']
+        //         : null,
+        owner: Auth.user!['_id'].toString(),
       );
       ownerCatalogue = CatalogueTeela.ownerCatalogues;
       // CatalogueTeela.ownerCatalogues = ownerCatalogue = catalogueSnap;
@@ -597,10 +562,7 @@ class _CatalogueState extends State<Catalogue> {
       }
     } on PostgrestException catch (errno) {
       debugPrint(errno.toString());
-      LocalPreferences.showFlashMessage(
-        errno.message.toString(),
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage(errno.message.toString(), Colors.red);
       setState(() {
         _hasNextCatalogue = false;
       });

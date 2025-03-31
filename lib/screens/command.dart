@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -38,10 +36,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller = TabController(
-      length: 3,
-      vsync: this,
-    );
+    _controller = TabController(length: 3, vsync: this);
 
     // Listening for tab change event
     _controller!.addListener(() {
@@ -77,10 +72,11 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
     return Column(
       children: [
         TextField(
-          onTap: () => showSearch(
-            context: context,
-            delegate: Search(searchKey: 'Catalogue'),
-          ),
+          onTap:
+              () => showSearch(
+                context: context,
+                delegate: Search(searchKey: 'Catalogue'),
+              ),
           readOnly: true,
           decoration: InputDecoration(
             prefixIcon: Padding(
@@ -93,9 +89,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
-            contentPadding: const EdgeInsets.only(
-              right: 10.0,
-            ),
+            contentPadding: const EdgeInsets.only(right: 10.0),
             filled: true,
             fillColor: neutral200,
             enabledBorder: const OutlineInputBorder(
@@ -106,15 +100,11 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
               borderRadius: BorderRadius.circular(5.0),
               borderSide: const BorderSide(color: neutral200),
             ),
-            hintStyle: const TextStyle(
-              fontWeight: FontWeight.normal,
-            ),
+            hintStyle: const TextStyle(fontWeight: FontWeight.normal),
             hintText: 'Rechercher...',
           ),
         ),
-        const SizedBox(
-          height: 5.0,
-        ),
+        const SizedBox(height: 5.0),
         TabBar(
           controller: _controller,
           padding: EdgeInsets.zero,
@@ -130,9 +120,10 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     'En attente',
                     style: TextStyle(
-                      color: _controller!.index == 0
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          _controller!.index == 0
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                     ),
                   ),
                   if (_controller!.index == 0)
@@ -155,9 +146,10 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     'Termines',
                     style: TextStyle(
-                      color: _controller!.index == 1
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          _controller!.index == 1
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                     ),
                   ),
                   if (_controller!.index == 1)
@@ -180,9 +172,10 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     'Livres',
                     style: TextStyle(
-                      color: _controller!.index == 2
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          _controller!.index == 2
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                     ),
                   ),
                   if (_controller!.index == 2)
@@ -203,55 +196,121 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
           width: double.maxFinite,
           child: SvgPicture.asset(
             'assets/images/general/pattern_2.svg',
-            colorFilter: const ColorFilter.mode(
-              neutral700,
-              BlendMode.srcIn,
-            ),
+            colorFilter: const ColorFilter.mode(neutral700, BlendMode.srcIn),
             fit: BoxFit.fill,
             // width: MediaQuery.of(context).size.height,
           ),
         ),
-        const SizedBox(
-          height: 10.0,
-        ),
+        const SizedBox(height: 10.0),
         !internetAccess
             ? Expanded(
-                child: TabBarView(
-                  controller: _controller,
-                  children: [
-                    for (var index in [1, 2, 3])
-                      Container(
-                        key: Key(index.toString()),
-                        alignment: Alignment.center,
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/no-internet.svg',
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).iconTheme.color!,
-                                BlendMode.srcIn,
+              child: TabBarView(
+                controller: _controller,
+                children: [
+                  for (var index in [1, 2, 3])
+                    Container(
+                      key: Key(index.toString()),
+                      alignment: Alignment.center,
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/no-internet.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).iconTheme.color!,
+                              BlendMode.srcIn,
+                            ),
+                            height: 75,
+                            width: 75,
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Pas d\'accès internet',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            // alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40.0,
+                              vertical: 10.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).iconTheme.color,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  internetAccess = true;
+                                  _hasNextCommande = true;
+                                });
+                                retrieveCommande();
+                              },
+                              child: Text(
+                                'Réessayer',
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  fontSize: 16,
+                                ),
                               ),
-                              height: 75,
-                              width: 75,
                             ),
-                            const SizedBox(
-                              height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            )
+            : ownerCommande.isEmpty && !_hasNextCommande
+            ? Expanded(
+              child: TabBarView(
+                controller: _controller,
+                children: [
+                  for (var index in [1, 2, 3])
+                    Container(
+                      key: Key(index.toString()),
+                      alignment: Alignment.center,
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/no-data.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).iconTheme.color!,
+                              BlendMode.srcIn,
                             ),
-                            const Text(
-                              'Pas d\'accès internet',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w700,
-                              ),
+                            height: 75,
+                            width: 75,
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Aucun Commande à afficher',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w700,
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
+                          ),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                internetAccess = true;
+                                _hasNextCommande = true;
+                              });
+                              retrieveCommande();
+                            },
+                            child: Container(
                               // alignment: Alignment.center,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 40.0,
@@ -259,153 +318,79 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                               ),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).iconTheme.color,
-                                borderRadius: BorderRadius.circular(10.0),
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    internetAccess = true;
-                                  });
-                                  retrieveCommande();
-                                },
-                                child: Text(
-                                  'Réessayer',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                    fontSize: 16,
-                                  ),
+                              child: Text(
+                                'Actualiser',
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  fontSize: 16,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              )
-            : ownerCommande.isEmpty && !_hasNextCommande
-                ? Expanded(
-                    child: TabBarView(
-                      controller: _controller,
-                      children: [
-                        for (var index in [1, 2, 3])
-                          Container(
-                            key: Key(index.toString()),
-                            alignment: Alignment.center,
-                            height: MediaQuery.of(context).size.height / 1.5,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icons/no-data.svg',
-                                  colorFilter: ColorFilter.mode(
-                                    Theme.of(context).iconTheme.color!,
-                                    BlendMode.srcIn,
-                                  ),
-                                  height: 75,
-                                  width: 75,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const Text(
-                                  'Aucun Commande à afficher',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      internetAccess = true;
-                                    });
-                                    retrieveCommande();
-                                  },
-                                  child: Container(
-                                    // alignment: Alignment.center,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 40.0,
-                                      vertical: 10.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).iconTheme.color,
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    child: Text(
-                                      'Actualiser',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .scaffoldBackgroundColor,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
-                  )
-                : Expanded(
-                    child: TabBarView(
-                      controller: _controller,
-                      children: [
-                        Column(
-                          children: [
-                            for (Map<String, dynamic> commande
-                                in ownerCommande.where((item) => true)) ...[
-                              commandeItemBuilder(
-                                context: context,
-                                commande: CommandeModel(
-                                  customerMesures: commande['customerMesures'],
-                                  customerName: commande['customerName'],
-                                  customerPhone: commande['customerPhone'],
-                                  date: DateTime.parse(commande['date']),
-                                  details: commande['details'],
-                                  duration: commande['duration'],
-                                  id: commande['id'],
-                                  modele: ModeleModel(
-                                      description: commande['Modele']
-                                          ['description'],
-                                      duration: SfRangeValues(
-                                          commande['Modele']['duration'][0],
-                                          commande['Modele']['duration'][0]),
-                                      id: commande['Modele']['id'],
-                                      images: commande['Modele']['images'],
-                                      maxPrice: commande['Modele']['max_price'],
-                                      minPrice: commande['Modele']['min_price'],
-                                      title: commande['Modele']['title']),
-                                  price: commande['price'],
-                                  versements: commande['versements'],
-                                ),
+                ],
+              ),
+            )
+            : Expanded(
+              child: TabBarView(
+                controller: _controller,
+                children: [
+                  Column(
+                    children: [
+                      for (Map<String, dynamic> commande in ownerCommande.where(
+                        (item) => true,
+                      )) ...[
+                        commandeItemBuilder(
+                          context: context,
+                          commande: CommandeModel(
+                            customerMesures: commande['customerMesures'],
+                            customerName: commande['customerName'],
+                            customerPhone: commande['customerPhone'],
+                            date: DateTime.parse(commande['date']),
+                            details: commande['details'],
+                            duration: commande['duration'],
+                            id: commande['_id'].toString().substring(
+                              10,
+                              commande['_id'].toString().length - 2,
+                            ),
+                            modele: ModeleModel(
+                              description: commande['Modele']['description'],
+                              duration: SfRangeValues(
+                                commande['Modele']['duration'][0],
+                                commande['Modele']['duration'][0],
                               ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                            ],
-                            if (_hasNextCommande)
-                              const Center(
-                                child: SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CupertinoActivityIndicator(),
-                                ),
-                              ),
-                          ],
+                              id: commande['Modele']['_id'],
+                              images: commande['Modele']['images'],
+                              maxPrice: commande['Modele']['max_price'],
+                              minPrice: commande['Modele']['min_price'],
+                              title: commande['Modele']['title'],
+                            ),
+                            price: commande['price'],
+                            versements: commande['versements'],
+                          ),
                         ),
-                        const Column(),
-                        const Column(),
+                        const SizedBox(height: 20.0),
                       ],
-                    ),
-                  )
+                      if (_hasNextCommande)
+                        const Center(
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CupertinoActivityIndicator(),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const Column(),
+                  const Column(),
+                ],
+              ),
+            ),
       ],
     );
   }
@@ -415,14 +400,13 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
     required CommandeModel commande,
   }) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DetailsCommande(
-            commande: commande,
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailsCommande(commande: commande),
+            ),
           ),
-        ),
-      ),
       child: SizedBox(
         height: 80.0,
         child: Row(
@@ -440,9 +424,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(
-              width: 10.0,
-            ),
+            const SizedBox(width: 10.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,23 +440,20 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Text(
                     commande.customerName,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
-                      color: commande.date
-                                  .add(Duration(days: commande.duration))
-                                  .difference(commande.date)
-                                  .inDays <=
-                              3
-                          ? primary200
-                          : Colors.transparent,
+                      color:
+                          commande.date
+                                      .add(Duration(days: commande.duration))
+                                      .difference(commande.date)
+                                      .inDays <=
+                                  3
+                              ? primary200
+                              : Colors.transparent,
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -483,13 +462,14 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w600,
-                        color: commande.date
-                                    .add(Duration(days: commande.duration))
-                                    .difference(commande.date)
-                                    .inDays <=
-                                3
-                            ? Colors.white
-                            : Theme.of(context).iconTheme.color,
+                        color:
+                            commande.date
+                                        .add(Duration(days: commande.duration))
+                                        .difference(commande.date)
+                                        .inDays <=
+                                    3
+                                ? Colors.white
+                                : Theme.of(context).iconTheme.color,
                       ),
                     ),
                   ),
@@ -509,7 +489,9 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                       '${commande.date.add(Duration(days: commande.duration)).day}',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 49),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 49,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -518,7 +500,8 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                     bottom: -10,
                     child: Text(
                       DateFormat.MMM().format(
-                          commande.date.add(Duration(days: commande.duration))),
+                        commande.date.add(Duration(days: commande.duration)),
+                      ),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
@@ -537,10 +520,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
 
   Future retrieveCommande() async {
     if (!await Internet.checkInternetAccess()) {
-      LocalPreferences.showFlashMessage(
-        'Pas d\'internet',
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
       setState(() {
         internetAccess = false;
       });
@@ -562,7 +542,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         // startAfter: CatalogueTeela.ownerCommandes.isNotEmpty
         //     ? CatalogueTeela.ownerCommandes.last['id']
         //     : null,
-        owner: Auth.user!.id,
+        owner: Auth.user!['_id'].toString(),
       );
       print(commandeSnap);
       ownerCommande = CommandeTeela.ownerCommandes;
@@ -573,10 +553,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
       }
     } on PostgrestException catch (errno) {
       debugPrint(errno.toString());
-      LocalPreferences.showFlashMessage(
-        errno.message.toString(),
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage(errno.message.toString(), Colors.red);
       setState(() {
         _hasNextCommande = false;
       });

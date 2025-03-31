@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:teela/auth/otp.dart';
 import 'package:teela/auth/otp_success.dart';
+import 'package:teela/auth/sign_in.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -12,10 +12,7 @@ import 'package:teela/utils/local.dart';
 
 class SignUp extends StatefulWidget {
   final String phone;
-  const SignUp({
-    super.key,
-    required this.phone,
-  });
+  const SignUp({super.key, required this.phone});
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -69,24 +66,16 @@ class _SignUpState extends State<SignUp> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
+                            const SizedBox(height: 20.0),
                             const Text(
                               'Pour effectuer la creation de votre compte, veuillez remplir les informations suivantes',
                             ),
-                            const SizedBox(
-                              height: 25.0,
-                            ),
+                            const SizedBox(height: 25.0),
                             const Text(
                               'Nom complet',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
+                            const SizedBox(height: 5.0),
                             TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
@@ -95,45 +84,45 @@ class _SignUpState extends State<SignUp> {
                                 placeholder: 'julie queen',
                               ),
                               controller: _controllerFullName,
-                              validator: (fullName) => fullName == null ||
-                                      _controllerFullName.text.trim() == ''
-                                  ? 'Veuillez saisir votre nom complet'
-                                  : null,
+                              validator:
+                                  (fullName) =>
+                                      fullName == null ||
+                                              _controllerFullName.text.trim() ==
+                                                  ''
+                                          ? 'Veuillez saisir votre nom complet'
+                                          : null,
                             ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
+                            const SizedBox(height: 10.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   'Mot de passe',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                                 Container(
                                   height: 15.0,
                                   width: 15.0,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: _controllerConfirmPassword.text
-                                                    .trim() !=
-                                                '' &&
-                                            _controllerPassword.text.trim() ==
-                                                _controllerConfirmPassword.text
-                                                    .trim()
-                                        ? secondary500
-                                        : primary300,
+                                    color:
+                                        _controllerConfirmPassword.text
+                                                        .trim() !=
+                                                    '' &&
+                                                _controllerPassword.text
+                                                        .trim() ==
+                                                    _controllerConfirmPassword
+                                                        .text
+                                                        .trim()
+                                            ? secondary500
+                                            : primary300,
                                     borderRadius: BorderRadius.circular(1000),
                                   ),
                                   // child: SvgPicture.asset('assets/icons/'),
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
+                            const SizedBox(height: 5.0),
                             TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
@@ -144,51 +133,53 @@ class _SignUpState extends State<SignUp> {
                                 placeholder: '_',
                               ),
                               controller: _controllerPassword,
-                              onChanged: (value) => setState(() {
-                                // _controllerPassword.text = value;
-                              }),
-                              validator: (fullName) => fullName == null ||
-                                      _controllerPassword.text.trim() == '' ||
-                                      !_controllerPassword.text
-                                          .contains(RegExp(r'\d')) ||
-                                      _controllerPassword.text.length < 6
-                                  ? 'votre mot de passe doit contenir au moins 06 caracteres et un chiffre'
-                                  : null,
+                              onChanged:
+                                  (value) => setState(() {
+                                    // _controllerPassword.text = value;
+                                  }),
+                              validator:
+                                  (fullName) =>
+                                      fullName == null ||
+                                              _controllerPassword.text.trim() ==
+                                                  '' ||
+                                              !_controllerPassword.text
+                                                  .contains(RegExp(r'\d')) ||
+                                              _controllerPassword.text.length <
+                                                  6
+                                          ? 'votre mot de passe doit contenir au moins 06 caracteres et un chiffre'
+                                          : null,
                             ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
+                            const SizedBox(height: 10.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   'Confirmer le mot de passe',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                                 Container(
                                   height: 15.0,
                                   width: 15.0,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: _controllerConfirmPassword.text
-                                                    .trim() !=
-                                                '' &&
-                                            _controllerPassword.text.trim() ==
-                                                _controllerConfirmPassword.text
-                                                    .trim()
-                                        ? secondary500
-                                        : primary300,
+                                    color:
+                                        _controllerConfirmPassword.text
+                                                        .trim() !=
+                                                    '' &&
+                                                _controllerPassword.text
+                                                        .trim() ==
+                                                    _controllerConfirmPassword
+                                                        .text
+                                                        .trim()
+                                            ? secondary500
+                                            : primary300,
                                     borderRadius: BorderRadius.circular(1000),
                                   ),
                                   // child: SvgPicture.asset('assets/icons/'),
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
+                            const SizedBox(height: 5.0),
                             TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
@@ -199,22 +190,23 @@ class _SignUpState extends State<SignUp> {
                                 placeholder: '_',
                               ),
                               controller: _controllerConfirmPassword,
-                              onChanged: (value) => setState(() {
-                                // _controllerConfirmPassword.text = value;
-                              }),
-                              validator: (fullName) => fullName == null ||
-                                      _controllerPassword.text.trim() !=
-                                          _controllerConfirmPassword.text.trim()
-                                  ? 'Veuillez comfirmer votre mot de passe'
-                                  : null,
+                              onChanged:
+                                  (value) => setState(() {
+                                    // _controllerConfirmPassword.text = value;
+                                  }),
+                              validator:
+                                  (fullName) =>
+                                      fullName == null ||
+                                              _controllerPassword.text.trim() !=
+                                                  _controllerConfirmPassword
+                                                      .text
+                                                      .trim()
+                                          ? 'Veuillez comfirmer votre mot de passe'
+                                          : null,
                             ),
-                            const SizedBox(
-                              height: 25.0,
-                            ),
+                            const SizedBox(height: 25.0),
                             const Text('Le mot de passe doit contenir:'),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
+                            const SizedBox(height: 5.0),
                             Row(
                               children: [
                                 Container(
@@ -222,22 +214,19 @@ class _SignUpState extends State<SignUp> {
                                   width: 15.0,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: _controllerPassword.text.length >= 6
-                                        ? secondary500
-                                        : neutral300,
+                                    color:
+                                        _controllerPassword.text.length >= 6
+                                            ? secondary500
+                                            : neutral300,
                                     borderRadius: BorderRadius.circular(1000),
                                   ),
                                   // child: SvgPicture.asset('assets/icons/'),
                                 ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
+                                const SizedBox(width: 10.0),
                                 const Text('Au moins 6 caracteres'),
                               ],
                             ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
+                            const SizedBox(height: 5.0),
                             Row(
                               children: [
                                 Container(
@@ -245,23 +234,21 @@ class _SignUpState extends State<SignUp> {
                                   width: 15.0,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: _controllerPassword.text
-                                            .contains(RegExp(r'\d'))
-                                        ? secondary500
-                                        : neutral300,
+                                    color:
+                                        _controllerPassword.text.contains(
+                                              RegExp(r'\d'),
+                                            )
+                                            ? secondary500
+                                            : neutral300,
                                     borderRadius: BorderRadius.circular(1000),
                                   ),
                                   // child: SvgPicture.asset('assets/icons/'),
                                 ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
+                                const SizedBox(width: 10.0),
                                 const Text('Au moins un chiffre'),
                               ],
                             ),
-                            const SizedBox(
-                              height: 30.0,
-                            )
+                            const SizedBox(height: 30.0),
                           ],
                         ),
                       ),
@@ -276,32 +263,31 @@ class _SignUpState extends State<SignUp> {
                       await registration();
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: primary200,
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      child: onGoingProcess
-                          ? SizedBox(
-                              height: 20.0,
-                              width: 20.0,
-                              child: CupertinoActivityIndicator(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
+                      child:
+                          onGoingProcess
+                              ? SizedBox(
+                                height: 20.0,
+                                width: 20.0,
+                                child: CupertinoActivityIndicator(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                ),
+                              )
+                              : Text(
+                                'Commencer',
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            )
-                          : Text(
-                              'Commencer',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
                     ),
                   ),
                 ],
@@ -319,42 +305,39 @@ class _SignUpState extends State<SignUp> {
     });
     try {
       if (!await Internet.checkInternetAccess()) {
-        LocalPreferences.showFlashMessage(
-          'Pas d\'internet',
-          Colors.red,
-        );
+        LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
         setState(() {
           onGoingProcess = false;
         });
       }
-      final user = await Auth.updateUser(
+      final user = await Auth.signUp(
         username: _controllerFullName.text.trim(),
+        phone: widget.phone,
         password: _controllerPassword.text.trim(),
       );
       if (user != null) {
+        await LocalPreferences.setFirstTime(true);
         setState(() {
           onGoingProcess = false;
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const OtpSuccess(),
-            ),
+            MaterialPageRoute(builder: (context) => const OtpSuccess()),
+          );
+        });
+      } else {
+        setState(() {
+          onGoingProcess = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SignIn()),
           );
         });
       }
-    } on AuthException catch (e) {
-      setState(() {
-        onGoingProcess = false;
-      });
-      LocalPreferences.showFlashMessage(
-        e.message,
-        Colors.red,
-      );
-      print(e.message);
     } catch (erno) {
       setState(() {
         onGoingProcess = false;
       });
+      LocalPreferences.showFlashMessage('Une erreur est survenue', Colors.red);
       debugPrint(erno.toString());
     }
   }

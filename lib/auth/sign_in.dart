@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:teela/auth/otp.dart';
+import 'package:teela/auth/otp_success.dart';
+import 'package:teela/auth/sign_up.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -37,9 +37,7 @@ class _SignInState extends State<SignIn> {
                     fit: BoxFit.cover,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -51,18 +49,12 @@ class _SignInState extends State<SignIn> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
+                        const SizedBox(height: 10.0),
                         const Text(
                           'Renseigner votre numero',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
+                        const SizedBox(height: 10.0),
                         Form(
                           key: signInFormKey,
                           child: InternationalPhoneNumberInput(
@@ -98,10 +90,15 @@ class _SignInState extends State<SignIn> {
                               context: context,
                               placeholder: 'téléphone',
                             ),
-                            validator: (phone) => phone != null &&
-                                    _controllerPhone.text.trim().length < 13
-                                ? 'Veuillez saisir une numéro de téléphone valide'
-                                : null,
+                            validator:
+                                (phone) =>
+                                    phone != null &&
+                                            _controllerPhone.text
+                                                    .trim()
+                                                    .length <
+                                                13
+                                        ? 'Veuillez saisir une numéro de téléphone valide'
+                                        : null,
                           ),
                         ),
                       ],
@@ -118,125 +115,123 @@ class _SignInState extends State<SignIn> {
               }
               return showCupertinoModalPopup(
                 context: context,
-                builder: (context) => CupertinoActionSheet(
-                  message: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Deja inscrit?',
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Montserrat',
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ),
-                            Text(
-                              'Un compte existe deja sur ce numero',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await authenfication();
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: primary200,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Text(
-                                  'Restaurer',
+                builder:
+                    (context) => CupertinoActionSheet(
+                      message: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Deja inscrit?',
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w600,
                                     fontFamily: 'Montserrat',
+                                    color: Theme.of(context).iconTheme.color,
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5.0,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text(
-                                'Changer de numero',
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: primary200,
-                                  color: primary200,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Montserrat',
+                                Text(
+                                  'Un compte existe deja sur ce numero',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    Navigator.pop(context);
+                                    await authenfication();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                    ),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: primary200,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Text(
+                                      'Restaurer',
+                                      style: TextStyle(
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).scaffoldBackgroundColor,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 5.0),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'Changer de numero',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: primary200,
+                                      color: primary200,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10.0,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               margin: const EdgeInsets.all(20.0),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: primary200,
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              child: onGoingProcess
-                  ? SizedBox(
-                      height: 20.0,
-                      width: 20.0,
-                      child: CupertinoActivityIndicator(
-                        color: Theme.of(context).scaffoldBackgroundColor,
+              child:
+                  onGoingProcess
+                      ? SizedBox(
+                        height: 20.0,
+                        width: 20.0,
+                        child: CupertinoActivityIndicator(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                      )
+                      : Text(
+                        'Continuer',
+                        style: TextStyle(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    )
-                  : Text(
-                      'Continuer',
-                      style: TextStyle(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -248,67 +243,58 @@ class _SignInState extends State<SignIn> {
     });
     try {
       if (!await Internet.checkInternetAccess()) {
+        LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
+        setState(() {
+          onGoingProcess = false;
+        });
+      }
+      Map<String, dynamic>? user = await Auth.signIn(
+        phone: _controllerPhone.text.trim(),
+      );
+      if (user != null && user.isNotEmpty) {
+        await LocalPreferences.setFirstTime(true);
+        // Update local storage
+        await LocalPreferences.setUserInfo(user);
+        Auth.user = user;
+        setState(() {
+          onGoingProcess = false;
+          // Navigate to the Home app screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => OtpSuccess(
+                    // phone: _controllerPhone.text.trim(),
+                    // register: true,
+                  ),
+            ),
+          );
+        });
+      } else {
         LocalPreferences.showFlashMessage(
-          'Pas d\'internet',
+          'Compte inexistant avec ce numero\nVeuillez creer un compte',
           Colors.red,
         );
         setState(() {
           onGoingProcess = false;
-        });
-      }
-      final user = await Auth.signUp(
-        password: 'password',
-        phone: _controllerPhone.text.trim(),
-        username: '',
-      );
-      if (user == null) {
-        setState(() {
-          onGoingProcess = false;
-        });
-
-        return Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Otp(
-              phone: _controllerPhone.text.trim(),
-              register: true,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => SignUp(
+                    phone: _controllerPhone.text.trim(),
+                    // register: true,
+                  ),
             ),
-          ),
-        );
+          );
+        });
       }
-    } on AuthException catch (e) {
-      setState(() {
-        onGoingProcess = false;
-      });
-      LocalPreferences.showFlashMessage(
-        e.message,
-        Colors.red,
-      );
-      if (e.message.startsWith('User already registered')) {
-        final user = await Auth.signIn(
-          phone: _controllerPhone.text.trim(),
-        );
-        if (user != null) {
-          // if (1 != 1) {
-          setState(() {
-            onGoingProcess = false;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Otp(
-                  phone: _controllerPhone.text.trim(),
-                  register: false,
-                ),
-              ),
-            );
-          });
-        }
-      }
-      print(e);
     } catch (erno) {
       setState(() {
         onGoingProcess = false;
       });
+      LocalPreferences.showFlashMessage('Une erreur est survenue', Colors.red);
+      print(erno);
       debugPrint(erno.toString());
     }
   }

@@ -10,10 +10,7 @@ import 'package:teela/utils/model.dart';
 
 class AddCatalogue extends StatefulWidget {
   final CatalogueModel? catalogueModel;
-  const AddCatalogue({
-    super.key,
-    required this.catalogueModel,
-  });
+  const AddCatalogue({super.key, required this.catalogueModel});
 
   @override
   State<AddCatalogue> createState() => _AddCatalogueState();
@@ -58,18 +55,12 @@ class _AddCatalogueState extends State<AddCatalogue> {
           widget.catalogueModel != null
               ? 'Mise A Jour Catalogue'
               : 'Nouveau Catalogue',
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(
-          right: 20.0,
-          left: 20.0,
-          bottom: 20.0,
-        ),
+        padding: const EdgeInsets.only(right: 20.0, left: 20.0, bottom: 20.0),
         child: Column(
           children: [
             Expanded(
@@ -81,13 +72,9 @@ class _AddCatalogueState extends State<AddCatalogue> {
                     children: [
                       const Text(
                         'Titre',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       TextFormField(
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
@@ -96,23 +83,19 @@ class _AddCatalogueState extends State<AddCatalogue> {
                           placeholder: 'Modeles traditionnels',
                         ),
                         controller: _controllerTitle,
-                        validator: (title) =>
-                            title == null || _controllerTitle.text.trim() == ''
-                                ? 'Veuillez renseigner le titre'
-                                : null,
+                        validator:
+                            (title) =>
+                                title == null ||
+                                        _controllerTitle.text.trim() == ''
+                                    ? 'Veuillez renseigner le titre'
+                                    : null,
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
+                      const SizedBox(height: 10.0),
                       const Text(
                         'Description',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       TextFormField(
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
@@ -123,10 +106,12 @@ class _AddCatalogueState extends State<AddCatalogue> {
                               'Des vetements refletant les coutumes de diverses regions du Cameroun',
                         ),
                         controller: _controllerDescription,
-                        validator: (description) => description == null ||
-                                _controllerDescription.text.trim() == ''
-                            ? 'Veuillez saisir une description'
-                            : null,
+                        validator:
+                            (description) =>
+                                description == null ||
+                                        _controllerDescription.text.trim() == ''
+                                    ? 'Veuillez saisir une description'
+                                    : null,
                       ),
                     ],
                   ),
@@ -142,32 +127,31 @@ class _AddCatalogueState extends State<AddCatalogue> {
                 await addOrUpdateCatalogue();
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10.0,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: primary200,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: onGoingProcess
-                    ? SizedBox(
-                        height: 20.0,
-                        width: 20.0,
-                        child: CupertinoActivityIndicator(
-                          color: Theme.of(context).scaffoldBackgroundColor,
+                child:
+                    onGoingProcess
+                        ? SizedBox(
+                          height: 20.0,
+                          width: 20.0,
+                          child: CupertinoActivityIndicator(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                        )
+                        : Text(
+                          widget.catalogueModel != null
+                              ? 'Mettre a jour'
+                              : 'Ajouter',
+                          style: TextStyle(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      )
-                    : Text(
-                        widget.catalogueModel != null
-                            ? 'Mettre a jour'
-                            : 'Ajouter',
-                        style: TextStyle(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
               ),
             ),
           ],
@@ -182,19 +166,19 @@ class _AddCatalogueState extends State<AddCatalogue> {
     });
     try {
       if (!await Internet.checkInternetAccess()) {
-        LocalPreferences.showFlashMessage(
-          'Pas d\'internet',
-          Colors.red,
-        );
+        LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
         setState(() {
           onGoingProcess = false;
         });
       }
       if (widget.catalogueModel != null) {
-        await CatalogueTeela.updateCatalogue(data: {
-          'description': _controllerDescription.text.trim(),
-          'title': _controllerTitle.text.trim(),
-        }, id: widget.catalogueModel!.id);
+        await CatalogueTeela.updateCatalogue(
+          data: {
+            'description': _controllerDescription.text.trim(),
+            'title': _controllerTitle.text.trim(),
+          },
+          id: widget.catalogueModel!.id,
+        );
         LocalPreferences.showFlashMessage(
           'Catalogue mis a jour avec succès',
           Colors.blue,
@@ -204,7 +188,7 @@ class _AddCatalogueState extends State<AddCatalogue> {
           data: {
             'description': _controllerDescription.text.trim(),
             'title': _controllerTitle.text.trim(),
-            'user': Auth.user!.id,
+            'user': Auth.user!['_id'].toString(),
           },
         );
         LocalPreferences.showFlashMessage(
@@ -221,10 +205,7 @@ class _AddCatalogueState extends State<AddCatalogue> {
       setState(() {
         onGoingProcess = false;
       });
-      LocalPreferences.showFlashMessage(
-        e.message,
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage(e.message, Colors.red);
     } catch (erno) {
       setState(() {
         onGoingProcess = false;

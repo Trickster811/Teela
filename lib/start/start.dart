@@ -8,11 +8,7 @@ import 'package:teela/screens/profile.dart';
 import 'package:teela/utils/color_scheme.dart';
 
 class Start extends StatefulWidget {
-  final Map<String, dynamic> userInfo;
-  const Start({
-    super.key,
-    required this.userInfo,
-  });
+  const Start({super.key});
 
   @override
   State<Start> createState() => _StartState();
@@ -22,22 +18,10 @@ class _StartState extends State<Start> {
   int currentPage = 0;
   // List of app main pages
   final List<Map> appPages = [
-    {
-      'title': 'Accueil',
-      'route': const Home(),
-    },
-    {
-      'title': 'Catalogue',
-      'route': const Catalogue(),
-    },
-    {
-      'title': 'Commande',
-      'route': const Command(),
-    },
-    {
-      'title': 'Profil',
-      'route': const Profile(),
-    }
+    {'title': 'Accueil', 'route': const Home()},
+    {'title': 'Catalogue', 'route': const Catalogue()},
+    {'title': 'Commande', 'route': const Command()},
+    {'title': 'Profil', 'route': const Profile()},
   ];
   @override
   Widget build(BuildContext context) {
@@ -48,16 +32,12 @@ class _StartState extends State<Start> {
         automaticallyImplyLeading: false,
         title: Text(
           appPages[currentPage]['title'],
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: appPages[currentPage]['route'],
       ),
       bottomNavigationBar: Container(
@@ -88,15 +68,14 @@ class _StartState extends State<Start> {
                       BlendMode.srcIn,
                     ),
                   ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
+                  const SizedBox(height: 5.0),
                   Text(
                     'Accueil',
                     style: TextStyle(
-                      color: currentPage == 0
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          currentPage == 0
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -121,15 +100,14 @@ class _StartState extends State<Start> {
                       BlendMode.srcIn,
                     ),
                   ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
+                  const SizedBox(height: 5.0),
                   Text(
                     'Catalogue',
                     style: TextStyle(
-                      color: currentPage == 1
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          currentPage == 1
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -157,15 +135,14 @@ class _StartState extends State<Start> {
                       BlendMode.srcIn,
                     ),
                   ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
+                  const SizedBox(height: 5.0),
                   Text(
                     'Commande',
                     style: TextStyle(
-                      color: currentPage == 2
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          currentPage == 2
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -190,15 +167,14 @@ class _StartState extends State<Start> {
                       BlendMode.srcIn,
                     ),
                   ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
+                  const SizedBox(height: 5.0),
                   Text(
                     'Profil',
                     style: TextStyle(
-                      color: currentPage == 3
-                          ? primary200
-                          : Theme.of(context).iconTheme.color,
+                      color:
+                          currentPage == 3
+                              ? primary200
+                              : Theme.of(context).iconTheme.color,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -210,14 +186,13 @@ class _StartState extends State<Start> {
         ),
       ),
       floatingActionButton: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AddCommande(
-              commande: null,
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddCommande(commande: null),
+              ),
             ),
-          ),
-        ),
         child: Container(
           height: 50.0,
           width: 50.0,
@@ -228,11 +203,7 @@ class _StartState extends State<Start> {
             borderRadius: BorderRadius.circular(12.0),
             color: primary200,
           ),
-          child: const Icon(
-            Icons.add,
-            size: 30.0,
-            color: Colors.white,
-          ),
+          child: const Icon(Icons.add, size: 30.0, color: Colors.white),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

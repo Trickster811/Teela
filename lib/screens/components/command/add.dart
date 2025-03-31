@@ -20,10 +20,7 @@ import 'package:path/path.dart' as p;
 class AddCommande extends StatefulWidget {
   final CommandeModel? commande;
 
-  const AddCommande({
-    super.key,
-    required this.commande,
-  });
+  const AddCommande({super.key, required this.commande});
 
   @override
   State<AddCommande> createState() => _AddCommandeState();
@@ -38,108 +35,32 @@ class _AddCommandeState extends State<AddCommande>
   // Mesures Info
   Map<String, List<Map<String, dynamic>>> defaultMesures = {
     'topBody': [
-      {
-        'name': 'Epaule',
-        'abbr': 'E',
-        'value': null,
-      },
-      {
-        'name': 'Tour de poitrine',
-        'abbr': 'P',
-        'value': null,
-      },
-      {
-        'name': 'Carrure avant',
-        'abbr': 'Ca',
-        'value': null,
-      },
-      {
-        'name': 'Carrure arriere',
-        'abbr': 'Cd',
-        'value': null,
-      },
-      {
-        'name': 'Tour de ventre',
-        'abbr': 'V',
-        'value': null,
-      },
-      {
-        'name': 'Longueur de la manche',
-        'abbr': 'L',
-        'value': null,
-      },
-      {
-        'name': 'Tour de la manche',
-        'abbr': 'Tm',
-        'value': null,
-      },
-      {
-        'name': 'Longueur du vetement',
-        'abbr': 'Lv',
-        'value': null,
-      },
-      {
-        'name': 'Tour de cou',
-        'abbr': 'C',
-        'value': null,
-      },
-      {
-        'name': 'Tour de poignet',
-        'abbr': 'P',
-        'value': null,
-      },
-      {
-        'name': 'Tour de rein',
-        'abbr': 'R',
-        'value': null,
-      },
-      {
-        'name': 'Longueur du corps',
-        'abbr': 'Lc',
-        'value': null,
-      },
+      {'name': 'Epaule', 'abbr': 'E', 'value': null},
+      {'name': 'Tour de poitrine', 'abbr': 'P', 'value': null},
+      {'name': 'Carrure avant', 'abbr': 'Ca', 'value': null},
+      {'name': 'Carrure arriere', 'abbr': 'Cd', 'value': null},
+      {'name': 'Tour de ventre', 'abbr': 'V', 'value': null},
+      {'name': 'Longueur de la manche', 'abbr': 'L', 'value': null},
+      {'name': 'Tour de la manche', 'abbr': 'Tm', 'value': null},
+      {'name': 'Longueur du vetement', 'abbr': 'Lv', 'value': null},
+      {'name': 'Tour de cou', 'abbr': 'C', 'value': null},
+      {'name': 'Tour de poignet', 'abbr': 'P', 'value': null},
+      {'name': 'Tour de rein', 'abbr': 'R', 'value': null},
+      {'name': 'Longueur du corps', 'abbr': 'Lc', 'value': null},
     ],
     'downBody': [
-      {
-        'name': 'Tour de hanche',
-        'abbr': 'Lh',
-        'value': null,
-      },
-      {
-        'name': 'Tour de cuisse',
-        'abbr': 'Tc',
-        'value': null,
-      },
-      {
-        'name': 'Tour de bassin',
-        'abbr': 'Tb',
-        'value': null,
-      },
-      {
-        'name': 'Longueur du pantalon',
-        'abbr': 'Lp',
-        'value': null,
-      },
-      {
-        'name': 'Bas du pantalon',
-        'abbr': "B",
-        'value': null,
-      },
-      {
-        'name': 'Tour de molaire',
-        'abbr': "M",
-        'value': null,
-      },
-      {
-        'name': 'Tour du pied',
-        'abbr': 'LpD',
-        'value': null,
-      },
-    ]
+      {'name': 'Tour de hanche', 'abbr': 'Lh', 'value': null},
+      {'name': 'Tour de cuisse', 'abbr': 'Tc', 'value': null},
+      {'name': 'Tour de bassin', 'abbr': 'Tb', 'value': null},
+      {'name': 'Longueur du pantalon', 'abbr': 'Lp', 'value': null},
+      {'name': 'Bas du pantalon', 'abbr': "B", 'value': null},
+      {'name': 'Tour de molaire', 'abbr': "M", 'value': null},
+      {'name': 'Tour du pied', 'abbr': 'LpD', 'value': null},
+    ],
   };
   Map<String, List<Map<String, dynamic>>> customerMesures = {
     'topBody': [],
-    'downBody': []
+    'downBody': [],
   };
   final _controllerMesureName = TextEditingController();
   final _controllerMesureAbbr = TextEditingController();
@@ -162,7 +83,7 @@ class _AddCommandeState extends State<AddCommande>
 
   TabController? _controller;
   TabController?
-      _controllerTabMesures; // For the sections 'Haut du corps' & 'Bas du corps'
+  _controllerTabMesures; // For the sections 'Haut du corps' & 'Bas du corps'
 
   List<CatalogueModel> listCatalogue = [
     const CatalogueModel(
@@ -294,14 +215,8 @@ class _AddCommandeState extends State<AddCommande>
   @override
   void initState() {
     super.initState();
-    _controller = TabController(
-      length: 4,
-      vsync: this,
-    );
-    _controllerTabMesures = TabController(
-      length: 2,
-      vsync: this,
-    );
+    _controller = TabController(length: 4, vsync: this);
+    _controllerTabMesures = TabController(length: 2, vsync: this);
 
     // Listening for tab change event
     _controller!.addListener(() {
@@ -356,9 +271,7 @@ class _AddCommandeState extends State<AddCommande>
         ),
         title: const Text(
           'Nouvelle commande',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -382,9 +295,7 @@ class _AddCommandeState extends State<AddCommande>
               tabs: [
                 Tab(
                   child: Container(
-                    padding: const EdgeInsets.only(
-                      left: 20.0,
-                    ),
+                    padding: const EdgeInsets.only(left: 20.0),
                     width: MediaQuery.of(context).size.width * .7,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,9 +303,10 @@ class _AddCommandeState extends State<AddCommande>
                         Text(
                           'Informations du client',
                           style: TextStyle(
-                            color: _controller!.index >= 0
-                                ? primary200
-                                : neutral300,
+                            color:
+                                _controller!.index >= 0
+                                    ? primary200
+                                    : neutral300,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -403,34 +315,36 @@ class _AddCommandeState extends State<AddCommande>
                         Row(
                           children: [
                             Container(
-                              padding: _controller!.index >= 0
-                                  ? const EdgeInsets.all(5.0)
-                                  : EdgeInsets.zero,
+                              padding:
+                                  _controller!.index >= 0
+                                      ? const EdgeInsets.all(5.0)
+                                      : EdgeInsets.zero,
                               decoration: BoxDecoration(
-                                border: _controller!.index >= 0
-                                    ? Border.all(color: primary200)
-                                    : Border.all(width: 0),
+                                border:
+                                    _controller!.index >= 0
+                                        ? Border.all(color: primary200)
+                                        : Border.all(width: 0),
                                 borderRadius: BorderRadius.circular(5000),
                               ),
                               child: Container(
                                 height: _controller!.index >= 0 ? 10.0 : 15.0,
                                 width: _controller!.index >= 0 ? 10.0 : 15.0,
                                 decoration: BoxDecoration(
-                                  color: _controller!.index >= 0
-                                      ? primary200
-                                      : neutral300,
+                                  color:
+                                      _controller!.index >= 0
+                                          ? primary200
+                                          : neutral300,
                                   borderRadius: BorderRadius.circular(5000),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 2.0,
-                            ),
+                            const SizedBox(width: 2.0),
                             Expanded(
                               child: DottedBorder(
-                                color: _controller!.index >= 0
-                                    ? primary200
-                                    : neutral300,
+                                color:
+                                    _controller!.index >= 0
+                                        ? primary200
+                                        : neutral300,
                                 padding: EdgeInsets.zero,
                                 child: const Divider(
                                   height: 0.6,
@@ -454,9 +368,10 @@ class _AddCommandeState extends State<AddCommande>
                         Text(
                           'Mesures',
                           style: TextStyle(
-                            color: _controller!.index >= 1
-                                ? primary200
-                                : neutral300,
+                            color:
+                                _controller!.index >= 1
+                                    ? primary200
+                                    : neutral300,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -465,34 +380,36 @@ class _AddCommandeState extends State<AddCommande>
                         Row(
                           children: [
                             Container(
-                              padding: _controller!.index >= 1
-                                  ? const EdgeInsets.all(5.0)
-                                  : EdgeInsets.zero,
+                              padding:
+                                  _controller!.index >= 1
+                                      ? const EdgeInsets.all(5.0)
+                                      : EdgeInsets.zero,
                               decoration: BoxDecoration(
-                                border: _controller!.index >= 1
-                                    ? Border.all(color: primary200)
-                                    : Border.all(width: 0),
+                                border:
+                                    _controller!.index >= 1
+                                        ? Border.all(color: primary200)
+                                        : Border.all(width: 0),
                                 borderRadius: BorderRadius.circular(5000),
                               ),
                               child: Container(
                                 height: _controller!.index >= 1 ? 10.0 : 15.0,
                                 width: _controller!.index >= 1 ? 10.0 : 15.0,
                                 decoration: BoxDecoration(
-                                  color: _controller!.index >= 1
-                                      ? primary200
-                                      : neutral300,
+                                  color:
+                                      _controller!.index >= 1
+                                          ? primary200
+                                          : neutral300,
                                   borderRadius: BorderRadius.circular(5000),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 2.0,
-                            ),
+                            const SizedBox(width: 2.0),
                             Expanded(
                               child: DottedBorder(
-                                color: _controller!.index >= 1
-                                    ? primary200
-                                    : neutral300,
+                                color:
+                                    _controller!.index >= 1
+                                        ? primary200
+                                        : neutral300,
                                 padding: EdgeInsets.zero,
                                 child: const Divider(
                                   height: 0.6,
@@ -516,9 +433,10 @@ class _AddCommandeState extends State<AddCommande>
                         Text(
                           'Modele',
                           style: TextStyle(
-                            color: _controller!.index >= 2
-                                ? primary200
-                                : neutral300,
+                            color:
+                                _controller!.index >= 2
+                                    ? primary200
+                                    : neutral300,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -527,34 +445,36 @@ class _AddCommandeState extends State<AddCommande>
                         Row(
                           children: [
                             Container(
-                              padding: _controller!.index >= 2
-                                  ? const EdgeInsets.all(5.0)
-                                  : EdgeInsets.zero,
+                              padding:
+                                  _controller!.index >= 2
+                                      ? const EdgeInsets.all(5.0)
+                                      : EdgeInsets.zero,
                               decoration: BoxDecoration(
-                                border: _controller!.index >= 2
-                                    ? Border.all(color: primary200)
-                                    : Border.all(width: 0),
+                                border:
+                                    _controller!.index >= 2
+                                        ? Border.all(color: primary200)
+                                        : Border.all(width: 0),
                                 borderRadius: BorderRadius.circular(5000),
                               ),
                               child: Container(
                                 height: _controller!.index >= 2 ? 10.0 : 15.0,
                                 width: _controller!.index >= 2 ? 10.0 : 15.0,
                                 decoration: BoxDecoration(
-                                  color: _controller!.index >= 2
-                                      ? primary200
-                                      : neutral300,
+                                  color:
+                                      _controller!.index >= 2
+                                          ? primary200
+                                          : neutral300,
                                   borderRadius: BorderRadius.circular(5000),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 2.0,
-                            ),
+                            const SizedBox(width: 2.0),
                             Expanded(
                               child: DottedBorder(
-                                color: _controller!.index >= 2
-                                    ? primary200
-                                    : neutral300,
+                                color:
+                                    _controller!.index >= 2
+                                        ? primary200
+                                        : neutral300,
                                 padding: EdgeInsets.zero,
                                 child: const Divider(
                                   height: 0.6,
@@ -578,9 +498,10 @@ class _AddCommandeState extends State<AddCommande>
                         Text(
                           'Modalites',
                           style: TextStyle(
-                            color: _controller!.index >= 3
-                                ? primary200
-                                : neutral300,
+                            color:
+                                _controller!.index >= 3
+                                    ? primary200
+                                    : neutral300,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -589,22 +510,25 @@ class _AddCommandeState extends State<AddCommande>
                         Row(
                           children: [
                             Container(
-                              padding: _controller!.index >= 3
-                                  ? const EdgeInsets.all(5.0)
-                                  : EdgeInsets.zero,
+                              padding:
+                                  _controller!.index >= 3
+                                      ? const EdgeInsets.all(5.0)
+                                      : EdgeInsets.zero,
                               decoration: BoxDecoration(
-                                border: _controller!.index >= 3
-                                    ? Border.all(color: primary200)
-                                    : Border.all(width: 0),
+                                border:
+                                    _controller!.index >= 3
+                                        ? Border.all(color: primary200)
+                                        : Border.all(width: 0),
                                 borderRadius: BorderRadius.circular(5000),
                               ),
                               child: Container(
                                 height: _controller!.index >= 3 ? 10.0 : 15.0,
                                 width: _controller!.index >= 3 ? 10.0 : 15.0,
                                 decoration: BoxDecoration(
-                                  color: _controller!.index >= 3
-                                      ? primary200
-                                      : neutral300,
+                                  color:
+                                      _controller!.index >= 3
+                                          ? primary200
+                                          : neutral300,
                                   borderRadius: BorderRadius.circular(5000),
                                 ),
                               ),
@@ -620,9 +544,7 @@ class _AddCommandeState extends State<AddCommande>
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: TabBarView(
                   controller: _controller,
                   children: [
@@ -630,18 +552,12 @@ class _AddCommandeState extends State<AddCommande>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 30.0,
-                          ),
+                          const SizedBox(height: 30.0),
                           const Text(
                             'Nom du client',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           TextFormField(
                             cursorColor: Theme.of(context).iconTheme.color,
                             cursorErrorColor: primary500,
@@ -650,23 +566,20 @@ class _AddCommandeState extends State<AddCommande>
                               placeholder: 'julie queen',
                             ),
                             controller: _controllerFullName,
-                            validator: (fullName) => fullName == null ||
-                                    _controllerFullName.text.trim() == ''
-                                ? 'Veuillez saisir votre nom complet'
-                                : null,
+                            validator:
+                                (fullName) =>
+                                    fullName == null ||
+                                            _controllerFullName.text.trim() ==
+                                                ''
+                                        ? 'Veuillez saisir votre nom complet'
+                                        : null,
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
+                          const SizedBox(height: 10.0),
                           const Text(
                             'Numéro de téléphone',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           InternationalPhoneNumberInput(
                             autoValidateMode:
                                 AutovalidateMode.onUserInteraction,
@@ -702,10 +615,15 @@ class _AddCommandeState extends State<AddCommande>
                               context: context,
                               placeholder: 'téléphone',
                             ),
-                            validator: (phone) => phone != null &&
-                                    _controllerPhone.text.trim().length < 13
-                                ? 'Veuillez saisir une numéro de téléphone valide'
-                                : null,
+                            validator:
+                                (phone) =>
+                                    phone != null &&
+                                            _controllerPhone.text
+                                                    .trim()
+                                                    .length <
+                                                13
+                                        ? 'Veuillez saisir une numéro de téléphone valide'
+                                        : null,
                           ),
                         ],
                       ),
@@ -727,9 +645,12 @@ class _AddCommandeState extends State<AddCommande>
                                   Text(
                                     'Haut du corps',
                                     style: TextStyle(
-                                      color: _controllerTabMesures!.index == 0
-                                          ? primary200
-                                          : Theme.of(context).iconTheme.color,
+                                      color:
+                                          _controllerTabMesures!.index == 0
+                                              ? primary200
+                                              : Theme.of(
+                                                context,
+                                              ).iconTheme.color,
                                     ),
                                   ),
                                   if (_controllerTabMesures!.index == 0)
@@ -738,8 +659,9 @@ class _AddCommandeState extends State<AddCommande>
                                       width: 6,
                                       decoration: BoxDecoration(
                                         color: primary200,
-                                        borderRadius:
-                                            BorderRadius.circular(100),
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
                                       ),
                                     ),
                                 ],
@@ -753,9 +675,12 @@ class _AddCommandeState extends State<AddCommande>
                                   Text(
                                     'Bas du corps',
                                     style: TextStyle(
-                                      color: _controllerTabMesures!.index == 1
-                                          ? primary200
-                                          : Theme.of(context).iconTheme.color,
+                                      color:
+                                          _controllerTabMesures!.index == 1
+                                              ? primary200
+                                              : Theme.of(
+                                                context,
+                                              ).iconTheme.color,
                                     ),
                                   ),
                                   if (_controllerTabMesures!.index == 1)
@@ -764,8 +689,9 @@ class _AddCommandeState extends State<AddCommande>
                                       width: 6,
                                       decoration: BoxDecoration(
                                         color: primary200,
-                                        borderRadius:
-                                            BorderRadius.circular(100),
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
                                       ),
                                     ),
                                 ],
@@ -785,9 +711,7 @@ class _AddCommandeState extends State<AddCommande>
                             // width: MediaQuery.of(context).size.height,
                           ),
                         ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
+                        const SizedBox(height: 10.0),
                         Expanded(
                           child: TabBarView(
                             controller: _controllerTabMesures,
@@ -801,181 +725,191 @@ class _AddCommandeState extends State<AddCommande>
                                         addTo: 'topBody',
                                         context: context,
                                         mesure: mesure,
-                                        onLongPress: () => showModalBottomSheet(
-                                          backgroundColor: Colors.transparent,
-                                          context: context,
-                                          builder: (context) =>
-                                              CupertinoActionSheet(
-                                            message: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Form(
-                                                key: addMesureFormKey,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Supprimer',
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          style: TextStyle(
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .iconTheme
-                                                                .color,
+                                        onLongPress:
+                                            () => showModalBottomSheet(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoActionSheet(
+                                                    message: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            10.0,
                                                           ),
+                                                      child: Form(
+                                                        key: addMesureFormKey,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  'Supprimer',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                  style: TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    color:
+                                                                        Theme.of(
+                                                                          context,
+                                                                        ).iconTheme.color,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'Voulez-vous supprimer cette mesure',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color:
+                                                                        Theme.of(
+                                                                          context,
+                                                                        ).iconTheme.color,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 20.0,
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setState(() {
+                                                                      customerMesures['topBody']!
+                                                                          .remove(
+                                                                            mesure,
+                                                                          );
+                                                                      defaultMesures['topBody']!.add(
+                                                                        mesure.update(
+                                                                          'value',
+                                                                          (
+                                                                            value,
+                                                                          ) =>
+                                                                              null,
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    );
+                                                                  },
+                                                                  child: Container(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          10.0,
+                                                                      horizontal:
+                                                                          10.0,
+                                                                    ),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                          primary200,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            5.0,
+                                                                          ),
+                                                                    ),
+                                                                    child: const Text(
+                                                                      'Valider',
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            Colors.white,
+                                                                        fontSize:
+                                                                            16.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10.0,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap:
+                                                                      () => Navigator.pop(
+                                                                        context,
+                                                                      ),
+                                                                  child: const Text(
+                                                                    'Annuler',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
                                                         ),
-                                                        Text(
-                                                          'Voulez-vous supprimer cette mesure',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .iconTheme
-                                                                .color,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                      ),
                                                     ),
-                                                    const SizedBox(
-                                                      height: 20.0,
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              customerMesures[
-                                                                      'topBody']!
-                                                                  .remove(
-                                                                      mesure);
-                                                              defaultMesures[
-                                                                      'topBody']!
-                                                                  .add(mesure.update(
-                                                                      'value',
-                                                                      (value) =>
-                                                                          null));
-                                                            });
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              vertical: 10.0,
-                                                              horizontal: 10.0,
-                                                            ),
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: primary200,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5.0),
-                                                            ),
-                                                            child: const Text(
-                                                              'Valider',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontFamily:
-                                                                    'Montserrat',
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 10.0,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () =>
-                                                              Navigator.pop(
-                                                                  context),
-                                                          child: const Text(
-                                                            'Annuler',
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
+                                                  ),
                                             ),
-                                          ),
-                                        ),
                                       ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
+                                      const SizedBox(height: 10.0),
                                     ],
-                                    const SizedBox(
-                                      height: 50.0,
-                                    ),
+                                    const SizedBox(height: 50.0),
                                     DottedBorder(
                                       borderType: BorderType.RRect,
                                       padding: const EdgeInsets.all(10.0),
                                       radius: const Radius.circular(5.0),
                                       child: GestureDetector(
-                                        onTap: () => addMesure(
-                                          context: context,
-                                          addTo:
-                                              'topBody', // add to 'Haut du corps' or 'Bas du corps'
-                                        ),
+                                        onTap:
+                                            () => addMesure(
+                                              context: context,
+                                              addTo:
+                                                  'topBody', // add to 'Haut du corps' or 'Bas du corps'
+                                            ),
                                         child: const Row(
                                           children: [
-                                            Icon(
-                                              Icons.add,
-                                            ),
-                                            SizedBox(
-                                              width: 5.0,
-                                            ),
+                                            Icon(Icons.add),
+                                            SizedBox(width: 5.0),
                                             Text(
                                               'Ajouter une nouvelle mesure',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
+                                    const SizedBox(height: 20.0),
                                     for (Map<String, dynamic> mesure
                                         in defaultMesures['topBody']!) ...[
                                       mesureItemBuilder(
@@ -984,9 +918,7 @@ class _AddCommandeState extends State<AddCommande>
                                         mesure: mesure,
                                         onLongPress: () {},
                                       ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
+                                      const SizedBox(height: 10.0),
                                     ],
                                   ],
                                 ),
@@ -1000,196 +932,198 @@ class _AddCommandeState extends State<AddCommande>
                                         addTo: 'topBody',
                                         context: context,
                                         mesure: mesure,
-                                        onLongPress: () => showModalBottomSheet(
-                                          backgroundColor: Colors.transparent,
-                                          context: context,
-                                          builder: (context) =>
-                                              CupertinoActionSheet(
-                                            message: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Form(
-                                                key: addMesureFormKey,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'Supprimer',
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          style: TextStyle(
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .iconTheme
-                                                                .color,
+                                        onLongPress:
+                                            () => showModalBottomSheet(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoActionSheet(
+                                                    message: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            10.0,
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          'Voulez-vous supprimer cette mesure',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .iconTheme
-                                                                .color,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 20.0,
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              customerMesures[
-                                                                      'downBody']!
-                                                                  .remove(
-                                                                      mesure);
-                                                            });
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              vertical: 10.0,
-                                                              horizontal: 10.0,
-                                                            ),
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors
-                                                                  .transparent,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5.0),
-                                                            ),
-                                                            child: Row(
+                                                      child: Form(
+                                                        key: addMesureFormKey,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                               children: [
-                                                                SvgPicture
-                                                                    .asset(
-                                                                  'assets/icons/delete.6.svg',
-                                                                  colorFilter:
-                                                                      const ColorFilter
-                                                                          .mode(
-                                                                    primary200,
-                                                                    BlendMode
-                                                                        .srcIn,
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 10.0,
-                                                                ),
-                                                                const Text(
+                                                                Text(
                                                                   'Supprimer',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color:
-                                                                        primary200,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                  style: TextStyle(
                                                                     fontSize:
-                                                                        16.0,
+                                                                        24,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w500,
+                                                                            .w600,
                                                                     fontFamily:
                                                                         'Montserrat',
+                                                                    color:
+                                                                        Theme.of(
+                                                                          context,
+                                                                        ).iconTheme.color,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'Voulez-vous supprimer cette mesure',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color:
+                                                                        Theme.of(
+                                                                          context,
+                                                                        ).iconTheme.color,
                                                                   ),
                                                                 ),
                                                               ],
                                                             ),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 10.0,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () =>
-                                                              Navigator.pop(
-                                                                  context),
-                                                          child: const Text(
-                                                            'Annuler',
-                                                            style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  'Montserrat',
+                                                            const SizedBox(
+                                                              height: 20.0,
                                                             ),
-                                                          ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setState(() {
+                                                                      customerMesures['downBody']!
+                                                                          .remove(
+                                                                            mesure,
+                                                                          );
+                                                                    });
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    );
+                                                                  },
+                                                                  child: Container(
+                                                                    padding: const EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          10.0,
+                                                                      horizontal:
+                                                                          10.0,
+                                                                    ),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            5.0,
+                                                                          ),
+                                                                    ),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        SvgPicture.asset(
+                                                                          'assets/icons/delete.6.svg',
+                                                                          colorFilter: const ColorFilter.mode(
+                                                                            primary200,
+                                                                            BlendMode.srcIn,
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              10.0,
+                                                                        ),
+                                                                        const Text(
+                                                                          'Supprimer',
+                                                                          style: TextStyle(
+                                                                            color:
+                                                                                primary200,
+                                                                            fontSize:
+                                                                                16.0,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            fontFamily:
+                                                                                'Montserrat',
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10.0,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap:
+                                                                      () => Navigator.pop(
+                                                                        context,
+                                                                      ),
+                                                                  child: const Text(
+                                                                    'Annuler',
+                                                                    style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
+                                                  ),
                                             ),
-                                          ),
-                                        ),
                                       ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
+                                      const SizedBox(height: 10.0),
                                     ],
-                                    const SizedBox(
-                                      height: 50.0,
-                                    ),
+                                    const SizedBox(height: 50.0),
                                     DottedBorder(
                                       borderType: BorderType.RRect,
                                       padding: const EdgeInsets.all(10.0),
                                       radius: const Radius.circular(5.0),
                                       child: GestureDetector(
-                                        onTap: () => addMesure(
-                                          context: context,
-                                          addTo:
-                                              'downBody', // add to 'Haut du corps' or 'Bas du corps'
-                                        ),
+                                        onTap:
+                                            () => addMesure(
+                                              context: context,
+                                              addTo:
+                                                  'downBody', // add to 'Haut du corps' or 'Bas du corps'
+                                            ),
                                         child: const Row(
                                           children: [
-                                            Icon(
-                                              Icons.add,
-                                            ),
-                                            SizedBox(
-                                              width: 5.0,
-                                            ),
+                                            Icon(Icons.add),
+                                            SizedBox(width: 5.0),
                                             Text(
                                               'Ajouter une nouvelle mesure',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
+                                    const SizedBox(height: 20.0),
                                     for (Map<String, dynamic> mesure
                                         in defaultMesures['downBody']!) ...[
                                       mesureItemBuilder(
@@ -1198,9 +1132,7 @@ class _AddCommandeState extends State<AddCommande>
                                         mesure: mesure,
                                         onLongPress: () {},
                                       ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
+                                      const SizedBox(height: 10.0),
                                     ],
                                   ],
                                 ),
@@ -1214,18 +1146,12 @@ class _AddCommandeState extends State<AddCommande>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 30.0,
-                          ),
+                          const SizedBox(height: 30.0),
                           const Text(
                             'Photos du modele',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -1236,320 +1162,349 @@ class _AddCommandeState extends State<AddCommande>
                                       context: context,
                                       isScrollControlled: true,
                                       useSafeArea: true,
-                                      builder: (context) => StatefulBuilder(
-                                          builder: (BuildContext context,
-                                              StateSetter stateSetter) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 15.0,
-                                            top: 15.0,
-                                            right: 15.0,
-                                          ),
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () =>
-                                                          Navigator.pop(
-                                                              context),
-                                                      child: SvgPicture.asset(
-                                                        'assets/icons/arrow-left-2.4.svg',
-                                                        semanticsLabel:
-                                                            'Arriw left',
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                          Theme.of(context)
-                                                              .iconTheme
-                                                              .color!,
-                                                          BlendMode.srcIn,
-                                                        ),
-                                                        height: 30,
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    const Text(
-                                                      'Choix du modele',
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                  ],
+                                      builder:
+                                          (context) => StatefulBuilder(
+                                            builder: (
+                                              BuildContext context,
+                                              StateSetter stateSetter,
+                                            ) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 15.0,
+                                                  top: 15.0,
+                                                  right: 15.0,
                                                 ),
-                                                const SizedBox(
-                                                  height: 20.0,
-                                                ),
-                                                TextField(
-                                                  decoration: InputDecoration(
-                                                    prefixIcon: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 14.0),
-                                                      child: SvgPicture.asset(
-                                                        'assets/icons/search.5.svg',
-                                                        colorFilter:
-                                                            const ColorFilter
-                                                                .mode(
-                                                          neutral700,
-                                                          BlendMode.srcIn,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    contentPadding:
-                                                        const EdgeInsets.only(
-                                                      right: 10.0,
-                                                    ),
-                                                    filled: true,
-                                                    fillColor: neutral200,
-                                                    enabledBorder:
-                                                        const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: neutral200),
-                                                    ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      gapPadding: 0,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5.0),
-                                                      borderSide:
-                                                          const BorderSide(
-                                                              color:
-                                                                  neutral200),
-                                                    ),
-                                                    hintStyle: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                                    hintText: 'Rechercher...',
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 20.0,
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    File photo =
-                                                        await FileManager
-                                                            .getImageFromDevice(
-                                                      multiImage: false,
-                                                      source:
-                                                          ImageSource.gallery,
-                                                    );
-                                                    setState(() {
-                                                      selectedModele =
-                                                          ModeleModel(
-                                                        description: '',
-                                                        duration:
-                                                            const SfRangeValues(
-                                                                0, 0),
-                                                        images: [photo],
-                                                        id: '',
-                                                        maxPrice: 0,
-                                                        minPrice: 0,
-                                                        title: 'Modele Anonyme',
-                                                      );
-                                                      Navigator.pop(context);
-                                                    });
-                                                  },
-                                                  child: Row(
+                                                child: SingleChildScrollView(
+                                                  child: Column(
                                                     children: [
-                                                      DottedBorder(
-                                                        borderType:
-                                                            BorderType.RRect,
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        radius: const Radius
-                                                            .circular(15.0),
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(20.0),
-                                                          height: 80.0,
-                                                          width: 80.0,
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            'assets/icons/camera.svg',
-                                                            semanticsLabel:
-                                                                'Arriw left',
-                                                            colorFilter:
-                                                                ColorFilter
-                                                                    .mode(
-                                                              Theme.of(context)
-                                                                  .iconTheme
-                                                                  .color!,
-                                                              BlendMode.srcIn,
+                                                      Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap:
+                                                                () =>
+                                                                    Navigator.pop(
+                                                                      context,
+                                                                    ),
+                                                            child: SvgPicture.asset(
+                                                              'assets/icons/arrow-left-2.4.svg',
+                                                              semanticsLabel:
+                                                                  'Arriw left',
+                                                              colorFilter:
+                                                                  ColorFilter.mode(
+                                                                    Theme.of(
+                                                                          context,
+                                                                        )
+                                                                        .iconTheme
+                                                                        .color!,
+                                                                    BlendMode
+                                                                        .srcIn,
+                                                                  ),
+                                                              height: 30,
                                                             ),
-                                                            // height: 30,
                                                           ),
+                                                          const Spacer(),
+                                                          const Text(
+                                                            'Choix du modele',
+                                                            style: TextStyle(
+                                                              fontSize: 24,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                          ),
+                                                          const Spacer(),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 20.0,
+                                                      ),
+                                                      TextField(
+                                                        decoration: InputDecoration(
+                                                          prefixIcon: Padding(
+                                                            padding:
+                                                                const EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      14.0,
+                                                                ),
+                                                            child: SvgPicture.asset(
+                                                              'assets/icons/search.5.svg',
+                                                              colorFilter:
+                                                                  const ColorFilter.mode(
+                                                                    neutral700,
+                                                                    BlendMode
+                                                                        .srcIn,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          contentPadding:
+                                                              const EdgeInsets.only(
+                                                                right: 10.0,
+                                                              ),
+                                                          filled: true,
+                                                          fillColor: neutral200,
+                                                          enabledBorder:
+                                                              const OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                      color:
+                                                                          neutral200,
+                                                                    ),
+                                                              ),
+                                                          focusedBorder: OutlineInputBorder(
+                                                            gapPadding: 0,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  5.0,
+                                                                ),
+                                                            borderSide:
+                                                                const BorderSide(
+                                                                  color:
+                                                                      neutral200,
+                                                                ),
+                                                          ),
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                              ),
+                                                          hintText:
+                                                              'Rechercher...',
                                                         ),
                                                       ),
                                                       const SizedBox(
-                                                        width: 10.0,
+                                                        height: 20.0,
                                                       ),
-                                                      const Expanded(
-                                                        child: SizedBox(
-                                                          height: 80.0,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                'Camera',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
+                                                      GestureDetector(
+                                                        onTap: () async {
+                                                          File photo =
+                                                              await FileManager.getImageFromDevice(
+                                                                multiImage:
+                                                                    false,
+                                                                source:
+                                                                    ImageSource
+                                                                        .gallery,
+                                                              );
+                                                          setState(() {
+                                                            selectedModele =
+                                                                ModeleModel(
+                                                                  description:
+                                                                      '',
+                                                                  duration:
+                                                                      const SfRangeValues(
+                                                                        0,
+                                                                        0,
+                                                                      ),
+                                                                  images: [
+                                                                    photo,
+                                                                  ],
+                                                                  id: '',
+                                                                  maxPrice: 0,
+                                                                  minPrice: 0,
+                                                                  title:
+                                                                      'Modele Anonyme',
+                                                                );
+                                                            Navigator.pop(
+                                                              context,
+                                                            );
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            DottedBorder(
+                                                              borderType:
+                                                                  BorderType
+                                                                      .RRect,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              radius:
+                                                                  const Radius.circular(
+                                                                    15.0,
+                                                                  ),
+                                                              child: Container(
+                                                                padding:
+                                                                    const EdgeInsets.all(
+                                                                      20.0,
+                                                                    ),
+                                                                height: 80.0,
+                                                                width: 80.0,
+                                                                child: SvgPicture.asset(
+                                                                  'assets/icons/camera.svg',
+                                                                  semanticsLabel:
+                                                                      'Arriw left',
+                                                                  colorFilter: ColorFilter.mode(
+                                                                    Theme.of(
+                                                                          context,
+                                                                        )
+                                                                        .iconTheme
+                                                                        .color!,
+                                                                    BlendMode
+                                                                        .srcIn,
+                                                                  ),
+                                                                  // height: 30,
                                                                 ),
                                                               ),
-                                                              Text(
-                                                                'Prendre en photo votre modele',
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 10.0,
-                                                ),
-                                                !internetAccess
-                                                    ? Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height /
-                                                            1.5,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              'assets/icons/no-internet.svg',
-                                                              colorFilter:
-                                                                  ColorFilter
-                                                                      .mode(
-                                                                Theme.of(
-                                                                        context)
-                                                                    .iconTheme
-                                                                    .color!,
-                                                                BlendMode.srcIn,
-                                                              ),
-                                                              height: 75,
-                                                              width: 75,
                                                             ),
                                                             const SizedBox(
-                                                              height: 10,
+                                                              width: 10.0,
                                                             ),
-                                                            const Text(
-                                                              'Pas d\'accès internet',
-                                                              style: TextStyle(
-                                                                fontSize: 15,
-                                                                fontFamily:
-                                                                    'Montserrat',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Container(
-                                                              // alignment: Alignment.center,
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal:
-                                                                    40.0,
-                                                                vertical: 10.0,
-                                                              ),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .iconTheme
-                                                                    .color,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                              ),
-                                                              child: InkWell(
-                                                                onTap: () {
-                                                                  stateSetter(
-                                                                      () {
-                                                                    internetAccess =
-                                                                        true;
-                                                                  });
-                                                                  retrieveCatalogue();
-                                                                },
-                                                                child: Text(
-                                                                  'Réessayer',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .scaffoldBackgroundColor,
-                                                                    fontSize:
-                                                                        16,
-                                                                  ),
+                                                            const Expanded(
+                                                              child: SizedBox(
+                                                                height: 80.0,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Camera',
+                                                                      style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      'Prendre en photo votre modele',
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
                                                             ),
                                                           ],
                                                         ),
-                                                      )
-                                                    : ownerCatalogue.isEmpty &&
-                                                            !_hasNextCatalogue
-                                                        ? Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height /
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      !internetAccess
+                                                          ? Container(
+                                                            alignment:
+                                                                Alignment
+                                                                    .center,
+                                                            height:
+                                                                MediaQuery.of(
+                                                                  context,
+                                                                ).size.height /
                                                                 1.5,
                                                             width:
                                                                 MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
+                                                                  context,
+                                                                ).size.width,
                                                             child: Column(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .center,
                                                               children: [
-                                                                SvgPicture
-                                                                    .asset(
-                                                                  'assets/icons/no-data.svg',
-                                                                  colorFilter:
-                                                                      ColorFilter
-                                                                          .mode(
+                                                                SvgPicture.asset(
+                                                                  'assets/icons/no-internet.svg',
+                                                                  colorFilter: ColorFilter.mode(
                                                                     Theme.of(
-                                                                            context)
+                                                                          context,
+                                                                        )
+                                                                        .iconTheme
+                                                                        .color!,
+                                                                    BlendMode
+                                                                        .srcIn,
+                                                                  ),
+                                                                  height: 75,
+                                                                  width: 75,
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                const Text(
+                                                                  'Pas d\'accès internet',
+                                                                  style: TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Container(
+                                                                  // alignment: Alignment.center,
+                                                                  padding: const EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        40.0,
+                                                                    vertical:
+                                                                        10.0,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color:
+                                                                        Theme.of(
+                                                                          context,
+                                                                        ).iconTheme.color,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          10.0,
+                                                                        ),
+                                                                  ),
+                                                                  child: InkWell(
+                                                                    onTap: () {
+                                                                      stateSetter(() {
+                                                                        internetAccess =
+                                                                            true;
+                                                                      });
+                                                                      retrieveCatalogue();
+                                                                    },
+                                                                    child: Text(
+                                                                      'Réessayer',
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            Theme.of(
+                                                                              context,
+                                                                            ).scaffoldBackgroundColor,
+                                                                        fontSize:
+                                                                            16,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                          : ownerCatalogue
+                                                                  .isEmpty &&
+                                                              !_hasNextCatalogue
+                                                          ? Container(
+                                                            alignment:
+                                                                Alignment
+                                                                    .center,
+                                                            height:
+                                                                MediaQuery.of(
+                                                                  context,
+                                                                ).size.height /
+                                                                1.5,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                  context,
+                                                                ).size.width,
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                SvgPicture.asset(
+                                                                  'assets/icons/no-data.svg',
+                                                                  colorFilter: ColorFilter.mode(
+                                                                    Theme.of(
+                                                                          context,
+                                                                        )
                                                                         .iconTheme
                                                                         .color!,
                                                                     BlendMode
@@ -1563,8 +1518,7 @@ class _AddCommandeState extends State<AddCommande>
                                                                 ),
                                                                 const Text(
                                                                   'Aucun Catalogue à afficher',
-                                                                  style:
-                                                                      TextStyle(
+                                                                  style: TextStyle(
                                                                     fontSize:
                                                                         15,
                                                                     fontFamily:
@@ -1580,39 +1534,38 @@ class _AddCommandeState extends State<AddCommande>
                                                                 GestureDetector(
                                                                   onTap: () {
                                                                     stateSetter(
-                                                                        () {
-                                                                      internetAccess =
-                                                                          true;
-                                                                    });
+                                                                      () {
+                                                                        internetAccess =
+                                                                            true;
+                                                                      },
+                                                                    );
                                                                     retrieveCatalogue();
                                                                   },
-                                                                  child:
-                                                                      Container(
+                                                                  child: Container(
                                                                     // alignment: Alignment.center,
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .symmetric(
+                                                                    padding: const EdgeInsets.symmetric(
                                                                       horizontal:
                                                                           40.0,
                                                                       vertical:
                                                                           10.0,
                                                                     ),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .iconTheme
-                                                                          .color,
+                                                                    decoration: BoxDecoration(
+                                                                      color:
+                                                                          Theme.of(
+                                                                            context,
+                                                                          ).iconTheme.color,
                                                                       borderRadius:
                                                                           BorderRadius.circular(
-                                                                              5.0),
+                                                                            5.0,
+                                                                          ),
                                                                     ),
                                                                     child: Text(
                                                                       'Actualiser',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: Theme.of(context)
-                                                                            .scaffoldBackgroundColor,
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            Theme.of(
+                                                                              context,
+                                                                            ).scaffoldBackgroundColor,
                                                                         fontSize:
                                                                             16,
                                                                       ),
@@ -1622,10 +1575,13 @@ class _AddCommandeState extends State<AddCommande>
                                                               ],
                                                             ),
                                                           )
-                                                        : Column(
+                                                          : Column(
                                                             children: [
-                                                              for (Map<String,
-                                                                      dynamic> catalogue
+                                                              for (Map<
+                                                                    String,
+                                                                    dynamic
+                                                                  >
+                                                                  catalogue
                                                                   in ownerCatalogue) ...[
                                                                 ExpansionTile(
                                                                   tilePadding:
@@ -1635,9 +1591,10 @@ class _AddCommandeState extends State<AddCommande>
                                                                     children: [
                                                                       ClipRRect(
                                                                         borderRadius:
-                                                                            BorderRadius.circular(15.0),
-                                                                        child: Image
-                                                                            .asset(
+                                                                            BorderRadius.circular(
+                                                                              15.0,
+                                                                            ),
+                                                                        child: Image.asset(
                                                                           // catalogue['Modele']
                                                                           //         [
                                                                           //         0]
@@ -1648,8 +1605,8 @@ class _AddCommandeState extends State<AddCommande>
                                                                               80.0,
                                                                           width:
                                                                               80.0,
-                                                                          fit: BoxFit
-                                                                              .cover,
+                                                                          fit:
+                                                                              BoxFit.cover,
                                                                         ),
                                                                       ),
                                                                       const SizedBox(
@@ -1657,12 +1614,10 @@ class _AddCommandeState extends State<AddCommande>
                                                                             10.0,
                                                                       ),
                                                                       Expanded(
-                                                                        child:
-                                                                            SizedBox(
+                                                                        child: SizedBox(
                                                                           height:
                                                                               80.0,
-                                                                          child:
-                                                                              Column(
+                                                                          child: Column(
                                                                             mainAxisAlignment:
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             crossAxisAlignment:
@@ -1670,39 +1625,51 @@ class _AddCommandeState extends State<AddCommande>
                                                                             children: [
                                                                               Text(
                                                                                 catalogue['title'],
-                                                                                overflow: TextOverflow.ellipsis,
+                                                                                overflow:
+                                                                                    TextOverflow.ellipsis,
                                                                                 style: const TextStyle(
-                                                                                  fontSize: 18,
-                                                                                  fontWeight: FontWeight.w600,
+                                                                                  fontSize:
+                                                                                      18,
+                                                                                  fontWeight:
+                                                                                      FontWeight.w600,
                                                                                 ),
                                                                               ),
                                                                               Text(
                                                                                 catalogue['description'],
-                                                                                overflow: TextOverflow.ellipsis,
+                                                                                overflow:
+                                                                                    TextOverflow.ellipsis,
                                                                               ),
                                                                               Container(
                                                                                 padding: const EdgeInsets.symmetric(
-                                                                                  horizontal: 10.0,
+                                                                                  horizontal:
+                                                                                      10.0,
                                                                                 ),
                                                                                 decoration: BoxDecoration(
-                                                                                  border: Border.all(),
-                                                                                  borderRadius: BorderRadius.circular(10.0),
+                                                                                  border:
+                                                                                      Border.all(),
+                                                                                  borderRadius: BorderRadius.circular(
+                                                                                    10.0,
+                                                                                  ),
                                                                                 ),
                                                                                 child: Text(
                                                                                   '${catalogue['Modele'].length} modele${catalogue['Modele'].length > 1 ? 's' : ''}',
                                                                                   style: const TextStyle(
-                                                                                    fontSize: 14.0,
-                                                                                    fontWeight: FontWeight.w600,
+                                                                                    fontSize:
+                                                                                        14.0,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ],
                                                                           ),
                                                                         ),
-                                                                      )
+                                                                      ),
                                                                     ],
                                                                   ),
-                                                                  children: <Widget>[
+                                                                  children: <
+                                                                    Widget
+                                                                  >[
                                                                     Row(
                                                                       mainAxisAlignment:
                                                                           MainAxisAlignment
@@ -1719,34 +1686,63 @@ class _AddCommandeState extends State<AddCommande>
                                                                           children: [
                                                                             if (catalogue['Modele'] !=
                                                                                 null)
-                                                                              for (dynamic item in catalogue['Modele'].getRange(0, (catalogue['Modele'].length / 2).round()))
+                                                                              for (dynamic item in catalogue['Modele'].getRange(
+                                                                                0,
+                                                                                (catalogue['Modele'].length /
+                                                                                        2)
+                                                                                    .round(),
+                                                                              ))
                                                                                 GestureDetector(
                                                                                   onTap: () {
-                                                                                    setState(() {
-                                                                                      selectedModele = ModeleModel(
-                                                                                        description: item['description'],
-                                                                                        duration: SfRangeValues(item['duration'][0], item['duration'][1]),
-                                                                                        images: item['images'],
-                                                                                        id: item['id'],
-                                                                                        maxPrice: item['max_price'],
-                                                                                        minPrice: item['min_price'],
-                                                                                        title: item['title'],
-                                                                                      );
-                                                                                      _controllerPrice.text = item['max_price'];
-                                                                                      Navigator.pop(context);
-                                                                                    });
+                                                                                    setState(
+                                                                                      () {
+                                                                                        selectedModele = ModeleModel(
+                                                                                          description:
+                                                                                              item['description'],
+                                                                                          duration: SfRangeValues(
+                                                                                            item['duration'][0],
+                                                                                            item['duration'][1],
+                                                                                          ),
+                                                                                          images:
+                                                                                              item['images'],
+                                                                                          id:
+                                                                                              item['id'],
+                                                                                          maxPrice:
+                                                                                              item['max_price'],
+                                                                                          minPrice:
+                                                                                              item['min_price'],
+                                                                                          title:
+                                                                                              item['title'],
+                                                                                        );
+                                                                                        _controllerPrice.text = item['max_price'];
+                                                                                        Navigator.pop(
+                                                                                          context,
+                                                                                        );
+                                                                                      },
+                                                                                    );
                                                                                   },
                                                                                   child: ClipRRect(
-                                                                                    borderRadius: BorderRadius.circular(5.0),
+                                                                                    borderRadius: BorderRadius.circular(
+                                                                                      5.0,
+                                                                                    ),
                                                                                     child: Image.network(
                                                                                       // item.images[0],
                                                                                       'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                                                                                      fit: BoxFit.cover,
-                                                                                      height: Random().nextInt(50) + 100,
-                                                                                      width: MediaQuery.of(context).size.width * .35,
+                                                                                      fit:
+                                                                                          BoxFit.cover,
+                                                                                      height:
+                                                                                          Random().nextInt(
+                                                                                            50,
+                                                                                          ) +
+                                                                                          100,
+                                                                                      width:
+                                                                                          MediaQuery.of(
+                                                                                            context,
+                                                                                          ).size.width *
+                                                                                          .35,
                                                                                     ),
                                                                                   ),
-                                                                                )
+                                                                                ),
                                                                           ],
                                                                         ),
                                                                         const SizedBox(
@@ -1759,37 +1755,65 @@ class _AddCommandeState extends State<AddCommande>
                                                                           runSpacing:
                                                                               15.0,
                                                                           children: [
-                                                                            for (dynamic item
-                                                                                in catalogue['Modele'].getRange((catalogue['Modele'].length / 2).round(), catalogue['Modele'].length))
+                                                                            for (dynamic item in catalogue['Modele'].getRange(
+                                                                              (catalogue['Modele'].length /
+                                                                                      2)
+                                                                                  .round(),
+                                                                              catalogue['Modele'].length,
+                                                                            ))
                                                                               // for (dynamic item
                                                                               //     in catalogue['Modele'].getRange(0, (catalogue['Modele'].length / 2).round()))
                                                                               GestureDetector(
                                                                                 onTap: () {
-                                                                                  setState(() {
-                                                                                    selectedModele = ModeleModel(
-                                                                                      description: item['description'],
-                                                                                      duration: SfRangeValues(item['duration'][0], item['duration'][1]),
-                                                                                      images: item['images'],
-                                                                                      id: item['id'],
-                                                                                      maxPrice: item['max_price'],
-                                                                                      minPrice: item['min_price'],
-                                                                                      title: item['title'],
-                                                                                    );
-                                                                                    _controllerPrice.text = item['max_price'];
-                                                                                    Navigator.pop(context);
-                                                                                  });
+                                                                                  setState(
+                                                                                    () {
+                                                                                      selectedModele = ModeleModel(
+                                                                                        description:
+                                                                                            item['description'],
+                                                                                        duration: SfRangeValues(
+                                                                                          item['duration'][0],
+                                                                                          item['duration'][1],
+                                                                                        ),
+                                                                                        images:
+                                                                                            item['images'],
+                                                                                        id:
+                                                                                            item['id'],
+                                                                                        maxPrice:
+                                                                                            item['max_price'],
+                                                                                        minPrice:
+                                                                                            item['min_price'],
+                                                                                        title:
+                                                                                            item['title'],
+                                                                                      );
+                                                                                      _controllerPrice.text = item['max_price'];
+                                                                                      Navigator.pop(
+                                                                                        context,
+                                                                                      );
+                                                                                    },
+                                                                                  );
                                                                                 },
                                                                                 child: ClipRRect(
-                                                                                  borderRadius: BorderRadius.circular(5.0),
+                                                                                  borderRadius: BorderRadius.circular(
+                                                                                    5.0,
+                                                                                  ),
                                                                                   child: Image.network(
                                                                                     // item.images[0],
                                                                                     'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                                                                                    fit: BoxFit.cover,
-                                                                                    height: Random().nextInt(50) + 100,
-                                                                                    width: MediaQuery.of(context).size.width * .35,
+                                                                                    fit:
+                                                                                        BoxFit.cover,
+                                                                                    height:
+                                                                                        Random().nextInt(
+                                                                                          50,
+                                                                                        ) +
+                                                                                        100,
+                                                                                    width:
+                                                                                        MediaQuery.of(
+                                                                                          context,
+                                                                                        ).size.width *
+                                                                                        .35,
                                                                                   ),
                                                                                 ),
-                                                                              )
+                                                                              ),
                                                                           ],
                                                                         ),
                                                                         const SizedBox(
@@ -1816,12 +1840,13 @@ class _AddCommandeState extends State<AddCommande>
                                                                       CupertinoActivityIndicator(),
                                                                 ),
                                                             ],
-                                                          )
-                                              ],
-                                            ),
+                                                          ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                      }),
                                     );
                                     setState(() {});
                                   },
@@ -1832,16 +1857,11 @@ class _AddCommandeState extends State<AddCommande>
                                     child: const SizedBox(
                                       height: 80.0,
                                       width: 80.0,
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 40.0,
-                                      ),
+                                      child: Icon(Icons.add, size: 40.0),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
+                                const SizedBox(width: 10.0),
                                 if (selectedModele != null)
                                   for (dynamic image
                                       in selectedModele!.images) ...[
@@ -1855,43 +1875,24 @@ class _AddCommandeState extends State<AddCommande>
                                         width: 80.0,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                  ]
+                                    const SizedBox(width: 10.0),
+                                  ],
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
+                          const SizedBox(height: 10.0),
                           const Text(
                             'Description',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           const Text(
                             'Ecrivez sur du papier et filmer ou rediger directement la description de votre commande',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(fontSize: 14),
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          const Text(
-                            'Photos',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 10.0),
+                          const Text('Photos', style: TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5.0),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -1912,60 +1913,45 @@ class _AddCommandeState extends State<AddCommande>
                                     child: const SizedBox(
                                       height: 80.0,
                                       width: 80.0,
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 40.0,
-                                      ),
+                                      child: Icon(Icons.add, size: 40.0),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
+                                const SizedBox(width: 10.0),
                                 for (dynamic image in images) ...[
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(15.0),
-                                    child: image is String &&
-                                            !image.contains('http')
-                                        ? Image.asset(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            height: 80.0,
-                                            width: 80.0,
-                                          )
-                                        : image is File
+                                    child:
+                                        image is String &&
+                                                !image.contains('http')
+                                            ? Image.asset(
+                                              image,
+                                              fit: BoxFit.cover,
+                                              height: 80.0,
+                                              width: 80.0,
+                                            )
+                                            : image is File
                                             ? Image.file(
-                                                image,
-                                                fit: BoxFit.cover,
-                                                height: 80.0,
-                                                width: 80.0,
-                                              )
+                                              image,
+                                              fit: BoxFit.cover,
+                                              height: 80.0,
+                                              width: 80.0,
+                                            )
                                             : Image.network(
-                                                image,
-                                                fit: BoxFit.cover,
-                                                height: 80.0,
-                                                width: 80.0,
-                                              ),
+                                              image,
+                                              fit: BoxFit.cover,
+                                              height: 80.0,
+                                              width: 80.0,
+                                            ),
                                   ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                ]
+                                  const SizedBox(width: 10.0),
+                                ],
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          const Text(
-                            'Texte',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 10.0),
+                          const Text('Texte', style: TextStyle(fontSize: 14)),
+                          const SizedBox(height: 5.0),
                           TextFormField(
                             cursorColor: Theme.of(context).iconTheme.color,
                             cursorErrorColor: primary500,
@@ -1975,14 +1961,14 @@ class _AddCommandeState extends State<AddCommande>
                               placeholder: 'details ici',
                             ),
                             controller: _controllerText,
-                            validator: (description) => description == null ||
-                                    _controllerText.text.trim() == ''
-                                ? 'Veuillez saisir une description'
-                                : null,
+                            validator:
+                                (description) =>
+                                    description == null ||
+                                            _controllerText.text.trim() == ''
+                                        ? 'Veuillez saisir une description'
+                                        : null,
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
+                          const SizedBox(height: 10.0),
                         ],
                       ),
                     ),
@@ -1990,18 +1976,12 @@ class _AddCommandeState extends State<AddCommande>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            height: 30.0,
-                          ),
+                          const SizedBox(height: 30.0),
                           const Text(
                             'Prix (Fcfa)',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           TextFormField(
                             cursorColor: Theme.of(context).iconTheme.color,
                             cursorErrorColor: primary500,
@@ -2012,23 +1992,19 @@ class _AddCommandeState extends State<AddCommande>
                               placeholder: '3500',
                             ),
                             controller: _controllerPrice,
-                            validator: (amount) => amount == null ||
-                                    _controllerPrice.text.trim() == ''
-                                ? 'Veuillez saisir un montant minimum'
-                                : null,
+                            validator:
+                                (amount) =>
+                                    amount == null ||
+                                            _controllerPrice.text.trim() == ''
+                                        ? 'Veuillez saisir un montant minimum'
+                                        : null,
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
+                          const SizedBox(height: 10.0),
                           const Text(
                             'Premier versement (Fcfa)',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           TextFormField(
                             cursorColor: Theme.of(context).iconTheme.color,
                             cursorErrorColor: primary500,
@@ -2044,18 +2020,12 @@ class _AddCommandeState extends State<AddCommande>
                             //     ? 'Veuillez saisir un montant'
                             //     : null,
                           ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
+                          const SizedBox(height: 10.0),
                           Text(
                             'Duree (${dueDate.difference(DateTime.now()).inDays} jours)',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(
-                            height: 5.0,
-                          ),
+                          const SizedBox(height: 5.0),
                           DottedBorder(
                             borderType: BorderType.RRect,
                             padding: const EdgeInsets.all(10.0),
@@ -2063,90 +2033,105 @@ class _AddCommandeState extends State<AddCommande>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  DateFormat.yMMMd().format(dueDate),
-                                ),
+                                Text(DateFormat.yMMMd().format(dueDate)),
                                 GestureDetector(
-                                  onTap: () => showCupertinoModalPopup(
-                                    context: context,
-                                    builder: (context) => CupertinoActionSheet(
-                                      message: SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .4,
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              child: CupertinoDatePicker(
-                                                dateOrder:
-                                                    DatePickerDateOrder.dmy,
-                                                showDayOfWeek: true,
-                                                use24hFormat: true,
-                                                minimumYear:
-                                                    DateTime.now().year,
-                                                minimumDate: DateTime.now(),
-                                                maximumYear:
-                                                    DateTime.now().year,
-                                                onDateTimeChanged:
-                                                    (pickedDate) =>
-                                                        setState(() {
-                                                  dueDate = pickedDate;
-                                                }),
+                                  onTap:
+                                      () => showCupertinoModalPopup(
+                                        context: context,
+                                        builder:
+                                            (context) => CupertinoActionSheet(
+                                              message: SizedBox(
+                                                height:
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.height *
+                                                    .4,
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      child: CupertinoDatePicker(
+                                                        dateOrder:
+                                                            DatePickerDateOrder
+                                                                .dmy,
+                                                        showDayOfWeek: true,
+                                                        use24hFormat: true,
+                                                        minimumYear:
+                                                            DateTime.now().year,
+                                                        minimumDate:
+                                                            DateTime.now(),
+                                                        maximumYear:
+                                                            DateTime.now().year,
+                                                        onDateTimeChanged:
+                                                            (
+                                                              pickedDate,
+                                                            ) => setState(() {
+                                                              dueDate =
+                                                                  pickedDate;
+                                                            }),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20.0,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 10.0,
+                                                              horizontal: 10.0,
+                                                            ),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration: BoxDecoration(
+                                                          color: primary200,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                5.0,
+                                                              ),
+                                                        ),
+                                                        child: const Text(
+                                                          'Terminer',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16.0,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10.0,
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: GestureDetector(
+                                                        onTap:
+                                                            () => Navigator.pop(
+                                                              context,
+                                                            ),
+                                                        child: const Text(
+                                                          'Annuler',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                            const SizedBox(
-                                              height: 20.0,
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 10.0,
-                                                ),
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: primary200,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          5.0),
-                                                ),
-                                                child: const Text(
-                                                  'Terminer',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: 'Montserrat',
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: GestureDetector(
-                                                onTap: () =>
-                                                    Navigator.pop(context),
-                                                child: const Text(
-                                                  'Annuler',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: 'Montserrat',
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                                       ),
-                                    ),
-                                  ),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0,
@@ -2164,7 +2149,7 @@ class _AddCommandeState extends State<AddCommande>
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -2174,7 +2159,7 @@ class _AddCommandeState extends State<AddCommande>
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -2200,26 +2185,27 @@ class _AddCommandeState extends State<AddCommande>
             color: primary200,
             borderRadius: BorderRadius.circular(5.0),
           ),
-          child: onGoingProcess
-              ? SizedBox(
-                  height: 20.0,
-                  width: 20.0,
-                  child: CupertinoActivityIndicator(
-                    color: Theme.of(context).scaffoldBackgroundColor,
+          child:
+              onGoingProcess
+                  ? SizedBox(
+                    height: 20.0,
+                    width: 20.0,
+                    child: CupertinoActivityIndicator(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                  )
+                  : Text(
+                    _controller!.index != 3
+                        ? 'Continuer'
+                        : widget.commande != null
+                        ? 'Mettre a jour'
+                        : 'Enregistrer',
+                    style: TextStyle(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                )
-              : Text(
-                  _controller!.index != 3
-                      ? 'Continuer'
-                      : widget.commande != null
-                          ? 'Mettre a jour'
-                          : 'Enregistrer',
-                  style: TextStyle(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
         ),
       ),
     );
@@ -2238,152 +2224,149 @@ class _AddCommandeState extends State<AddCommande>
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
           context: context,
-          builder: (context) => CupertinoActionSheet(
-            message: Padding(
-              padding: EdgeInsets.only(
-                left: 10.0,
-                top: 10.0,
-                right: 10.0,
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: addMesureFormKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
+          builder:
+              (context) => CupertinoActionSheet(
+                message: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                    right: 10.0,
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: addMesureFormKey,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            '${mesure['abbr']}: ${mesure['name']}',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Montserrat',
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                          Text(
-                            'Entrer la valeur',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      TextFormField(
-                        keyboardType: const TextInputType.numberWithOptions(),
-                        cursorColor: Theme.of(context).iconTheme.color,
-                        cursorErrorColor: primary500,
-                        decoration: FormDecoration.inputDecoaration(
-                          context: context,
-                          placeholder:
-                              'Valeur : ${mesure['value'] ?? 0.0} (cm)',
-                        ),
-                        controller: _controllerMesureValue,
-                        validator: (value) => value == null ||
-                                _controllerMesureValue.text.trim() == ''
-                            ? 'Veuillez saisir la valeur de la mesure'
-                            : null,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (!addMesureFormKey.currentState!.validate()) {
-                                return;
-                              }
-                              if (mesure['value'] == null) {
-                                setState(() {
-                                  customerMesures[addTo]!.add(
-                                    {
-                                      'name': mesure['name'],
-                                      'abbr': mesure['abbr'],
-                                      'value':
-                                          _controllerMesureValue.text.trim(),
-                                    },
-                                  );
-                                  defaultMesures[addTo]!.remove(mesure);
-                                  _controllerMesureValue.clear();
-                                });
-                              } else {
-                                setState(() {
-                                  customerMesures['topBody']![
-                                          customerMesures['topBody']!
-                                              .indexOf(mesure)]
-                                      .update(
-                                          'value',
-                                          (value) => _controllerMesureValue.text
-                                              .trim());
-
-                                  _controllerMesureValue.clear();
-                                });
-                              }
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10.0,
-                                horizontal: 10.0,
-                              ),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: primary200,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: const Text(
-                                'Valider',
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${mesure['abbr']}: ${mesure['name']}',
+                                textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600,
                                   fontFamily: 'Montserrat',
+                                  color: Theme.of(context).iconTheme.color,
                                 ),
                               ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: const Text(
-                              'Annuler',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Montserrat',
+                              Text(
+                                'Entrer la valeur',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 20.0),
+                          TextFormField(
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
+                            cursorColor: Theme.of(context).iconTheme.color,
+                            cursorErrorColor: primary500,
+                            decoration: FormDecoration.inputDecoaration(
+                              context: context,
+                              placeholder:
+                                  'Valeur : ${mesure['value'] ?? 0.0} (cm)',
                             ),
+                            controller: _controllerMesureValue,
+                            validator:
+                                (value) =>
+                                    value == null ||
+                                            _controllerMesureValue.text
+                                                    .trim() ==
+                                                ''
+                                        ? 'Veuillez saisir la valeur de la mesure'
+                                        : null,
+                          ),
+                          const SizedBox(height: 10.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (!addMesureFormKey.currentState!
+                                      .validate()) {
+                                    return;
+                                  }
+                                  if (mesure['value'] == null) {
+                                    setState(() {
+                                      customerMesures[addTo]!.add({
+                                        'name': mesure['name'],
+                                        'abbr': mesure['abbr'],
+                                        'value':
+                                            _controllerMesureValue.text.trim(),
+                                      });
+                                      defaultMesures[addTo]!.remove(mesure);
+                                      _controllerMesureValue.clear();
+                                    });
+                                  } else {
+                                    setState(() {
+                                      customerMesures['topBody']![customerMesures['topBody']!
+                                              .indexOf(mesure)]
+                                          .update(
+                                            'value',
+                                            (value) =>
+                                                _controllerMesureValue.text
+                                                    .trim(),
+                                          );
+
+                                      _controllerMesureValue.clear();
+                                    });
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10.0,
+                                    horizontal: 10.0,
+                                  ),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: primary200,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: const Text(
+                                    'Valider',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: const Text(
+                                  'Annuler',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Montserrat',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
         );
       },
       onLongPress: onLongPress,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15.0,
-          vertical: 10.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
         decoration: BoxDecoration(
           color: neutral200,
           borderRadius: BorderRadius.circular(5.0),
@@ -2396,17 +2379,13 @@ class _AddCommandeState extends State<AddCommande>
           children: [
             Text(
               '${mesure['abbr']} : ',
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             Expanded(
               child: Text(
                 mesure['name'],
                 overflow: TextOverflow.clip,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
             if (mesure['value'] != null)
@@ -2428,9 +2407,7 @@ class _AddCommandeState extends State<AddCommande>
                   ),
                 ),
               ),
-            const SizedBox(
-              width: 5.0,
-            ),
+            const SizedBox(width: 5.0),
             SvgPicture.asset(
               'assets/icons/check-circle-bold.svg',
               semanticsLabel: 'Arriw left',
@@ -2454,171 +2431,163 @@ class _AddCommandeState extends State<AddCommande>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
-      builder: (context) => CupertinoActionSheet(
-        message: Padding(
-          padding: EdgeInsets.only(
-            left: 10.0,
-            top: 10.0,
-            right: 10.0,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Form(
-              key: addMesureFormKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+      builder:
+          (context) => CupertinoActionSheet(
+            message: Padding(
+              padding: EdgeInsets.only(
+                left: 10.0,
+                top: 10.0,
+                right: 10.0,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: addMesureFormKey,
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Ajouter une nouvelle mesure',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Montserrat',
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                      ),
-                      Text(
-                        'Entrer les informations de la mesure',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    cursorColor: Theme.of(context).iconTheme.color,
-                    cursorErrorColor: primary500,
-                    decoration: FormDecoration.inputDecoaration(
-                      context: context,
-                      placeholder: 'Nom de la mesure',
-                    ),
-                    controller: _controllerMesureName,
-                    validator: (name) =>
-                        name == null || _controllerMesureName.text.trim() == ''
-                            ? 'Veuillez saisir le nom de la mesure'
-                            : null,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  TextFormField(
-                    cursorColor: Theme.of(context).iconTheme.color,
-                    cursorErrorColor: primary500,
-                    decoration: FormDecoration.inputDecoaration(
-                      context: context,
-                      placeholder: 'Abbreviation',
-                    ),
-                    controller: _controllerMesureAbbr,
-                    validator: (abbr) =>
-                        abbr == null || _controllerMesureAbbr.text.trim() == ''
-                            ? 'Veuillez saisir l\'abbreviation de votre mesure'
-                            : null,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  TextFormField(
-                    keyboardType: const TextInputType.numberWithOptions(),
-                    cursorColor: Theme.of(context).iconTheme.color,
-                    cursorErrorColor: primary500,
-                    decoration: FormDecoration.inputDecoaration(
-                      context: context,
-                      placeholder: 'Valeur : 83 (cm)',
-                    ),
-                    controller: _controllerMesureValue,
-                    validator: (value) => value == null ||
-                            _controllerMesureValue.text.trim() == ''
-                        ? 'Veuillez saisir la valeur de la mesure'
-                        : null,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (!addMesureFormKey.currentState!.validate()) {
-                            return;
-                          }
-
-                          setState(() {
-                            customerMesures[addTo]!.add(
-                              {
-                                'name': _controllerMesureName.text.trim(),
-                                'abbr': _controllerMesureAbbr.text.trim(),
-                                'value': _controllerMesureValue.text.trim(),
-                              },
-                            );
-                            _controllerMesureName.clear();
-                            _controllerMesureAbbr.clear();
-                            _controllerMesureValue.clear();
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 10.0,
-                          ),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: primary200,
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: const Text(
-                            'Valider',
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ajouter une nouvelle mesure',
+                            textAlign: TextAlign.start,
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
                               fontFamily: 'Montserrat',
+                              color: Theme.of(context).iconTheme.color,
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Text(
-                          'Annuler',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Montserrat',
+                          Text(
+                            'Entrer les informations de la mesure',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                           ),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      TextFormField(
+                        cursorColor: Theme.of(context).iconTheme.color,
+                        cursorErrorColor: primary500,
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder: 'Nom de la mesure',
                         ),
+                        controller: _controllerMesureName,
+                        validator:
+                            (name) =>
+                                name == null ||
+                                        _controllerMesureName.text.trim() == ''
+                                    ? 'Veuillez saisir le nom de la mesure'
+                                    : null,
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        cursorColor: Theme.of(context).iconTheme.color,
+                        cursorErrorColor: primary500,
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder: 'Abbreviation',
+                        ),
+                        controller: _controllerMesureAbbr,
+                        validator:
+                            (abbr) =>
+                                abbr == null ||
+                                        _controllerMesureAbbr.text.trim() == ''
+                                    ? 'Veuillez saisir l\'abbreviation de votre mesure'
+                                    : null,
+                      ),
+                      const SizedBox(height: 10.0),
+                      TextFormField(
+                        keyboardType: const TextInputType.numberWithOptions(),
+                        cursorColor: Theme.of(context).iconTheme.color,
+                        cursorErrorColor: primary500,
+                        decoration: FormDecoration.inputDecoaration(
+                          context: context,
+                          placeholder: 'Valeur : 83 (cm)',
+                        ),
+                        controller: _controllerMesureValue,
+                        validator:
+                            (value) =>
+                                value == null ||
+                                        _controllerMesureValue.text.trim() == ''
+                                    ? 'Veuillez saisir la valeur de la mesure'
+                                    : null,
+                      ),
+                      const SizedBox(height: 10.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (!addMesureFormKey.currentState!.validate()) {
+                                return;
+                              }
+
+                              setState(() {
+                                customerMesures[addTo]!.add({
+                                  'name': _controllerMesureName.text.trim(),
+                                  'abbr': _controllerMesureAbbr.text.trim(),
+                                  'value': _controllerMesureValue.text.trim(),
+                                });
+                                _controllerMesureName.clear();
+                                _controllerMesureAbbr.clear();
+                                _controllerMesureValue.clear();
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 10.0,
+                              ),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: primary200,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Text(
+                                'Valider',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: const Text(
+                              'Annuler',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
     );
   }
 
   Future retrieveCatalogue() async {
     if (!await Internet.checkInternetAccess()) {
-      LocalPreferences.showFlashMessage(
-        'Pas d\'internet',
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
       setState(() {
         internetAccess = false;
       });
@@ -2640,7 +2609,7 @@ class _AddCommandeState extends State<AddCommande>
         // startAfter: CatalogueTeela.ownerCatalogues.isNotEmpty
         //     ? CatalogueTeela.ownerCatalogues.last['id']
         //     : null,
-        owner: Auth.user!.id,
+        owner: Auth.user!['_id'].toString(),
       );
       ownerCatalogue = CatalogueTeela.ownerCatalogues;
       // CatalogueTeela.ownerCatalogues = ownerCatalogue = catalogueSnap;
@@ -2651,10 +2620,7 @@ class _AddCommandeState extends State<AddCommande>
       }
     } on PostgrestException catch (errno) {
       debugPrint(errno.code.toString());
-      LocalPreferences.showFlashMessage(
-        errno.message.toString(),
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage(errno.message.toString(), Colors.red);
       setState(() {
         _hasNextCatalogue = false;
       });
@@ -2664,8 +2630,9 @@ class _AddCommandeState extends State<AddCommande>
     });
   }
 
-  Future<List<String>> uploadPhotos(
-      {required List<dynamic> imagesToUpload}) async {
+  Future<List<String>> uploadPhotos({
+    required List<dynamic> imagesToUpload,
+  }) async {
     // Upload images if they were picked from internal storage
     List<String> downloadLinks = [];
     for (dynamic image in images) {
@@ -2674,7 +2641,7 @@ class _AddCommandeState extends State<AddCommande>
           image: image,
           folder: 'commande_images',
           uploadPath:
-              '${Auth.user!.id}/${_controllerFullName.text.trim()}/${p.basename(image.path)}',
+              '${Auth.user!['_id'].toString()}/${_controllerFullName.text.trim()}/${p.basename(image.path)}',
         );
         if (photosLink != null) {
           downloadLinks.add(photosLink);
@@ -2687,10 +2654,7 @@ class _AddCommandeState extends State<AddCommande>
   Future addOrUpdateCommande() async {
     try {
       if (!await Internet.checkInternetAccess()) {
-        LocalPreferences.showFlashMessage(
-          'Pas d\'internet',
-          Colors.red,
-        );
+        LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
         setState(() {
           onGoingProcess = false;
         });
@@ -2708,16 +2672,15 @@ class _AddCommandeState extends State<AddCommande>
         'date': DateFormat('yyyy-MM-dd HH:mm:ss').format(dueDate),
         'details': {
           'text': _controllerText.text.trim(),
-          'images': descriptionImgagesLinks
+          'images': descriptionImgagesLinks,
         },
         'duration': dueDate.difference(DateTime.now()).inDays,
-        'modele': selectedModele!.id,
+        'modele': selectedModele!.id.toString(),
         'price': _controllerPrice.text.trim(),
-        'versements': _controllerVersement.text.trim() == ''
-            ? {}
-            : {
-                '1': _controllerVersement.text.trim(),
-              },
+        'versements':
+            _controllerVersement.text.trim() == ''
+                ? {}
+                : {'1': _controllerVersement.text.trim()},
       };
       if (widget.commande != null) {
         await CommandeTeela.updateCommande(
@@ -2729,9 +2692,7 @@ class _AddCommandeState extends State<AddCommande>
           Colors.blue,
         );
       } else {
-        print(
-          commandeDetails,
-        );
+        print(commandeDetails);
         await CommandeTeela.createCommande(data: commandeDetails);
         LocalPreferences.showFlashMessage(
           'Modele créé avec succès',
@@ -2747,10 +2708,7 @@ class _AddCommandeState extends State<AddCommande>
       setState(() {
         onGoingProcess = false;
       });
-      LocalPreferences.showFlashMessage(
-        e.message,
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage(e.message, Colors.red);
       debugPrint(e.toString());
     } catch (erno) {
       setState(() {

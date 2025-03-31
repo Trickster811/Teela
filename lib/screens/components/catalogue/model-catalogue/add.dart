@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,11 +17,7 @@ import 'package:path/path.dart' as p;
 class AddModele extends StatefulWidget {
   final CatalogueModel catalogue;
   final ModeleModel? modele;
-  const AddModele({
-    super.key,
-    required this.catalogue,
-    required this.modele,
-  });
+  const AddModele({super.key, required this.catalogue, required this.modele});
 
   @override
   State<AddModele> createState() => _AddModeleState();
@@ -69,18 +66,12 @@ class _AddModeleState extends State<AddModele> {
         ),
         title: Text(
           widget.modele != null ? 'Mise A Jour Modele' : 'Nouveau Modele',
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(
-          left: 20.0,
-          right: 20.0,
-          bottom: 20.0,
-        ),
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
         child: Column(
           children: [
             Expanded(
@@ -92,13 +83,9 @@ class _AddModeleState extends State<AddModele> {
                     children: [
                       const Text(
                         'Photos',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -119,60 +106,47 @@ class _AddModeleState extends State<AddModele> {
                                 child: const SizedBox(
                                   height: 80.0,
                                   width: 80.0,
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 40.0,
-                                  ),
+                                  child: Icon(Icons.add, size: 40.0),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
+                            const SizedBox(width: 10.0),
                             for (dynamic image in images) ...[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(15.0),
                                 child:
                                     image is String && !image.contains('http')
                                         ? Image.asset(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            height: 80.0,
-                                            width: 80.0,
-                                          )
+                                          image,
+                                          fit: BoxFit.cover,
+                                          height: 80.0,
+                                          width: 80.0,
+                                        )
                                         : image is File
-                                            ? Image.file(
-                                                image,
-                                                fit: BoxFit.cover,
-                                                height: 80.0,
-                                                width: 80.0,
-                                              )
-                                            : Image.network(
-                                                image,
-                                                fit: BoxFit.cover,
-                                                height: 80.0,
-                                                width: 80.0,
-                                              ),
+                                        ? Image.file(
+                                          image,
+                                          fit: BoxFit.cover,
+                                          height: 80.0,
+                                          width: 80.0,
+                                        )
+                                        : Image.network(
+                                          image,
+                                          fit: BoxFit.cover,
+                                          height: 80.0,
+                                          width: 80.0,
+                                        ),
                               ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                            ]
+                              const SizedBox(width: 10.0),
+                            ],
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
+                      const SizedBox(height: 10.0),
                       const Text(
                         'Titre',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       TextFormField(
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
@@ -181,23 +155,19 @@ class _AddModeleState extends State<AddModele> {
                           placeholder: 'Modeles traditionnels',
                         ),
                         controller: _controllerTitle,
-                        validator: (title) =>
-                            title == null || _controllerTitle.text.trim() == ''
-                                ? 'Veuillez renseigner le titre'
-                                : null,
+                        validator:
+                            (title) =>
+                                title == null ||
+                                        _controllerTitle.text.trim() == ''
+                                    ? 'Veuillez renseigner le titre'
+                                    : null,
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
+                      const SizedBox(height: 10.0),
                       const Text(
                         'Description',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       TextFormField(
                         cursorColor: Theme.of(context).iconTheme.color,
                         cursorErrorColor: primary500,
@@ -208,23 +178,19 @@ class _AddModeleState extends State<AddModele> {
                               'Des vetements refletant les coutumes de diverses regions du Cameroun',
                         ),
                         controller: _controllerDescription,
-                        validator: (description) => description == null ||
-                                _controllerDescription.text.trim() == ''
-                            ? 'Veuillez saisir une description'
-                            : null,
+                        validator:
+                            (description) =>
+                                description == null ||
+                                        _controllerDescription.text.trim() == ''
+                                    ? 'Veuillez saisir une description'
+                                    : null,
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
+                      const SizedBox(height: 10.0),
                       const Text(
                         'Prix (Min - Max)',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -234,15 +200,22 @@ class _AddModeleState extends State<AddModele> {
                             child: TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: false,
+                              ),
                               decoration: FormDecoration.inputDecoaration(
                                 context: context,
                                 placeholder: '3500',
                               ),
                               controller: _controllerMinPrice,
-                              validator: (amount) => amount == null ||
-                                      _controllerMinPrice.text.trim() == ''
-                                  ? 'Veuillez saisir un montant minimum'
-                                  : null,
+                              validator:
+                                  (amount) =>
+                                      amount == null ||
+                                              _controllerMinPrice.text.trim() ==
+                                                  ''
+                                          ? 'Veuillez saisir un montant minimum'
+                                          : null,
                             ),
                           ),
                           SizedBox(
@@ -251,31 +224,32 @@ class _AddModeleState extends State<AddModele> {
                             child: TextFormField(
                               cursorColor: Theme.of(context).iconTheme.color,
                               cursorErrorColor: primary500,
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: false,
+                              ),
                               decoration: FormDecoration.inputDecoaration(
                                 context: context,
                                 placeholder: '7000',
                               ),
                               controller: _controllerMaxPrice,
-                              validator: (amount) => amount == null ||
-                                      _controllerMaxPrice.text.trim() == ''
-                                  ? 'Veuillez saisir un montant maximum'
-                                  : null,
+                              validator:
+                                  (amount) =>
+                                      amount == null ||
+                                              _controllerMaxPrice.text.trim() ==
+                                                  ''
+                                          ? 'Veuillez saisir un montant maximum'
+                                          : null,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
+                      const SizedBox(height: 10.0),
                       Text(
                         'Duree (${_duration.start.toInt()} - ${_duration.end.toInt()})',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
+                      const SizedBox(height: 5.0),
                       SfRangeSlider(
                         onChanged: (SfRangeValues newValues) {
                           setState(() {
@@ -309,30 +283,29 @@ class _AddModeleState extends State<AddModele> {
                 await uploadPhotos();
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10.0,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: primary200,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                child: onGoingProcess
-                    ? SizedBox(
-                        height: 20.0,
-                        width: 20.0,
-                        child: CupertinoActivityIndicator(
-                          color: Theme.of(context).scaffoldBackgroundColor,
+                child:
+                    onGoingProcess
+                        ? SizedBox(
+                          height: 20.0,
+                          width: 20.0,
+                          child: CupertinoActivityIndicator(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                        )
+                        : Text(
+                          widget.modele != null ? 'Mettre a jour' : 'Ajouter',
+                          style: TextStyle(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      )
-                    : Text(
-                        widget.modele != null ? 'Mettre a jour' : 'Ajouter',
-                        style: TextStyle(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
               ),
             ),
           ],
@@ -351,54 +324,48 @@ class _AddModeleState extends State<AddModele> {
             image: image,
             folder: 'modele_images',
             uploadPath:
-                '${Auth.user!.id}/${_controllerTitle.text.trim()}/${p.basename(image.path)}',
+                '${Auth.user!['_id'].toString()}/${_controllerTitle.text.trim()}/${p.basename(image.path)}',
           );
           if (photosLink != null) {
             imageModeleDownloadLinks.add(photosLink);
-          }
+          } else {}
         }
       }
       return await addOrUpdateModele(
         imageModeleDownloadLinks: imageModeleDownloadLinks,
       );
-    } on StorageException catch (e) {
-      LocalPreferences.showFlashMessage(
-        e.message.toString(),
-        Colors.red,
-      );
     } catch (e) {
+      setState(() {
+        onGoingProcess = false;
+      });
+      print(e);
       LocalPreferences.showFlashMessage(
-        '$e',
+        'Erreur de chargement des fichiers\nVeuiller reessayer',
         Colors.red,
       );
     }
   }
 
-  Future addOrUpdateModele({
-    List<String>? imageModeleDownloadLinks,
-  }) async {
+  Future addOrUpdateModele({List<String>? imageModeleDownloadLinks}) async {
     try {
       if (!await Internet.checkInternetAccess()) {
-        LocalPreferences.showFlashMessage(
-          'Pas d\'internet',
-          Colors.red,
-        );
+        LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
         setState(() {
           onGoingProcess = false;
         });
       }
       if (widget.modele != null) {
-        await ModeleTeela.updateModele(data: {
-          'description': _controllerDescription.text.trim(),
-          'duration': [
-            _duration.start,
-            _duration.end,
-          ],
-          'images': [],
-          'max_price': _controllerMaxPrice.text.trim(),
-          'min_price': _controllerMinPrice.text.trim(),
-          'title': _controllerTitle.text.trim(),
-        }, id: widget.modele!.id);
+        await ModeleTeela.updateModele(
+          data: {
+            'description': _controllerDescription.text.trim(),
+            'duration': [_duration.start, _duration.end],
+            'images': [],
+            'max_price': _controllerMaxPrice.text.trim(),
+            'min_price': _controllerMinPrice.text.trim(),
+            'title': _controllerTitle.text.trim(),
+          },
+          id: widget.modele!.id,
+        );
         LocalPreferences.showFlashMessage(
           'Modele mis a jour avec succès',
           Colors.blue,
@@ -412,7 +379,7 @@ class _AddModeleState extends State<AddModele> {
             'max_price': _controllerMaxPrice.text.trim(),
             'min_price': _controllerMinPrice.text.trim(),
             'title': _controllerTitle.text.trim(),
-            'catalogue': widget.catalogue.id
+            'catalogue': widget.catalogue.id.toString(),
           },
         );
         LocalPreferences.showFlashMessage(
@@ -425,15 +392,8 @@ class _AddModeleState extends State<AddModele> {
         onGoingProcess = false;
         Navigator.pop(context);
       });
-    } on PostgrestException catch (e) {
-      setState(() {
-        onGoingProcess = false;
-      });
-      LocalPreferences.showFlashMessage(
-        e.message,
-        Colors.red,
-      );
     } catch (erno) {
+      LocalPreferences.showFlashMessage('Une erreur est survenue', Colors.red);
       setState(() {
         onGoingProcess = false;
       });

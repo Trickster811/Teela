@@ -40,8 +40,9 @@ class OtpSuccess extends StatelessWidget {
                           height: 8,
                           width: 8,
                           decoration: BoxDecoration(
-                              color: secondary400,
-                              borderRadius: BorderRadius.circular(100)),
+                            color: secondary400,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
                         ),
                       ),
                       ...[
@@ -66,8 +67,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -77,8 +79,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -88,8 +91,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -99,8 +103,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -110,8 +115,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -121,8 +127,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                       ],
@@ -134,8 +141,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -145,8 +153,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -156,8 +165,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -167,8 +177,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -178,8 +189,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -189,8 +201,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -200,8 +213,9 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -211,38 +225,27 @@ class OtpSuccess extends StatelessWidget {
                             height: 8,
                             width: 8,
                             decoration: BoxDecoration(
-                                color: secondary400,
-                                borderRadius: BorderRadius.circular(100)),
+                              color: secondary400,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
                           ),
                         ),
-                      ]
+                      ],
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                const Text(
-                  'Le numero a ete verifie',
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
+                const SizedBox(height: 20.0),
+                const Text('Le numero a ete verifie'),
+                const SizedBox(height: 10.0),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const Start(
-                          userInfo: {},
-                        ),
-                      ),
+                      MaterialPageRoute(builder: (context) => const Start()),
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     margin: const EdgeInsets.all(20.0),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(

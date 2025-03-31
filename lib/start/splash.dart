@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:teela/start/start.dart';
 import 'package:teela/start/onboard.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
 import 'package:teela/utils/local.dart';
 
 class Splash extends StatefulWidget {
-  final Map<String, dynamic> userInfo;
-  const Splash({
-    super.key,
-    required this.userInfo,
-  });
+  const Splash({super.key});
 
   @override
   State<Splash> createState() => _SplashState();
@@ -27,11 +24,15 @@ class _SplashState extends State<Splash> {
 
   start() async {
     bool? firstTime = LocalPreferences.getFirstTime();
+    // Initialize app with MongoDB
+    await DatabaseConnection.init();
 
-    if ((firstTime != null && firstTime)) {
-      startTime();
-    } else {
-      startTime1();
+    if (DatabaseConnection.teelaDBToken.isConnected) {
+      if ((firstTime != null && firstTime)) {
+        startTime();
+      } else {
+        startTime1();
+      }
     }
   }
 
@@ -48,20 +49,14 @@ class _SplashState extends State<Splash> {
   route() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => Start(
-          userInfo: widget.userInfo,
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => Start()),
     );
   }
 
   route1() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) => const Onboard(),
-      ),
+      MaterialPageRoute(builder: (context) => const Onboard()),
     );
   }
 
@@ -90,46 +85,26 @@ class _SplashState extends State<Splash> {
                       mainAxisSpacing: 4.0,
                       crossAxisSpacing: 4.0,
                       children: [
-                        Container(
-                          color: primary500,
-                        ),
-                        Container(
-                          color: Colors.black,
-                        ),
-                        Container(
-                          color: Colors.black,
-                        ),
-                        Container(
-                          color: Colors.transparent,
-                        ),
-                        Container(
-                          color: Colors.black,
-                        ),
-                        Container(
-                          color: Colors.transparent,
-                        ),
-                        Container(
-                          color: Colors.transparent,
-                        ),
-                        Container(
-                          color: Colors.black,
-                        ),
-                        Container(
-                          color: secondary500,
-                        ),
+                        Container(color: primary500),
+                        Container(color: Colors.black),
+                        Container(color: Colors.black),
+                        Container(color: Colors.transparent),
+                        Container(color: Colors.black),
+                        Container(color: Colors.transparent),
+                        Container(color: Colors.transparent),
+                        Container(color: Colors.black),
+                        Container(color: secondary500),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20.0),
+                  CircularProgressIndicator(
+                    color: Theme.of(context).iconTheme.color!,
+                  ),
                   const Spacer(),
                   const Text('by OHO'),
-                  Container(
-                    height: 2,
-                    width: 120,
-                    color: primary500,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  Container(height: 2, width: 120, color: primary500),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
