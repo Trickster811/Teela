@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
@@ -138,7 +139,7 @@ class _AddCatalogueState extends State<AddCatalogue> {
                         ? SizedBox(
                           height: 20.0,
                           width: 20.0,
-                          child: CupertinoActivityIndicator(
+                          child: CircularProgressIndicator(
                             color: Theme.of(context).scaffoldBackgroundColor,
                           ),
                         )
@@ -188,7 +189,7 @@ class _AddCatalogueState extends State<AddCatalogue> {
           data: {
             'description': _controllerDescription.text.trim(),
             'title': _controllerTitle.text.trim(),
-            'user': Auth.user!['_id'].toString(),
+            'user': mongodb.ObjectId.parse(Auth.user!['_id'].toString()),
           },
         );
         LocalPreferences.showFlashMessage(

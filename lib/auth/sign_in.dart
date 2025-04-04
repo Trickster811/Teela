@@ -218,7 +218,7 @@ class _SignInState extends State<SignIn> {
                       ? SizedBox(
                         height: 20.0,
                         width: 20.0,
-                        child: CupertinoActivityIndicator(
+                        child: CircularProgressIndicator(
                           color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                       )
@@ -255,7 +255,7 @@ class _SignInState extends State<SignIn> {
         await LocalPreferences.setFirstTime(true);
         // Update local storage
         await LocalPreferences.setUserInfo(user);
-        Auth.user = user;
+        Auth.user = LocalPreferences.getUserInfo();
         setState(() {
           onGoingProcess = false;
           // Navigate to the Home app screen

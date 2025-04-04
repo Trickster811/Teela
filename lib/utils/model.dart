@@ -2,7 +2,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class CatalogueModel {
   final String description;
-  final String id;
+  final Object id;
   final List<ModeleModel> modeles;
   final String title;
 
@@ -21,10 +21,11 @@ class CommandeModel {
   final DateTime date;
   final Map<String, dynamic> details;
   final int duration;
-  final String id;
+  final Object id;
   final ModeleModel modele;
   final int price; // Total to pay
   final Map<String, dynamic> versements;
+  final int status; // 1 = In progress | 2 = Finished | 3 = Delivered  ]
 
   const CommandeModel({
     required this.customerMesures,
@@ -37,13 +38,14 @@ class CommandeModel {
     required this.modele,
     required this.price,
     required this.versements,
+    required this.status,
   });
 }
 
 class ModeleModel {
   final String description;
   final SfRangeValues duration;
-  final String id;
+  final Object id;
   final List<dynamic> images;
   final int maxPrice;
   final int minPrice;

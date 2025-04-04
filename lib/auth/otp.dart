@@ -15,11 +15,7 @@ import 'package:teela/utils/local.dart';
 class Otp extends StatefulWidget {
   final String phone;
   final bool register;
-  const Otp({
-    super.key,
-    required this.phone,
-    required this.register,
-  });
+  const Otp({super.key, required this.phone, required this.register});
 
   @override
   State<Otp> createState() => _OtpState();
@@ -37,8 +33,9 @@ class _OtpState extends State<Otp> {
 
   // Manage Time Count Down to resend the sms verification code
   static const Duration countdownDuration = Duration(minutes: 0, seconds: 30);
-  final ValueNotifier<Duration> durationNotifier =
-      ValueNotifier<Duration>(countdownDuration);
+  final ValueNotifier<Duration> durationNotifier = ValueNotifier<Duration>(
+    countdownDuration,
+  );
   Timer? timer;
 
   @override
@@ -86,12 +83,7 @@ class _OtpState extends State<Otp> {
             height: 30,
           ),
         ),
-        title: const Text(
-          'Changer de numero',
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
+        title: const Text('Changer de numero', style: TextStyle(fontSize: 16)),
       ),
       body: Stack(
         children: [
@@ -119,9 +111,7 @@ class _OtpState extends State<Otp> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          const SizedBox(
-                            height: 40,
-                          ),
+                          const SizedBox(height: 40),
                           SvgPicture.asset(
                             'assets/images/auth/icon.svg',
                             semanticsLabel: 'message send/receive',
@@ -131,9 +121,7 @@ class _OtpState extends State<Otp> {
                             ),
                             height: 50,
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
                           const Text(
                             'Regardez votre telephone',
                             textAlign: TextAlign.center,
@@ -142,17 +130,13 @@ class _OtpState extends State<Otp> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
                           const Text(
                             'Nous vous avons envoye un sms\nsur votre numero',
                             textAlign: TextAlign.center,
                             style: TextStyle(),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           Form(
                             key: otpFormKey,
                             child: Pinput(
@@ -160,8 +144,8 @@ class _OtpState extends State<Otp> {
                               controller: pinSMSCodeController,
                               focusNode: focusNode,
                               defaultPinTheme: defaultPinTheme,
-                              separatorBuilder: (index) =>
-                                  const SizedBox(width: 8),
+                              separatorBuilder:
+                                  (index) => const SizedBox(width: 8),
                               validator: (value) {
                                 return value == null || value.length != 6
                                     ? 'Code incomplet'
@@ -196,15 +180,14 @@ class _OtpState extends State<Otp> {
                                 ],
                               ),
                               focusedPinTheme: defaultPinTheme.copyWith(
-                                decoration:
-                                    defaultPinTheme.decoration!.copyWith(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: primary200),
-                                ),
+                                decoration: defaultPinTheme.decoration!
+                                    .copyWith(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: primary200),
+                                    ),
                               ),
                               submittedPinTheme: defaultPinTheme.copyWith(
-                                decoration:
-                                    defaultPinTheme.decoration!.copyWith(
+                                decoration: defaultPinTheme.decoration!.copyWith(
                                   // color: Theme.of(context).iconTheme.color,
                                   borderRadius: BorderRadius.circular(5),
                                   border: Border.all(color: neutral800),
@@ -215,16 +198,15 @@ class _OtpState extends State<Otp> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           GestureDetector(
                             onTap: () async {
                               if (timer != null) return;
                               setState(() {
                                 timer = Timer.periodic(
-                                    const Duration(seconds: 1),
-                                    (_) => addTime());
+                                  const Duration(seconds: 1),
+                                  (_) => addTime(),
+                                );
                               });
                             },
                             child: Row(
@@ -238,38 +220,37 @@ class _OtpState extends State<Otp> {
                                       BlendMode.srcIn,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 5.0,
-                                  ),
+                                  const SizedBox(width: 5.0),
                                 ],
                                 timer != null
                                     ? ValueListenableBuilder<Duration>(
-                                        valueListenable: durationNotifier,
-                                        builder: (context, duration, child) {
-                                          return Text(
-                                            '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${duration.inSeconds.remainder(60).toString().padLeft(2, '0')} sec restantes',
-                                            style: TextStyle(
-                                              decoration: TextDecoration.none,
-                                              decorationColor: primary200,
-                                              color: Theme.of(context)
-                                                  .iconTheme
-                                                  .color,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          );
-                                        },
-                                      )
+                                      valueListenable: durationNotifier,
+                                      builder: (context, duration, child) {
+                                        return Text(
+                                          '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${duration.inSeconds.remainder(60).toString().padLeft(2, '0')} sec restantes',
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            decorationColor: primary200,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).iconTheme.color,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        );
+                                      },
+                                    )
                                     : const Text(
-                                        'Renvoyer le code',
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          decorationColor: primary200,
-                                          color: primary200,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                      'Renvoyer le code',
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: primary200,
+                                        color: primary200,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                       ),
+                                    ),
                               ],
                             ),
                           ),
@@ -287,33 +268,36 @@ class _OtpState extends State<Otp> {
                     return await verifyOtp();
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     margin: const EdgeInsets.all(20.0),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: wrongPin ? neutral200 : primary200,
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: onGoingProcess
-                        ? SizedBox(
-                            height: 20.0,
-                            width: 20.0,
-                            child: CupertinoActivityIndicator(
-                              color: Theme.of(context).scaffoldBackgroundColor,
+                    child:
+                        onGoingProcess
+                            ? SizedBox(
+                              height: 20.0,
+                              width: 20.0,
+                              child: CircularProgressIndicator(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                            )
+                            : Text(
+                              wrongPin ? 'Code incorrect' : 'Verifier',
+                              style: TextStyle(
+                                color:
+                                    wrongPin
+                                        ? neutral800
+                                        : Theme.of(
+                                          context,
+                                        ).scaffoldBackgroundColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          )
-                        : Text(
-                            wrongPin ? 'Code incorrect' : 'Verifier',
-                            style: TextStyle(
-                              color: wrongPin
-                                  ? neutral800
-                                  : Theme.of(context).scaffoldBackgroundColor,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                   ),
                 ),
               ],
@@ -344,10 +328,7 @@ class _OtpState extends State<Otp> {
     });
     try {
       if (!await Internet.checkInternetAccess()) {
-        LocalPreferences.showFlashMessage(
-          'Pas d\'internet',
-          Colors.red,
-        );
+        LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
         setState(() {
           onGoingProcess = false;
         });
@@ -365,19 +346,14 @@ class _OtpState extends State<Otp> {
 
         return Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const OtpSuccess(),
-          ),
+          MaterialPageRoute(builder: (context) => const OtpSuccess()),
         );
       }
     } on AuthException catch (e) {
       setState(() {
         onGoingProcess = false;
       });
-      LocalPreferences.showFlashMessage(
-        e.message,
-        Colors.red,
-      );
+      LocalPreferences.showFlashMessage(e.message, Colors.red);
       print(e);
     } catch (erno) {
       setState(() {

@@ -3,19 +3,28 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:teela/screens/components/catalogue/model-catalogue/add.dart';
 import 'package:teela/screens/components/catalogue/model-catalogue/details.dart';
 import 'package:teela/screens/components/catalogue/search.dart';
+import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
+import 'package:teela/utils/data.dart';
+import 'package:teela/utils/local.dart';
 import 'package:teela/utils/model.dart';
 
-class DetailsCatalogue extends StatelessWidget {
+class DetailsCatalogue extends StatefulWidget {
   final CatalogueModel catalogueModel;
 
-  const DetailsCatalogue({
-    super.key,
-    required this.catalogueModel,
-  });
+  const DetailsCatalogue({super.key, required this.catalogueModel});
+
+  @override
+  State<DetailsCatalogue> createState() => _DetailsCatalogueState();
+}
+
+class _DetailsCatalogueState extends State<DetailsCatalogue> {
+  // Modele drop progress
+  int? dropInProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -35,25 +44,16 @@ class DetailsCatalogue extends StatelessWidget {
           ),
         ),
         title: Text(
-          catalogueModel.title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          widget.catalogueModel.title,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_vert,
-            ),
-          ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Stack(
           children: [
             SafeArea(
@@ -66,15 +66,17 @@ class DetailsCatalogue extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 100.0,
                           child: TextField(
-                            onTap: () => showSearch(
-                              context: context,
-                              delegate: Search(searchKey: 'Modeles'),
-                            ),
+                            onTap:
+                                () => showSearch(
+                                  context: context,
+                                  delegate: Search(searchKey: 'Modeles'),
+                                ),
                             readOnly: true,
                             decoration: InputDecoration(
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 14.0),
+                                  horizontal: 14.0,
+                                ),
                                 child: SvgPicture.asset(
                                   'assets/icons/search.5.svg',
                                   colorFilter: const ColorFilter.mode(
@@ -112,16 +114,12 @@ class DetailsCatalogue extends StatelessWidget {
                               color: neutral200,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            child: const Icon(
-                              Icons.filter_list_sharp,
-                            ),
+                            child: const Icon(Icons.filter_list_sharp),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
+                    const SizedBox(height: 30.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,23 +128,40 @@ class DetailsCatalogue extends StatelessWidget {
                           direction: Axis.vertical,
                           spacing: 15.0,
                           children: [
-                            for (ModeleModel item in catalogueModel.modeles
+                            for (ModeleModel item in widget
+                                .catalogueModel
+                                .modeles
                                 .getRange(
-                                    0,
-                                    (catalogueModel.modeles.length / 2)
-                                        .round()))
-                              modeleBuilder(context, item)
+                                  0,
+                                  (widget.catalogueModel.modeles.length / 2)
+                                      .round(),
+                                ))
+                              modeleBuilder(
+                                context: context,
+                                item: item,
+                                itemIndex: widget.catalogueModel.modeles
+                                    .indexOf(item),
+                              ),
                           ],
                         ),
                         Wrap(
                           direction: Axis.vertical,
                           spacing: 15.0,
                           children: [
-                            for (ModeleModel item in catalogueModel.modeles
+                            for (ModeleModel item in widget
+                                .catalogueModel
+                                .modeles
                                 .getRange(
-                                    (catalogueModel.modeles.length / 2).round(),
-                                    catalogueModel.modeles.length))
-                              modeleBuilder(context, item)
+                                  (widget.catalogueModel.modeles.length / 2)
+                                      .round(),
+                                  widget.catalogueModel.modeles.length,
+                                ))
+                              modeleBuilder(
+                                context: context,
+                                item: item,
+                                itemIndex: widget.catalogueModel.modeles
+                                    .indexOf(item),
+                              ),
                           ],
                         ),
                       ],
@@ -162,9 +177,7 @@ class DetailsCatalogue extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(),
@@ -178,13 +191,9 @@ class DetailsCatalogue extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
+                  const SizedBox(height: 10.0),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
                       color: primary200,
                       border: Border.all(),
@@ -200,20 +209,22 @@ class DetailsCatalogue extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
       floatingActionButton: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddModele(
-              catalogue: catalogueModel,
-              modele: null,
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => AddModele(
+                      catalogue: widget.catalogueModel,
+                      modele: null,
+                    ),
+              ),
             ),
-          ),
-        ),
         child: Container(
           height: 50.0,
           width: 50.0,
@@ -221,182 +232,254 @@ class DetailsCatalogue extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
             color: primary200,
           ),
-          child: const Icon(
-            Icons.add,
-            size: 30.0,
-            color: Colors.white,
-          ),
+          child: const Icon(Icons.add, size: 30.0, color: Colors.white),
         ),
       ),
     );
   }
 
-  GestureDetector modeleBuilder(BuildContext context, ModeleModel item) {
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DetailsModele(
-            catalogue: catalogueModel,
-            modele: item,
-          ),
-        ),
-      ),
-      onLongPress: () => showCupertinoModalPopup(
-        context: context,
-        builder: (context) => CupertinoActionSheet(
-          message: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Actions',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                    ),
-                    Text(
-                      'Quelle action souhaitex-vous effectuer sur ce modele?',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                    ),
-                  ],
+  Stack modeleBuilder({
+    required BuildContext context,
+    required ModeleModel item,
+    required int itemIndex,
+  }) {
+    return Stack(
+      children: [
+        SafeArea(
+          child: GestureDetector(
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => DetailsModele(
+                          catalogue: widget.catalogueModel,
+                          modele: item,
+                        ),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 5.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddModele(
-                              catalogue: catalogueModel,
-                              modele: item,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 10.0,
-                        ),
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                          color: primary200,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
+            onLongPress:
+                () => showCupertinoModalPopup(
+                  context: context,
+                  builder:
+                      (context) => CupertinoActionSheet(
+                        message: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SvgPicture.asset(
-                              'assets/icons/edit.svg',
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Actions',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Quelle action souhaitex-vous effectuer sur ce modele?',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            const Text(
-                              'Editer',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Montserrat',
+                            const SizedBox(height: 5.0),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => AddModele(
+                                                catalogue:
+                                                    widget.catalogueModel,
+                                                modele: item,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0,
+                                        horizontal: 10.0,
+                                      ),
+                                      alignment: Alignment.centerLeft,
+                                      decoration: BoxDecoration(
+                                        color: primary200,
+                                        borderRadius: BorderRadius.circular(
+                                          5.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/icons/edit.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Colors.white,
+                                              BlendMode.srcIn,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10.0),
+                                          const Text(
+                                            'Editer',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Montserrat',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  GestureDetector(
+                                    onTap: () {
+                                      dropModele(modeleId: item.id);
+                                      setState(() {
+                                        dropInProgress = itemIndex;
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0,
+                                        horizontal: 10.0,
+                                      ),
+                                      alignment: Alignment.centerLeft,
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius: BorderRadius.circular(
+                                          5.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/icons/delete.6.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              primary200,
+                                              BlendMode.srcIn,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10.0),
+                                          const Text(
+                                            'Supprimer',
+                                            style: TextStyle(
+                                              color: primary200,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Montserrat',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 10.0,
-                        ),
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/delete.6.svg',
-                              colorFilter: const ColorFilter.mode(
-                                primary200,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            const Text(
-                              'Supprimer',
-                              style: TextStyle(
-                                color: primary200,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Montserrat',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
+            child: SizedBox(
+              height: Random().nextInt(250) + 100,
+              width: MediaQuery.of(context).size.width * .5 - 30.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child:
+                    !item.images[0].contains('http')
+                        ? Image.asset(
+                          'assets/images/catalogue/img_1.png',
+                          // item.images[0],
+                          fit: BoxFit.cover,
+                        )
+                        : ItemBuilder.imageCardBuilder(item.images[0]),
               ),
-            ],
+            ),
           ),
         ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5.0),
-        child: !item.images[0].contains('http')
-            ? Image.asset(
-                'assets/images/catalogue/img_1.png',
-                // item.images[0],
-                fit: BoxFit.cover,
-                height: Random().nextInt(250) + 100,
-                width: MediaQuery.of(context).size.width * .5 - 30.0,
-              )
-            : Image.network(
-                item.images[0],
-                fit: BoxFit.cover,
-                height: Random().nextInt(250) + 100,
-                width: MediaQuery.of(context).size.width * .5 - 30.0,
+        if (dropInProgress != null && dropInProgress == itemIndex)
+          Positioned(
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              alignment: Alignment.center,
+              height: 80.0,
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(200),
+                borderRadius: BorderRadius.circular(5.0),
               ),
-      ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Suppression',
+                    style: TextStyle(
+                      color: primary200,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(color: primary200),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
+  }
+
+  Future dropModele({required Object modeleId}) async {
+    if (!await Internet.checkInternetAccess()) {
+      LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
+      return;
+    }
+    try {
+      mongodb.WriteResult response = await ModeleTeela.deleteModele(
+        id: modeleId,
+      );
+      if (response.isSuccess) {
+        CatalogueTeela
+            .ownerCatalogues[CatalogueTeela.ownerCatalogues.indexWhere(
+              (catalogue) => catalogue['_id'] == widget.catalogueModel.id,
+            )]['Modele']
+            .removeAt(dropInProgress!);
+        setState(() {
+          widget.catalogueModel.modeles.removeAt(dropInProgress!);
+          dropInProgress = null;
+        });
+      }
+    } catch (errno) {
+      debugPrint(errno.toString());
+      LocalPreferences.showFlashMessage(
+        'Une erreur est survenue\nVeuillez verifier votre connexion internet',
+        Colors.red,
+      );
+    }
   }
 }

@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teela/auth/otp_success.dart';
 import 'package:teela/auth/sign_in.dart';
 import 'package:teela/utils/app.dart';
@@ -274,7 +272,7 @@ class _SignUpState extends State<SignUp> {
                               ? SizedBox(
                                 height: 20.0,
                                 width: 20.0,
-                                child: CupertinoActivityIndicator(
+                                child: CircularProgressIndicator(
                                   color:
                                       Theme.of(context).scaffoldBackgroundColor,
                                 ),

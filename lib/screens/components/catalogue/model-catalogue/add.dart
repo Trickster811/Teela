@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
@@ -112,29 +110,21 @@ class _AddModeleState extends State<AddModele> {
                             ),
                             const SizedBox(width: 10.0),
                             for (dynamic image in images) ...[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15.0),
-                                child:
-                                    image is String && !image.contains('http')
-                                        ? Image.asset(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          height: 80.0,
-                                          width: 80.0,
-                                        )
-                                        : image is File
-                                        ? Image.file(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          height: 80.0,
-                                          width: 80.0,
-                                        )
-                                        : Image.network(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          height: 80.0,
-                                          width: 80.0,
-                                        ),
+                              SizedBox(
+                                height: 80.0,
+                                width: 80.0,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  child:
+                                      image is String && !image.contains('http')
+                                          ? Image.asset(
+                                            image,
+                                            fit: BoxFit.cover,
+                                          )
+                                          : image is File
+                                          ? Image.file(image, fit: BoxFit.cover)
+                                          : ItemBuilder.imageCardBuilder(image),
+                                ),
                               ),
                               const SizedBox(width: 10.0),
                             ],
@@ -294,7 +284,7 @@ class _AddModeleState extends State<AddModele> {
                         ? SizedBox(
                           height: 20.0,
                           width: 20.0,
-                          child: CupertinoActivityIndicator(
+                          child: CircularProgressIndicator(
                             color: Theme.of(context).scaffoldBackgroundColor,
                           ),
                         )
@@ -379,7 +369,7 @@ class _AddModeleState extends State<AddModele> {
             'max_price': _controllerMaxPrice.text.trim(),
             'min_price': _controllerMinPrice.text.trim(),
             'title': _controllerTitle.text.trim(),
-            'catalogue': widget.catalogue.id.toString(),
+            'catalogue': widget.catalogue.id,
           },
         );
         LocalPreferences.showFlashMessage(

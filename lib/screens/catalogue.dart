@@ -2,7 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/screens/components/catalogue/add.dart';
 import 'package:teela/screens/components/catalogue/details.dart';
@@ -32,6 +32,9 @@ class _CatalogueState extends State<Catalogue> {
 
   // List of catalogue
   List<Map<String, dynamic>> ownerCatalogue = CatalogueTeela.ownerCatalogues;
+
+  // Catalogue drop progress
+  int? dropInProgress;
 
   @override
   void initState() {
@@ -276,32 +279,27 @@ class _CatalogueState extends State<Catalogue> {
                     for (var item in ownerCatalogue) ...[
                       catalogueItemBuilder(
                         catalogue: CatalogueModel(
-                          id: item['_id'].toString().substring(
-                            10,
-                            item['_id'].toString().length - 2,
-                          ),
+                          id: item['_id'],
                           description: item['description'],
                           modeles: [
-                            // for (var element in item['Modele'])
-                            //   ModeleModel(
-                            //     description: element['description'],
-                            //     duration: SfRangeValues(
-                            //       element['duration'][0],
-                            //       element['duration'][1],
-                            //     ),
-                            //     id: element['_id'].toString().substring(
-                            //       10,
-                            //       element['_id'].toString().length - 2,
-                            //     ),
-                            //     images: element['images'],
-                            //     maxPrice: element['max_price'],
-                            //     minPrice: element['min_price'],
-                            //     title: element['title'],
-                            //   ),
+                            for (var element in item['Modele'])
+                              ModeleModel(
+                                description: element['description'],
+                                duration: SfRangeValues(
+                                  element['duration'][0],
+                                  element['duration'][1],
+                                ),
+                                id: element['_id'],
+                                images: element['images'],
+                                maxPrice: int.tryParse(element['max_price'])!,
+                                minPrice: int.tryParse(element['min_price'])!,
+                                title: element['title'],
+                              ),
                           ],
                           title: item['title'],
                         ),
                         context: context,
+                        itemIndex: ownerCatalogue.indexOf(item),
                       ),
                       const SizedBox(height: 20.0),
                     ],
@@ -310,7 +308,7 @@ class _CatalogueState extends State<Catalogue> {
                         child: SizedBox(
                           height: 20,
                           width: 20,
-                          child: CupertinoActivityIndicator(),
+                          child: CircularProgressIndicator(),
                         ),
                       ),
                   ],
@@ -321,208 +319,256 @@ class _CatalogueState extends State<Catalogue> {
     );
   }
 
-  GestureDetector catalogueItemBuilder({
+  Widget catalogueItemBuilder({
     required BuildContext context,
     required CatalogueModel catalogue,
+    required int itemIndex,
   }) {
-    return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailsCatalogue(catalogueModel: catalogue),
-            ),
-          ),
-      onLongPress:
-          () => showCupertinoModalPopup(
-            context: context,
-            builder:
-                (context) => CupertinoActionSheet(
-                  message: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
+    return Stack(
+      children: [
+        SafeArea(
+          child: GestureDetector(
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            DetailsCatalogue(catalogueModel: catalogue),
+                  ),
+                ),
+            onLongPress:
+                () => showCupertinoModalPopup(
+                  context: context,
+                  builder:
+                      (context) => CupertinoActionSheet(
+                        message: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Actions',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Montserrat',
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ),
-                            Text(
-                              'Quelle action souhaitex-vous effectuer sur ce catalogue?',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => AddCatalogue(
-                                          catalogueModel: catalogue,
-                                        ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Actions',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
                                   ),
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                  horizontal: 10.0,
-                                ),
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                  color: primary200,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/icons/edit.svg',
-                                      colorFilter: const ColorFilter.mode(
-                                        Colors.white,
-                                        BlendMode.srcIn,
-                                      ),
+                                  Text(
+                                    'Quelle action souhaitex-vous effectuer sur ce catalogue?',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context).iconTheme.color,
                                     ),
-                                    const SizedBox(width: 10.0),
-                                    const Text(
-                                      'Editer',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 5.0),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                  horizontal: 10.0,
-                                ),
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/icons/delete.6.svg',
-                                      colorFilter: const ColorFilter.mode(
-                                        primary200,
-                                        BlendMode.srcIn,
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => AddCatalogue(
+                                                catalogueModel: catalogue,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0,
+                                        horizontal: 10.0,
                                       ),
-                                    ),
-                                    const SizedBox(width: 10.0),
-                                    const Text(
-                                      'Supprimer',
-                                      style: TextStyle(
+                                      alignment: Alignment.centerLeft,
+                                      decoration: BoxDecoration(
                                         color: primary200,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Montserrat',
+                                        borderRadius: BorderRadius.circular(
+                                          5.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/icons/edit.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Colors.white,
+                                              BlendMode.srcIn,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10.0),
+                                          const Text(
+                                            'Editer',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Montserrat',
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      dropCatalogue(catalogueId: catalogue.id);
+                                      setState(() {
+                                        dropInProgress = itemIndex;
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0,
+                                        horizontal: 10.0,
+                                      ),
+                                      alignment: Alignment.centerLeft,
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius: BorderRadius.circular(
+                                          5.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/icons/delete.6.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              primary200,
+                                              BlendMode.srcIn,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10.0),
+                                          const Text(
+                                            'Supprimer',
+                                            style: TextStyle(
+                                              color: primary200,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Montserrat',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
+                ),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 80.0,
+                  width: 80.0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child:
+                        catalogue.modeles.isNotEmpty
+                            ? ItemBuilder.imageCardBuilder(
+                              catalogue.modeles[0].images[0],
+                            )
+                            : Image.asset(
+                              'assets/images/catalogue/img_1.png',
+                              height: double.maxFinite,
+                              width: double.maxFinite,
+                              fit: BoxFit.cover,
+                            ),
                   ),
                 ),
-          ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child:
-            // catalogue.modeles.isNotEmpty
-            // ? Image.network(
-            //     Auth.supabase.storage.from('modele_images').getPublicUrl(
-            //         catalogue.modeles[0].images[0].substring(14)),
-            //     height: 80.0,
-            //     width: 80.0,
-            //     fit: BoxFit.cover,
-            //   )
-            // :
-            Image.asset(
-              'assets/images/catalogue/img_1.png',
-              height: 80.0,
-              width: 80.0,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 10.0),
-          Expanded(
-            child: SizedBox(
-              height: 80.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    catalogue.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: SizedBox(
+                    height: 80.0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          catalogue.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          catalogue.description,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Text(
+                            '${catalogue.modeles.length} modele${catalogue.modeles.length > 1 ? 's' : ''}',
+                            style: const TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(catalogue.description, overflow: TextOverflow.ellipsis),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(10.0),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (dropInProgress != null && dropInProgress == itemIndex)
+          Positioned(
+            child: Container(
+              alignment: Alignment.center,
+              height: 80.0,
+              decoration: BoxDecoration(
+                color: Colors.white.withAlpha(200),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Suppression',
+                    style: TextStyle(
+                      color: primary200,
+                      fontWeight: FontWeight.w700,
                     ),
-                    child: Text(
-                      '${catalogue.modeles.length} modele${catalogue.modeles.length > 1 ? 's' : ''}',
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(color: primary200),
                   ),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -543,7 +589,6 @@ class _CatalogueState extends State<Catalogue> {
         _hasNextCatalogue = true;
       });
     }
-    print(Auth.user!['_id']);
     try {
       final catalogueSnap = await CatalogueTeela.retrieveMultiCatalogue(
         limit: documentLimit,
@@ -551,7 +596,7 @@ class _CatalogueState extends State<Catalogue> {
         //     CatalogueTeela.ownerCatalogues.isNotEmpty
         //         ? CatalogueTeela.ownerCatalogues.last['id']
         //         : null,
-        owner: Auth.user!['_id'].toString(),
+        owner: mongodb.ObjectId.parse(Auth.user!['_id']),
       );
       ownerCatalogue = CatalogueTeela.ownerCatalogues;
       // CatalogueTeela.ownerCatalogues = ownerCatalogue = catalogueSnap;
@@ -560,9 +605,12 @@ class _CatalogueState extends State<Catalogue> {
           _hasNextCatalogue = false;
         });
       }
-    } on PostgrestException catch (errno) {
+    } catch (errno) {
       debugPrint(errno.toString());
-      LocalPreferences.showFlashMessage(errno.message.toString(), Colors.red);
+      LocalPreferences.showFlashMessage(
+        'Une erreur est survenue\nVeuillez verifier votre connexion internet',
+        Colors.red,
+      );
       setState(() {
         _hasNextCatalogue = false;
       });
@@ -570,5 +618,32 @@ class _CatalogueState extends State<Catalogue> {
     setState(() {
       isFetchingCatalogue = false;
     });
+  }
+
+  Future dropCatalogue({required Object catalogueId}) async {
+    if (!await Internet.checkInternetAccess()) {
+      LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
+      setState(() {
+        internetAccess = false;
+      });
+      return;
+    }
+    try {
+      mongodb.WriteResult response = await CatalogueTeela.deleteCatalogue(
+        id: catalogueId,
+      );
+      if (response.isSuccess) {
+        CatalogueTeela.ownerCatalogues.removeAt(dropInProgress!);
+        setState(() {
+          dropInProgress = null;
+        });
+      }
+    } catch (errno) {
+      debugPrint(errno.toString());
+      LocalPreferences.showFlashMessage(
+        'Une erreur est survenue\nVeuillez verifier votre connexion internet',
+        Colors.red,
+      );
+    }
   }
 }

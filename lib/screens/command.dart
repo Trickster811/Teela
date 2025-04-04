@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/screens/components/catalogue/search.dart';
 import 'package:teela/screens/components/command/details.dart';
@@ -343,7 +344,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                   Column(
                     children: [
                       for (Map<String, dynamic> commande in ownerCommande.where(
-                        (item) => true,
+                        (item) => item['status'] == 1,
                       )) ...[
                         commandeItemBuilder(
                           context: context,
@@ -354,10 +355,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                             date: DateTime.parse(commande['date']),
                             details: commande['details'],
                             duration: commande['duration'],
-                            id: commande['_id'].toString().substring(
-                              10,
-                              commande['_id'].toString().length - 2,
-                            ),
+                            id: commande['_id'],
                             modele: ModeleModel(
                               description: commande['Modele']['description'],
                               duration: SfRangeValues(
@@ -366,12 +364,19 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                               ),
                               id: commande['Modele']['_id'],
                               images: commande['Modele']['images'],
-                              maxPrice: commande['Modele']['max_price'],
-                              minPrice: commande['Modele']['min_price'],
+                              maxPrice:
+                                  int.tryParse(
+                                    commande['Modele']['max_price'],
+                                  )!,
+                              minPrice:
+                                  int.tryParse(
+                                    commande['Modele']['min_price'],
+                                  )!,
                               title: commande['Modele']['title'],
                             ),
-                            price: commande['price'],
+                            price: int.tryParse(commande['price'])!,
                             versements: commande['versements'],
+                            status: commande['status'],
                           ),
                         ),
                         const SizedBox(height: 20.0),
@@ -381,13 +386,111 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                           child: SizedBox(
                             height: 20,
                             width: 20,
-                            child: CupertinoActivityIndicator(),
+                            child: CircularProgressIndicator(),
                           ),
                         ),
                     ],
                   ),
-                  const Column(),
-                  const Column(),
+                  Column(
+                    children: [
+                      for (Map<String, dynamic> commande in ownerCommande.where(
+                        (item) => item['status'] == 2,
+                      )) ...[
+                        commandeItemBuilder(
+                          context: context,
+                          commande: CommandeModel(
+                            customerMesures: commande['customerMesures'],
+                            customerName: commande['customerName'],
+                            customerPhone: commande['customerPhone'],
+                            date: DateTime.parse(commande['date']),
+                            details: commande['details'],
+                            duration: commande['duration'],
+                            id: commande['_id'],
+                            modele: ModeleModel(
+                              description: commande['Modele']['description'],
+                              duration: SfRangeValues(
+                                commande['Modele']['duration'][0],
+                                commande['Modele']['duration'][0],
+                              ),
+                              id: commande['Modele']['_id'],
+                              images: commande['Modele']['images'],
+                              maxPrice:
+                                  int.tryParse(
+                                    commande['Modele']['max_price'],
+                                  )!,
+                              minPrice:
+                                  int.tryParse(
+                                    commande['Modele']['min_price'],
+                                  )!,
+                              title: commande['Modele']['title'],
+                            ),
+                            price: int.tryParse(commande['price'])!,
+                            versements: commande['versements'],
+                            status: commande['status'],
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                      ],
+                      if (_hasNextCommande)
+                        const Center(
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      for (Map<String, dynamic> commande in ownerCommande.where(
+                        (item) => item['status'] == 3,
+                      )) ...[
+                        commandeItemBuilder(
+                          context: context,
+                          commande: CommandeModel(
+                            customerMesures: commande['customerMesures'],
+                            customerName: commande['customerName'],
+                            customerPhone: commande['customerPhone'],
+                            date: DateTime.parse(commande['date']),
+                            details: commande['details'],
+                            duration: commande['duration'],
+                            id: commande['_id'],
+                            modele: ModeleModel(
+                              description: commande['Modele']['description'],
+                              duration: SfRangeValues(
+                                commande['Modele']['duration'][0],
+                                commande['Modele']['duration'][0],
+                              ),
+                              id: commande['Modele']['_id'],
+                              images: commande['Modele']['images'],
+                              maxPrice:
+                                  int.tryParse(
+                                    commande['Modele']['max_price'],
+                                  )!,
+                              minPrice:
+                                  int.tryParse(
+                                    commande['Modele']['min_price'],
+                                  )!,
+                              title: commande['Modele']['title'],
+                            ),
+                            price: int.tryParse(commande['price'])!,
+                            versements: commande['versements'],
+                            status: commande['status'],
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                      ],
+                      if (_hasNextCommande)
+                        const Center(
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -412,16 +515,17 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: Image.network(
-                // commande.modele.images[Random().nextInt(
-                //   commande.modele.images.length,
-                // )],
-                'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                height: 80.0,
-                width: 80.0,
-                fit: BoxFit.cover,
+            SizedBox(
+              height: 80.0,
+              width: 80.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: ItemBuilder.imageCardBuilder(
+                  commande.modele.images[Random().nextInt(
+                    commande.modele.images.length,
+                  )],
+                  // 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                ),
               ),
             ),
             const SizedBox(width: 10.0),
@@ -542,7 +646,7 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
         // startAfter: CatalogueTeela.ownerCommandes.isNotEmpty
         //     ? CatalogueTeela.ownerCommandes.last['id']
         //     : null,
-        owner: Auth.user!['_id'].toString(),
+        owner: mongodb.ObjectId.parse(Auth.user!['_id']),
       );
       print(commandeSnap);
       ownerCommande = CommandeTeela.ownerCommandes;
@@ -551,9 +655,12 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
           _hasNextCommande = false;
         });
       }
-    } on PostgrestException catch (errno) {
+    } catch (errno) {
       debugPrint(errno.toString());
-      LocalPreferences.showFlashMessage(errno.message.toString(), Colors.red);
+      LocalPreferences.showFlashMessage(
+        'Une erreur est survenue\nVeuillez verifier votre connexion internet',
+        Colors.red,
+      );
       setState(() {
         _hasNextCommande = false;
       });

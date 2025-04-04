@@ -1,4 +1,3 @@
-import 'package:cloudinary_flutter/cloudinary_object.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,10 +15,14 @@ class DatabaseConnection {
       return;
     }
     //
-    teelaDBToken = await Db.create(
-      'mongodb+srv://${dotenv.env['DB_USER']}:${dotenv.env['USER_PASSWORD']}@teela.we6eknj.mongodb.net/${dotenv.env['DB_NAME']}?retryWrites=true&w=majority&appName=${dotenv.env['APP_NAME']}',
-    );
-    await teelaDBToken.open(secure: true);
+    try {
+      teelaDBToken = await Db.create(
+        'mongodb+srv://${dotenv.env['DB_USER']}:${dotenv.env['USER_PASSWORD']}@teela.we6eknj.mongodb.net/${dotenv.env['DB_NAME']}?retryWrites=true&w=majority&appName=${dotenv.env['APP_NAME']}',
+      );
+      await teelaDBToken.open(secure: true);
+    } catch (e) {
+      await init();
+    }
     // inspect(teelaDBToken);
     // await teelaDBToken.collection('users').insert({'a': 4});
   }
@@ -66,12 +69,8 @@ class Auth {
         'password': password,
       });
       if (response.isSuccess) {
-        await LocalPreferences.setUserInfo({
-          'username': username,
-          'phone': phone,
-          'password': password,
-        });
-        // user = {'username': username, 'phone': phone, 'password': password};
+        await LocalPreferences.setUserInfo(response.document!);
+        user = LocalPreferences.getUserInfo();
         return response;
       }
     } else {
@@ -126,10 +125,10 @@ class CatalogueTeela {
   static List<Map<String, dynamic>> ownerCatalogues = [];
 
   //Set of all Catalogue
-  static Future<List<Map<String, dynamic>>> retrieveMultiCatalogue({
+  static Future retrieveMultiCatalogue({
     required int limit,
     int? startAfter,
-    String? owner,
+    Object? owner,
   }) async {
     late List<Map<String, dynamic>> refCatalogue;
     try {
@@ -140,7 +139,24 @@ class CatalogueTeela {
                 .find(where.limit(limit))
                 .skip(catalogues.length)
                 .toList();
+
+        for (var element in refCatalogue) {
+          List<Map<String, dynamic>> models =
+              await ModeleTeela.retrieveMultiModele(
+                limit: limit,
+                catalogueId: element['_id'],
+              );
+          refCatalogue[refCatalogue.indexOf(element)]['Modele'] = models;
+        }
         // .range(startAfter + 1, startAfter + limit);
+        refCatalogue.map((element) async {
+          List<Map<String, dynamic>> models =
+              await ModeleTeela.retrieveMultiModele(
+                limit: limit,
+                catalogueId: element['_id'],
+              );
+          element['Modele'] = models;
+        });
         catalogues.addAll(
           refCatalogue.where((item) => !catalogues.contains(item)),
         );
@@ -151,6 +167,14 @@ class CatalogueTeela {
                 .find(where.eq('user', owner).limit(limit).sortBy('title'))
                 .skip(ownerCatalogues.length)
                 .toList();
+        for (var element in refCatalogue) {
+          List<Map<String, dynamic>> models =
+              await ModeleTeela.retrieveMultiModele(
+                limit: limit,
+                catalogueId: element['_id'],
+              );
+          refCatalogue[refCatalogue.indexOf(element)]['Modele'] = models;
+        }
 
         // .range(startAfter + 1, startAfter + limit);
         ownerCatalogues.addAll(
@@ -160,8 +184,7 @@ class CatalogueTeela {
 
       return refCatalogue;
     } catch (erno) {
-      print(erno);
-      return refCatalogue;
+      debugPrint(erno.toString());
     }
   }
 
@@ -171,16 +194,16 @@ class CatalogueTeela {
 
   static Future updateCatalogue({
     required Map<String, dynamic> data,
-    required String id,
+    required Object id,
   }) async {
     return await db.collection('Catalogue').update(where.eq('_id', id), data);
   }
 
-  static Future deleteCatalogue({required int id}) async {
+  static Future deleteCatalogue({required Object id}) async {
     return await db.collection('Catalogue').deleteOne(where.eq('_id', id));
   }
 
-  static Future deleteMultiCatalogue({required List<int> ids}) async {
+  static Future deleteMultiCatalogue({required List<Object> ids}) async {
     return await db.collection('Catalogue').deleteMany({
       '_id': {r'$in': ids},
     });
@@ -197,7 +220,7 @@ class CommandeTeela {
   static Future<List<Map<String, dynamic>>> retrieveMultiCommande({
     required int limit,
     int? startAfter,
-    String? owner,
+    Object? owner,
   }) async {
     List<Map<String, dynamic>> refCommande;
 
@@ -218,6 +241,12 @@ class CommandeTeela {
               .find(where.limit(limit))
               .skip(commandes.length)
               .toList();
+      for (var element in refCommande) {
+        Map<String, dynamic>? model = await ModeleTeela.retrieveModele(
+          modeleId: element['modele'],
+        );
+        refCommande[refCommande.indexOf(element)]['Modele'] = model;
+      }
       // refCommande = await supabase
       //     .from('Commande')
       //     .select('*,Modele(*, Catalogue(*))')
@@ -237,16 +266,16 @@ class CommandeTeela {
 
   static Future updateCommande({
     required Map<String, dynamic> data,
-    required String id,
+    required Object id,
   }) async {
     return await db.collection('Commande').updateOne(where.eq('_id', id), data);
   }
 
-  static Future deleteCommande({required int id}) async {
+  static Future deleteCommande({required Object id}) async {
     return await db.collection('Commande').deleteOne(where.eq('_id', id));
   }
 
-  static Future deleteMultiCommande({required List<int> ids}) async {
+  static Future deleteMultiCommande({required List<Object> ids}) async {
     return await db.collection('Commande').deleteMany({
       '_id': {r'$in': ids},
     });
@@ -259,17 +288,30 @@ class ModeleTeela {
   static List<Map<String, dynamic>> modeles = [];
 
   //Set of all Modele
-  static Future retrieveMultiModele({
+  static Future<List<Map<String, dynamic>>> retrieveMultiModele({
     required int limit,
-    required String,
+    required Object catalogueId,
     // required int startAfter,
   }) async {
     final refModele =
         await db
             .collection('Modele')
-            .find(where.limit(limit))
+            .find(where.eq('catalogue', catalogueId))
             .skip(modeles.length)
             .toList();
+    // .range(startAfter + 1, startAfter + limit);
+    // modeles.addAll(refModele);
+    return refModele;
+  }
+
+  // Find modele by id
+  static Future<Map<String, dynamic>?> retrieveModele({
+    required Object modeleId,
+    // required int startAfter,
+  }) async {
+    final refModele = await db
+        .collection('Modele')
+        .findOne(where.eq('_id', modeleId));
     // .range(startAfter + 1, startAfter + limit);
     // modeles.addAll(refModele);
     return refModele;
@@ -281,16 +323,16 @@ class ModeleTeela {
 
   static Future updateModele({
     required Map<String, dynamic> data,
-    required String id,
+    required Object id,
   }) async {
     return await db.collection('Modele').updateOne(where.eq('_id', id), data);
   }
 
-  static Future deleteModele({required int id}) async {
+  static Future deleteModele({required Object id}) async {
     return await db.collection('Modele').deleteOne(where.eq('_id', id));
   }
 
-  static Future deleteMultiModele({required List<int> ids}) async {
+  static Future deleteMultiModele({required List<Object> ids}) async {
     return await db.collection('Modele').deleteMany({
       '_id': {r'$in': ids},
     });

@@ -1162,6 +1162,7 @@ class _AddCommandeState extends State<AddCommande>
                                       context: context,
                                       isScrollControlled: true,
                                       useSafeArea: true,
+                                      enableDrag: true,
                                       builder:
                                           (context) => StatefulBuilder(
                                             builder: (
@@ -1589,24 +1590,21 @@ class _AddCommandeState extends State<AddCommande>
                                                                           .zero,
                                                                   title: Row(
                                                                     children: [
-                                                                      ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              15.0,
-                                                                            ),
-                                                                        child: Image.asset(
-                                                                          // catalogue['Modele']
-                                                                          //         [
-                                                                          //         0]
-                                                                          //     [
-                                                                          //     'images'][0],
-                                                                          'assets/images/catalogue/img_1.png',
-                                                                          height:
-                                                                              80.0,
-                                                                          width:
-                                                                              80.0,
-                                                                          fit:
-                                                                              BoxFit.cover,
+                                                                      SizedBox(
+                                                                        height:
+                                                                            80.0,
+                                                                        width:
+                                                                            80.0,
+                                                                        child: ClipRRect(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            15.0,
+                                                                          ),
+                                                                          child: ItemBuilder.imageCardBuilder(
+                                                                            catalogue['Modele'].length !=
+                                                                                    0
+                                                                                ? catalogue['Modele'][0]['images'][0]
+                                                                                : 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                       const SizedBox(
@@ -1667,9 +1665,7 @@ class _AddCommandeState extends State<AddCommande>
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  children: <
-                                                                    Widget
-                                                                  >[
+                                                                  children: [
                                                                     Row(
                                                                       mainAxisAlignment:
                                                                           MainAxisAlignment
@@ -1706,11 +1702,15 @@ class _AddCommandeState extends State<AddCommande>
                                                                                           images:
                                                                                               item['images'],
                                                                                           id:
-                                                                                              item['id'],
+                                                                                              item['_id'],
                                                                                           maxPrice:
-                                                                                              item['max_price'],
+                                                                                              int.tryParse(
+                                                                                                item['max_price'],
+                                                                                              )!,
                                                                                           minPrice:
-                                                                                              item['min_price'],
+                                                                                              int.tryParse(
+                                                                                                item['min_price'],
+                                                                                              )!,
                                                                                           title:
                                                                                               item['title'],
                                                                                         );
@@ -1721,25 +1721,25 @@ class _AddCommandeState extends State<AddCommande>
                                                                                       },
                                                                                     );
                                                                                   },
-                                                                                  child: ClipRRect(
-                                                                                    borderRadius: BorderRadius.circular(
-                                                                                      5.0,
-                                                                                    ),
-                                                                                    child: Image.network(
-                                                                                      // item.images[0],
-                                                                                      'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                                                                                      fit:
-                                                                                          BoxFit.cover,
-                                                                                      height:
-                                                                                          Random().nextInt(
-                                                                                            50,
-                                                                                          ) +
-                                                                                          100,
-                                                                                      width:
-                                                                                          MediaQuery.of(
-                                                                                            context,
-                                                                                          ).size.width *
-                                                                                          .35,
+                                                                                  child: SizedBox(
+                                                                                    height:
+                                                                                        Random().nextInt(
+                                                                                          50,
+                                                                                        ) +
+                                                                                        100,
+                                                                                    width:
+                                                                                        MediaQuery.of(
+                                                                                          context,
+                                                                                        ).size.width *
+                                                                                        .35,
+                                                                                    child: ClipRRect(
+                                                                                      borderRadius: BorderRadius.circular(
+                                                                                        5.0,
+                                                                                      ),
+                                                                                      child: ItemBuilder.imageCardBuilder(
+                                                                                        item['images'][0],
+                                                                                        // 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                                                                                      ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -1777,11 +1777,15 @@ class _AddCommandeState extends State<AddCommande>
                                                                                         images:
                                                                                             item['images'],
                                                                                         id:
-                                                                                            item['id'],
+                                                                                            item['_id'],
                                                                                         maxPrice:
-                                                                                            item['max_price'],
+                                                                                            int.tryParse(
+                                                                                              item['max_price'],
+                                                                                            )!,
                                                                                         minPrice:
-                                                                                            item['min_price'],
+                                                                                            int.tryParse(
+                                                                                              item['min_price'],
+                                                                                            )!,
                                                                                         title:
                                                                                             item['title'],
                                                                                       );
@@ -1792,25 +1796,25 @@ class _AddCommandeState extends State<AddCommande>
                                                                                     },
                                                                                   );
                                                                                 },
-                                                                                child: ClipRRect(
-                                                                                  borderRadius: BorderRadius.circular(
-                                                                                    5.0,
-                                                                                  ),
-                                                                                  child: Image.network(
-                                                                                    // item.images[0],
-                                                                                    'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                                                                                    fit:
-                                                                                        BoxFit.cover,
-                                                                                    height:
-                                                                                        Random().nextInt(
-                                                                                          50,
-                                                                                        ) +
-                                                                                        100,
-                                                                                    width:
-                                                                                        MediaQuery.of(
-                                                                                          context,
-                                                                                        ).size.width *
-                                                                                        .35,
+                                                                                child: SizedBox(
+                                                                                  height:
+                                                                                      Random().nextInt(
+                                                                                        50,
+                                                                                      ) +
+                                                                                      100,
+                                                                                  width:
+                                                                                      MediaQuery.of(
+                                                                                        context,
+                                                                                      ).size.width *
+                                                                                      .35,
+                                                                                  child: ClipRRect(
+                                                                                    borderRadius: BorderRadius.circular(
+                                                                                      5.0,
+                                                                                    ),
+                                                                                    child: ItemBuilder.imageCardBuilder(
+                                                                                      item['images'][0],
+                                                                                      // 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                                                                                    ),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1837,7 +1841,7 @@ class _AddCommandeState extends State<AddCommande>
                                                                   height: 20,
                                                                   width: 20,
                                                                   child:
-                                                                      CupertinoActivityIndicator(),
+                                                                      CircularProgressIndicator(),
                                                                 ),
                                                             ],
                                                           ),
@@ -1865,14 +1869,23 @@ class _AddCommandeState extends State<AddCommande>
                                 if (selectedModele != null)
                                   for (dynamic image
                                       in selectedModele!.images) ...[
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      child: Image.network(
-                                        // image,
-                                        'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                                        fit: BoxFit.cover,
-                                        height: 80.0,
-                                        width: 80.0,
+                                    SizedBox(
+                                      height: 80.0,
+                                      width: 80.0,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                          15.0,
+                                        ),
+                                        child:
+                                            image is File
+                                                ? Image.file(
+                                                  image,
+                                                  fit: BoxFit.cover,
+                                                )
+                                                : ItemBuilder.imageCardBuilder(
+                                                  image,
+                                                  // 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                                                ),
                                       ),
                                     ),
                                     const SizedBox(width: 10.0),
@@ -1919,30 +1932,27 @@ class _AddCommandeState extends State<AddCommande>
                                 ),
                                 const SizedBox(width: 10.0),
                                 for (dynamic image in images) ...[
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child:
-                                        image is String &&
-                                                !image.contains('http')
-                                            ? Image.asset(
-                                              image,
-                                              fit: BoxFit.cover,
-                                              height: 80.0,
-                                              width: 80.0,
-                                            )
-                                            : image is File
-                                            ? Image.file(
-                                              image,
-                                              fit: BoxFit.cover,
-                                              height: 80.0,
-                                              width: 80.0,
-                                            )
-                                            : Image.network(
-                                              image,
-                                              fit: BoxFit.cover,
-                                              height: 80.0,
-                                              width: 80.0,
-                                            ),
+                                  SizedBox(
+                                    height: 80.0,
+                                    width: 80.0,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child:
+                                          image is String &&
+                                                  !image.contains('http')
+                                              ? Image.asset(
+                                                image,
+                                                fit: BoxFit.cover,
+                                              )
+                                              : image is File
+                                              ? Image.file(
+                                                image,
+                                                fit: BoxFit.cover,
+                                              )
+                                              : ItemBuilder.imageCardBuilder(
+                                                image,
+                                              ),
+                                    ),
                                   ),
                                   const SizedBox(width: 10.0),
                                 ],
@@ -2050,6 +2060,9 @@ class _AddCommandeState extends State<AddCommande>
                                                   children: [
                                                     Expanded(
                                                       child: CupertinoDatePicker(
+                                                        mode:
+                                                            CupertinoDatePickerMode
+                                                                .date,
                                                         dateOrder:
                                                             DatePickerDateOrder
                                                                 .dmy,
@@ -2190,7 +2203,7 @@ class _AddCommandeState extends State<AddCommande>
                   ? SizedBox(
                     height: 20.0,
                     width: 20.0,
-                    child: CupertinoActivityIndicator(
+                    child: CircularProgressIndicator(
                       color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                   )
@@ -2675,12 +2688,13 @@ class _AddCommandeState extends State<AddCommande>
           'images': descriptionImgagesLinks,
         },
         'duration': dueDate.difference(DateTime.now()).inDays,
-        'modele': selectedModele!.id.toString(),
+        'modele': selectedModele!.id,
         'price': _controllerPrice.text.trim(),
         'versements':
             _controllerVersement.text.trim() == ''
                 ? {}
                 : {'1': _controllerVersement.text.trim()},
+        'status': 1,
       };
       if (widget.commande != null) {
         await CommandeTeela.updateCommande(

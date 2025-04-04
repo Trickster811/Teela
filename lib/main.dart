@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:teela/start/splash.dart';
 import 'package:teela/utils/color_scheme.dart';
-import 'package:teela/utils/data.dart';
 import 'package:teela/utils/local.dart';
 
 Future main() async {

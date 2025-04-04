@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cloudinary_url_gen/cloudinary.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,6 +65,70 @@ class Internet {
   }
 }
 
+class ItemBuilder {
+  static CachedNetworkImage imageCardBuilder(String image) {
+    return CachedNetworkImage(
+      imageUrl: image,
+      imageBuilder:
+          (context, imageProvider) => Container(
+            height: double.maxFinite,
+            width: double.maxFinite,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+            ),
+          ),
+      placeholder:
+          (context, url) => Container(
+            decoration: BoxDecoration(
+              color: neutral400,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 5.0,
+                  width: 5.0,
+                  decoration: BoxDecoration(
+                    color: neutral800,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                const SizedBox(width: 5.0),
+                Container(
+                  height: 5.0,
+                  width: 5.0,
+                  decoration: BoxDecoration(
+                    color: neutral800,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                const SizedBox(width: 5.0),
+                Container(
+                  height: 5.0,
+                  width: 5.0,
+                  decoration: BoxDecoration(
+                    color: neutral800,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      errorWidget:
+          (context, url, error) => Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: const Center(child: Text('Erreur\nréseau')),
+          ),
+    );
+  }
+}
+
 class FileManager {
   // Get a reference your Supabase client
   static SupabaseClient supabase = Supabase.instance.client;
@@ -119,15 +183,8 @@ class FileManager {
         return data['url'];
       }
       return null;
-      return await supabase.storage
-          .from(folder)
-          .upload(
-            uploadPath,
-            image,
-            fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
-          );
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       LocalPreferences.showFlashMessage('$e', Colors.red);
     }
   }
