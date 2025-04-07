@@ -40,14 +40,9 @@ class _CatalogueState extends State<Catalogue> {
   void initState() {
     super.initState();
     scrollController.addListener(scrollListener);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      retrieveCatalogue();
-    });
-
-    // Also listen for when we return to this screen
-    ModalRoute.of(context)?.addPostFrameCallback((_) {
-      retrieveCatalogue();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    retrieveCatalogue();
+    // });
   }
 
   @override
@@ -120,14 +115,22 @@ class _CatalogueState extends State<Catalogue> {
             ),
             const SizedBox(height: 30.0),
             GestureDetector(
-              onTap:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => const AddCatalogue(catalogueModel: null),
-                    ),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => const AddCatalogue(catalogueModel: null),
                   ),
+                );
+                CatalogueTeela.ownerCatalogues = [];
+                ModeleTeela.modeles = [];
+                setState(() {
+                  internetAccess = true;
+                  _hasNextCatalogue = true;
+                });
+                retrieveCatalogue();
+              },
               child: Row(
                 children: [
                   DottedBorder(
@@ -335,15 +338,22 @@ class _CatalogueState extends State<Catalogue> {
       children: [
         SafeArea(
           child: GestureDetector(
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            DetailsCatalogue(catalogueModel: catalogue),
-                  ),
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => DetailsCatalogue(catalogueModel: catalogue),
                 ),
+              );
+              CatalogueTeela.ownerCatalogues = [];
+              ModeleTeela.modeles = [];
+              setState(() {
+                internetAccess = true;
+                _hasNextCatalogue = true;
+              });
+              retrieveCatalogue();
+            },
             onLongPress:
                 () => showCupertinoModalPopup(
                   context: context,
@@ -386,9 +396,9 @@ class _CatalogueState extends State<Catalogue> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       Navigator.pop(context);
-                                      Navigator.push(
+                                      await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder:
@@ -397,6 +407,13 @@ class _CatalogueState extends State<Catalogue> {
                                               ),
                                         ),
                                       );
+                                      CatalogueTeela.ownerCatalogues = [];
+                                      ModeleTeela.modeles = [];
+                                      setState(() {
+                                        internetAccess = true;
+                                        _hasNextCatalogue = true;
+                                      });
+                                      retrieveCatalogue();
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(

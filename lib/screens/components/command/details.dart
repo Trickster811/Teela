@@ -527,7 +527,7 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Text(
-                                  '${widget.commande.date.add(Duration(days: widget.commande.duration)).difference(widget.commande.date).inDays} jour${widget.commande.duration > 1 ? 's' : ''}',
+                                  '${widget.commande.date.difference(DateTime.now()).inDays} jour${widget.commande.date.difference(DateTime.now()).inDays > 1 ? 's' : ''}',
                                   style: TextStyle(
                                     fontSize: 14.0,
                                     fontWeight: FontWeight.w600,

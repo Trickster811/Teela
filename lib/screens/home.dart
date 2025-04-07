@@ -535,6 +535,14 @@ class _HomeState extends State<Home> {
                       (item) => item['status'] == 1,
                     )) ...[
                       ItemBuilder.commandeItemBuilder(
+                        onTap: () {
+                          CommandeTeela.ownerCommandes = [];
+                          setState(() {
+                            internetAccess = true;
+                            _hasNextCommande = true;
+                          });
+                          retrieveCommande();
+                        },
                         context: context,
                         commande: CommandeModel(
                           customerMesures: commande['customerMesures'],

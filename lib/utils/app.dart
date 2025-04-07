@@ -134,15 +134,18 @@ class ItemBuilder {
   static GestureDetector commandeItemBuilder({
     required BuildContext context,
     required CommandeModel commande,
+    required Function onTap,
   }) {
     return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailsCommande(commande: commande),
-            ),
+      onTap: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailsCommande(commande: commande),
           ),
+        );
+        onTap();
+      },
       child: SizedBox(
         height: 80.0,
         child: Row(
@@ -193,7 +196,7 @@ class ItemBuilder {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Text(
-                      '${commande.date.add(Duration(days: commande.duration)).difference(commande.date).inDays} jour${commande.duration > 1 ? 's' : ''}',
+                      '${commande.date.difference(DateTime.now()).inDays} jour${commande.date.difference(DateTime.now()).inDays > 1 ? 's' : ''}',
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w600,

@@ -371,6 +371,14 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                         for (Map<String, dynamic> commande in ownerCommande
                             .where((item) => item['status'] == 1)) ...[
                           ItemBuilder.commandeItemBuilder(
+                            onTap: () {
+                              CommandeTeela.ownerCommandes = [];
+                              setState(() {
+                                internetAccess = true;
+                                _hasNextCommande = true;
+                              });
+                              retrieveCommande();
+                            },
                             context: context,
                             commande: CommandeModel(
                               customerMesures: commande['customerMesures'],
@@ -425,6 +433,14 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                         for (Map<String, dynamic> commande in ownerCommande
                             .where((item) => item['status'] == 2)) ...[
                           ItemBuilder.commandeItemBuilder(
+                            onTap: () {
+                              CommandeTeela.ownerCommandes = [];
+                              setState(() {
+                                internetAccess = true;
+                                _hasNextCommande = true;
+                              });
+                              retrieveCommande();
+                            },
                             context: context,
                             commande: CommandeModel(
                               customerMesures: commande['customerMesures'],
@@ -479,6 +495,14 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                         for (Map<String, dynamic> commande in ownerCommande
                             .where((item) => item['status'] == 3)) ...[
                           ItemBuilder.commandeItemBuilder(
+                            onTap: () {
+                              CommandeTeela.ownerCommandes = [];
+                              setState(() {
+                                internetAccess = true;
+                                _hasNextCommande = true;
+                              });
+                              retrieveCommande();
+                            },
                             context: context,
                             commande: CommandeModel(
                               customerMesures: commande['customerMesures'],

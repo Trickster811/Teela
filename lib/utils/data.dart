@@ -136,8 +136,9 @@ class CatalogueTeela {
         refCatalogue =
             await db
                 .collection('Catalogue')
-                .find(where.limit(limit))
-                .skip(catalogues.length)
+                .find(
+                  where.sortBy('title').skip(catalogues.length).limit(limit),
+                )
                 .toList();
 
         for (var element in refCatalogue) {
@@ -164,8 +165,13 @@ class CatalogueTeela {
         refCatalogue =
             await db
                 .collection('Catalogue')
-                .find(where.eq('user', owner).limit(limit).sortBy('title'))
-                .skip(ownerCatalogues.length)
+                .find(
+                  where
+                      .eq('user', owner)
+                      .sortBy('title')
+                      .skip(ownerCatalogues.length)
+                      .limit(limit),
+                )
                 .toList();
         for (var element in refCatalogue) {
           List<Map<String, dynamic>> models =
@@ -225,19 +231,31 @@ class CommandeTeela {
     Object? owner,
   }) async {
     List<Map<String, dynamic>> refCommande;
+    Map<String, dynamic>? model;
     try {
       if (owner == null) {
         refCommande =
             await db
                 .collection('Commande')
-                .find(where.limit(limit))
-                .skip(commandes.length)
+                .find(where.sortBy('date').skip(commandes.length).limit(limit))
                 .toList();
 
         for (var element in refCommande) {
-          Map<String, dynamic>? model = await ModeleTeela.retrieveModele(
-            modeleId: element['modele'],
-          );
+          if (!element['modele'].toString().contains('http')) {
+            model = await ModeleTeela.retrieveModele(
+              modeleId: element['modele'],
+            );
+          } else {
+            model = {
+              '_id': ObjectId.parse('000000000000000000000000'),
+              'description': 'RAS',
+              'duration': [1, 1],
+              'images': [element['modele']],
+              'max_price': 1,
+              'min_price': 1,
+              'title': 'Modele Anonyme',
+            };
+          }
           refCommande[refCommande.indexOf(element)]['Modele'] = model;
         }
         // .range(startAfter + 1, startAfter + limit);
@@ -248,13 +266,16 @@ class CommandeTeela {
         refCommande =
             await db
                 .collection('Commande')
-                .find(where.eq('user', owner).limit(limit).sortBy('date'))
-                .skip(ownerCommandes.length)
+                .find(
+                  where
+                      .eq('user', owner)
+                      .sortBy('date')
+                      .skip(ownerCommandes.length)
+                      .limit(limit),
+                )
                 .toList();
 
         for (var element in refCommande) {
-          Map<String, dynamic>? model;
-
           if (!element['modele'].toString().contains('http')) {
             model = await ModeleTeela.retrieveModele(
               modeleId: element['modele'],
