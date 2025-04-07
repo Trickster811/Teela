@@ -113,97 +113,7 @@ class _SignInState extends State<SignIn> {
               if (onGoingProcess || !signInFormKey.currentState!.validate()) {
                 return;
               }
-              return showCupertinoModalPopup(
-                context: context,
-                builder:
-                    (context) => CupertinoActionSheet(
-                      message: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Deja inscrit?',
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Montserrat',
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                ),
-                                Text(
-                                  'Un compte existe deja sur ce numero',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w400,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 5.0),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    Navigator.pop(context);
-                                    await authenfication();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0,
-                                    ),
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: primary200,
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    child: Text(
-                                      'Restaurer',
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).scaffoldBackgroundColor,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 5.0),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    'Changer de numero',
-                                    style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: primary200,
-                                      color: primary200,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Montserrat',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-              );
+              return await authenfication();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -258,18 +168,106 @@ class _SignInState extends State<SignIn> {
         Auth.user = LocalPreferences.getUserInfo();
         setState(() {
           onGoingProcess = false;
-          // Navigate to the Home app screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => OtpSuccess(
-                    // phone: _controllerPhone.text.trim(),
-                    // register: true,
-                  ),
-            ),
-          );
         });
+        showCupertinoModalPopup(
+          context: context,
+          builder:
+              (context) => CupertinoActionSheet(
+                message: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Deja inscrit?',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat',
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                          Text(
+                            'Un compte existe deja sur ce numero',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 5.0),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              Navigator.pop(context);
+                              // Navigate to the Home app screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => OtpSuccess(
+                                        // phone: _controllerPhone.text.trim(),
+                                        // register: true,
+                                      ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                              ),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: primary200,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: Text(
+                                'Restaurer',
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Changer de numero',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor: primary200,
+                                color: primary200,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+        );
       } else {
         LocalPreferences.showFlashMessage(
           'Compte inexistant avec ce numero\nVeuillez creer un compte',

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
-import 'package:teela/screens/components/catalogue/search.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -29,6 +28,9 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
 
   // List of commande
   List<Map<String, dynamic>> ownerCommande = CommandeTeela.ownerCommandes;
+
+  // Search text
+  final _controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -74,12 +76,14 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
             SizedBox(
               width: MediaQuery.of(context).size.width - 100.0,
               child: TextField(
-                onTap:
-                    () => showSearch(
-                      context: context,
-                      delegate: Search(searchKey: 'Modeles'),
-                    ),
-                readOnly: true,
+                // onTap:
+                //     () => showSearch(
+                //       context: context,
+                //       delegate: Search(searchKey: 'Modeles'),
+                //     ),
+                // readOnly: true,
+                onChanged: (value) => setState(() {}),
+                controller: _controllerSearch,
                 decoration: InputDecoration(
                   prefixIcon: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 14.0),
@@ -369,7 +373,20 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                     child: Column(
                       children: [
                         for (Map<String, dynamic> commande in ownerCommande
-                            .where((item) => item['status'] == 1)) ...[
+                            .where((item) {
+                              if (item['status'] == 1 &&
+                                  _controllerSearch.text == '') {
+                                return true;
+                              } else {
+                                return item['status'] == 1 &&
+                                    (item['customerName'].contains(
+                                          _controllerSearch.text,
+                                        ) ||
+                                        item['customerPhone'].contains(
+                                          _controllerSearch.text,
+                                        ));
+                              }
+                            })) ...[
                           ItemBuilder.commandeItemBuilder(
                             onTap: () {
                               CommandeTeela.ownerCommandes = [];
@@ -431,7 +448,20 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                     child: Column(
                       children: [
                         for (Map<String, dynamic> commande in ownerCommande
-                            .where((item) => item['status'] == 2)) ...[
+                            .where((item) {
+                              if (item['status'] == 2 &&
+                                  _controllerSearch.text == '') {
+                                return true;
+                              } else {
+                                return item['status'] == 2 &&
+                                    (item['customerName'].contains(
+                                          _controllerSearch.text,
+                                        ) ||
+                                        item['customerPhone'].contains(
+                                          _controllerSearch.text,
+                                        ));
+                              }
+                            })) ...[
                           ItemBuilder.commandeItemBuilder(
                             onTap: () {
                               CommandeTeela.ownerCommandes = [];
@@ -493,7 +523,20 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
                     child: Column(
                       children: [
                         for (Map<String, dynamic> commande in ownerCommande
-                            .where((item) => item['status'] == 3)) ...[
+                            .where((item) {
+                              if (item['status'] == 3 &&
+                                  _controllerSearch.text == '') {
+                                return true;
+                              } else {
+                                return item['status'] == 3 &&
+                                    (item['customerName'].contains(
+                                          _controllerSearch.text,
+                                        ) ||
+                                        item['customerPhone'].contains(
+                                          _controllerSearch.text,
+                                        ));
+                              }
+                            })) ...[
                           ItemBuilder.commandeItemBuilder(
                             onTap: () {
                               CommandeTeela.ownerCommandes = [];

@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
                             ),
                             const SizedBox(height: 25.0),
                             Text(
-                              '${NumberFormat().format(ownerCommande.where((item) => item['status'] == 1 && DateUtils.isSameMonth(DateTime.now(), DateTime.parse(item['date']))).fold<num>(0, (sum, amount) => sum + amount['versements'].values.reduce((x, y) => x + y)))} Fcfa',
+                              '${NumberFormat().format(ownerCommande.where((item) => DateUtils.isSameMonth(DateTime.now(), DateTime.parse(item['date']))).fold<num>(0, (sum, amount) => sum + amount['versements'].values.reduce((x, y) => x + y)))} Fcfa',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 23,
@@ -178,7 +178,7 @@ class _HomeState extends State<Home> {
                             ),
                             const SizedBox(height: 25.0),
                             Text(
-                              '${NumberFormat().format(ownerCommande.where((item) => item['status'] == 1 && DateUtils.isSameMonth(DateTime.now(), DateTime.parse(item['date']))).fold<num>(0, (sum, amount) => sum + (int.tryParse(amount['price'])! - amount['versements'].values.reduce((x, y) => x + y))))} Fcfa',
+                              '${NumberFormat().format(ownerCommande.where((item) => DateUtils.isSameMonth(DateTime.now(), DateTime.parse(item['date']))).fold<num>(0, (sum, amount) => sum + (int.tryParse(amount['price'])! - amount['versements'].values.reduce((x, y) => x + y))))} Fcfa',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 23,

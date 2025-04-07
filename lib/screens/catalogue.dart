@@ -6,7 +6,6 @@ import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/screens/components/catalogue/add.dart';
 import 'package:teela/screens/components/catalogue/details.dart';
-import 'package:teela/screens/components/catalogue/search.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -35,6 +34,9 @@ class _CatalogueState extends State<Catalogue> {
 
   // Catalogue drop progress
   int? dropInProgress;
+
+  // Search text
+  final _controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -81,12 +83,14 @@ class _CatalogueState extends State<Catalogue> {
         child: Column(
           children: [
             TextField(
-              onTap:
-                  () => showSearch(
-                    context: context,
-                    delegate: Search(searchKey: 'Catalogue'),
-                  ),
-              readOnly: true,
+              // onTap:
+              //     () => showSearch(
+              //       context: context,
+              //       delegate: Search(searchKey: 'Catalogue'),
+              //     ),
+              // readOnly: true,
+              onChanged: (value) => setState(() {}),
+              controller: _controllerSearch,
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 14.0),
@@ -286,7 +290,16 @@ class _CatalogueState extends State<Catalogue> {
                 )
                 : Column(
                   children: [
-                    for (var item in ownerCatalogue) ...[
+                    for (var item in ownerCatalogue.where((item) {
+                      if (_controllerSearch.text == '') {
+                        return true;
+                      } else {
+                        return item['title'].contains(_controllerSearch.text) ||
+                            item['description'].contains(
+                              _controllerSearch.text,
+                            );
+                      }
+                    })) ...[
                       catalogueItemBuilder(
                         catalogue: CatalogueModel(
                           id: item['_id'],

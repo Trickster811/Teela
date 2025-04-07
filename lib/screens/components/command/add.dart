@@ -73,10 +73,7 @@ class _AddCommandeState extends State<AddCommande>
       {'name': 'Tour du pied', 'abbr': 'LpD', 'value': null, 'state': true},
     ],
   };
-  Map<String, List<Map<String, dynamic>>> customerMesures = {
-    'topBody': [],
-    'downBody': [],
-  };
+  Map<String, dynamic> customerMesures = {'topBody': [], 'downBody': []};
   final _controllerMesureName = TextEditingController();
   final _controllerMesureAbbr = TextEditingController();
   final _controllerMesureValue = TextEditingController();
@@ -118,6 +115,22 @@ class _AddCommandeState extends State<AddCommande>
     super.initState();
     _controller = TabController(length: 4, vsync: this);
     _controllerTabMesures = TabController(length: 2, vsync: this);
+    //
+    if (widget.commande != null) {
+      _controllerFullName.text = widget.commande!.customerName;
+      _controllerPhone.text = widget.commande!.customerPhone;
+      customerMesures = widget.commande!.customerMesures;
+      selectedModele = widget.commande!.modele;
+      images.addAll(widget.commande!.details['images']);
+      _controllerText.text = widget.commande!.details['text'];
+      _controllerPrice.text = widget.commande!.price.toString();
+      _controllerVersement.text =
+          widget.commande!.versements.values
+              .fold<num>(0, (previousValue, element) => previousValue + element)
+              .toString();
+
+      dueDate = widget.commande!.date;
+    }
 
     // Listening for tab change event
     _controller!.addListener(() {
@@ -493,7 +506,11 @@ class _AddCommandeState extends State<AddCommande>
                               setSelectorButtonAsPrefixIcon: false,
                               useBottomSheetSafeArea: false,
                             ),
-                            initialValue: PhoneNumber(isoCode: 'CM'),
+                            initialValue: PhoneNumber(
+                              dialCode: '+237',
+                              isoCode: 'CM',
+                              phoneNumber: _controllerPhone.text,
+                            ),
                             countries: const ["CM"],
                             onInputChanged: (PhoneNumber number) {
                               setState(() {
@@ -2605,7 +2622,6 @@ class _AddCommandeState extends State<AddCommande>
           onGoingProcess = false;
         });
       }
-      // Upload description image if exist __start__
       List<String> descriptionImgagesLinks = [];
       List<String> modeleImage = [];
       if (selectedModele!.images[0] is File) {
@@ -2616,7 +2632,6 @@ class _AddCommandeState extends State<AddCommande>
       if (images.isNotEmpty) {
         descriptionImgagesLinks = await uploadPhotos(imagesToUpload: images);
       }
-      // Upload description image if exist __end__
       Map<String, dynamic> commandeDetails = {
         'customerMesures': customerMesures,
         'customerName': _controllerFullName.text.trim(),
@@ -2639,19 +2654,22 @@ class _AddCommandeState extends State<AddCommande>
         'status': 1,
         'user': mongodb.ObjectId.parse(Auth.user!['_id']),
       };
+      // Upload description image if exist __start__
       if (widget.commande != null) {
         await CommandeTeela.updateCommande(
           data: commandeDetails,
           id: widget.commande!.id,
+          singleFieldUpdate: true,
         );
         LocalPreferences.showFlashMessage(
           'Modele mis a jour avec succès',
           Colors.blue,
         );
+        // Upload description image if exist __end__
       } else {
         await CommandeTeela.createCommande(data: commandeDetails);
         LocalPreferences.showFlashMessage(
-          'Modele créé avec succès',
+          'Commande créé avec succès',
           Colors.green,
         );
       }

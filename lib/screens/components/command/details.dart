@@ -652,24 +652,26 @@ class _DetailsCommandeState extends State<DetailsCommande> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              widget.commande.modele.title,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                widget.commande.modele.title,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
-                                            ),
-                                            const Text(
-                                              'Voir le modele',
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ],
+                                              const Text(
+                                                'Voir le modele',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -1403,6 +1405,7 @@ class _DetailsCommandeState extends State<DetailsCommande> {
       mongodb.WriteResult response = await CommandeTeela.updateCommande(
         id: widget.commande.id,
         data: data,
+        singleFieldUpdate: false,
       );
       if (response.isSuccess) {
         CommandeTeela.ownerCommandes[CommandeTeela.ownerCommandes.indexWhere(

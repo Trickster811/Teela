@@ -110,20 +110,151 @@ class _AddModeleState extends State<AddModele> {
                             ),
                             const SizedBox(width: 10.0),
                             for (dynamic image in images) ...[
-                              SizedBox(
-                                height: 80.0,
-                                width: 80.0,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  child:
-                                      image is String && !image.contains('http')
-                                          ? Image.asset(
-                                            image,
-                                            fit: BoxFit.cover,
-                                          )
-                                          : image is File
-                                          ? Image.file(image, fit: BoxFit.cover)
-                                          : ItemBuilder.imageCardBuilder(image),
+                              GestureDetector(
+                                onTap:
+                                    () => showModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder:
+                                          (context) => CupertinoActionSheet(
+                                            message: Padding(
+                                              padding: const EdgeInsets.all(
+                                                10.0,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Supprimer',
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
+                                                          fontSize: 24,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          color:
+                                                              Theme.of(
+                                                                context,
+                                                              ).iconTheme.color,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        'Voulez-vous supprimer cette image',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              Theme.of(
+                                                                context,
+                                                              ).iconTheme.color,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 20.0),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          images.remove(image);
+                                                          setState(() {
+                                                            Navigator.pop(
+                                                              context,
+                                                            );
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 10.0,
+                                                                horizontal:
+                                                                    10.0,
+                                                              ),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration: BoxDecoration(
+                                                            color: primary200,
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  5.0,
+                                                                ),
+                                                          ),
+                                                          child: const Text(
+                                                            'Valider',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap:
+                                                            () => Navigator.pop(
+                                                              context,
+                                                            ),
+                                                        child: const Text(
+                                                          'Annuler',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                    ),
+                                child: SizedBox(
+                                  height: 80.0,
+                                  width: 80.0,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    child:
+                                        image is String &&
+                                                !image.contains('http')
+                                            ? Image.asset(
+                                              image,
+                                              fit: BoxFit.cover,
+                                            )
+                                            : image is File
+                                            ? Image.file(
+                                              image,
+                                              fit: BoxFit.cover,
+                                            )
+                                            : ItemBuilder.imageCardBuilder(
+                                              image,
+                                            ),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 10.0),
@@ -270,7 +401,7 @@ class _AddModeleState extends State<AddModele> {
                 setState(() {
                   onGoingProcess = true;
                 });
-                await uploadPhotos();
+                await addOrUpdateModele();
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -304,7 +435,7 @@ class _AddModeleState extends State<AddModele> {
     );
   }
 
-  Future uploadPhotos() async {
+  Future uploadPhotos({required List<dynamic> imagesToUpload}) async {
     try {
       // Upload images if they were picked from internal storage
       List<String> imageModeleDownloadLinks = [];
@@ -318,12 +449,10 @@ class _AddModeleState extends State<AddModele> {
           );
           if (photosLink != null) {
             imageModeleDownloadLinks.add(photosLink);
-          } else {}
+          }
         }
       }
-      return await addOrUpdateModele(
-        imageModeleDownloadLinks: imageModeleDownloadLinks,
-      );
+      return imageModeleDownloadLinks;
     } catch (e) {
       setState(() {
         onGoingProcess = false;
@@ -343,17 +472,25 @@ class _AddModeleState extends State<AddModele> {
         setState(() {
           onGoingProcess = false;
         });
+      } // Upload description image if exist __start__
+      List<String> imagesLinks = [];
+
+      if (images.isNotEmpty) {
+        imagesLinks = await uploadPhotos(imagesToUpload: images);
+        imagesLinks.addAll(images.whereType<String>());
       }
+      Map<String, dynamic> modeleDetails = {
+        'description': _controllerDescription.text.trim(),
+        'duration': [_duration.start, _duration.end],
+        'images': imagesLinks,
+        'max_price': _controllerMaxPrice.text.trim(),
+        'min_price': _controllerMinPrice.text.trim(),
+        'title': _controllerTitle.text.trim(),
+        'catalogue': widget.catalogue.id,
+      };
       if (widget.modele != null) {
         await ModeleTeela.updateModele(
-          data: {
-            'description': _controllerDescription.text.trim(),
-            'duration': [_duration.start, _duration.end],
-            'images': [],
-            'max_price': _controllerMaxPrice.text.trim(),
-            'min_price': _controllerMinPrice.text.trim(),
-            'title': _controllerTitle.text.trim(),
-          },
+          data: modeleDetails,
           id: widget.modele!.id,
         );
         LocalPreferences.showFlashMessage(
@@ -361,17 +498,7 @@ class _AddModeleState extends State<AddModele> {
           Colors.blue,
         );
       } else {
-        await ModeleTeela.createModele(
-          data: {
-            'description': _controllerDescription.text.trim(),
-            'duration': [_duration.start, _duration.end],
-            'images': imageModeleDownloadLinks,
-            'max_price': _controllerMaxPrice.text.trim(),
-            'min_price': _controllerMinPrice.text.trim(),
-            'title': _controllerTitle.text.trim(),
-            'catalogue': widget.catalogue.id,
-          },
-        );
+        await ModeleTeela.createModele(data: modeleDetails);
         LocalPreferences.showFlashMessage(
           'Modele créé avec succès',
           Colors.green,

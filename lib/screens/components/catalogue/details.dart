@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:teela/screens/components/catalogue/model-catalogue/add.dart';
 import 'package:teela/screens/components/catalogue/model-catalogue/details.dart';
-import 'package:teela/screens/components/catalogue/search.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -26,6 +25,8 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
   // Modele drop progress
   int? dropInProgress;
 
+  // Search text
+  final _controllerSearch = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,12 +67,14 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 100.0,
                           child: TextField(
-                            onTap:
-                                () => showSearch(
-                                  context: context,
-                                  delegate: Search(searchKey: 'Modeles'),
-                                ),
-                            readOnly: true,
+                            // onTap:
+                            //     () => showSearch(
+                            //       context: context,
+                            //       delegate: Search(searchKey: 'Modeles'),
+                            //     ),
+                            // readOnly: true,
+                            onChanged: (value) => setState(() {}),
+                            controller: _controllerSearch,
                             decoration: InputDecoration(
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -174,7 +177,19 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
                                       0,
                                       (widget.catalogueModel.modeles.length / 2)
                                           .round(),
-                                    ))
+                                    )
+                                    .where((item) {
+                                      if (_controllerSearch.text == '') {
+                                        return true;
+                                      } else {
+                                        return item.title.contains(
+                                              _controllerSearch.text,
+                                            ) ||
+                                            item.description.contains(
+                                              _controllerSearch.text,
+                                            );
+                                      }
+                                    }))
                                   modeleBuilder(
                                     context: context,
                                     item: item,
@@ -194,7 +209,19 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
                                       (widget.catalogueModel.modeles.length / 2)
                                           .round(),
                                       widget.catalogueModel.modeles.length,
-                                    ))
+                                    )
+                                    .where((item) {
+                                      if (_controllerSearch.text == '') {
+                                        return true;
+                                      } else {
+                                        return item.title.contains(
+                                              _controllerSearch.text,
+                                            ) ||
+                                            item.description.contains(
+                                              _controllerSearch.text,
+                                            );
+                                      }
+                                    }))
                                   modeleBuilder(
                                     context: context,
                                     item: item,

@@ -315,13 +315,16 @@ class CommandeTeela {
   static Future updateCommande({
     required Map<String, dynamic> data,
     required Object id,
+    required bool singleFieldUpdate,
   }) async {
     try {
       return await db
           .collection('Commande')
           .updateOne(
             where.eq('_id', id),
-            modify.set(data.keys.first, data.values.first),
+            singleFieldUpdate
+                ? {r'$set': data}
+                : modify.set(data.keys.first, data.values.first),
           );
     } catch (erno) {
       print('hello $erno');
