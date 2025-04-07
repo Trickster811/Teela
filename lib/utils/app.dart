@@ -9,9 +9,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:teela/screens/components/command/details.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/local.dart';
+import 'package:teela/utils/model.dart';
 
 class FormDecoration {
   static InputDecoration inputDecoaration({
@@ -125,6 +128,126 @@ class ItemBuilder {
             ),
             child: const Center(child: Text('Erreur\nréseau')),
           ),
+    );
+  }
+
+  static GestureDetector commandeItemBuilder({
+    required BuildContext context,
+    required CommandeModel commande,
+  }) {
+    return GestureDetector(
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailsCommande(commande: commande),
+            ),
+          ),
+      child: SizedBox(
+        height: 80.0,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: 80.0,
+              width: 80.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: ItemBuilder.imageCardBuilder(
+                  commande.modele.images[0],
+                  // 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
+                ),
+              ),
+            ),
+            const SizedBox(width: 10.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    commande.modele.title,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    commande.customerName,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color:
+                          commande.date
+                                      .add(Duration(days: commande.duration))
+                                      .difference(commande.date)
+                                      .inDays <=
+                                  3
+                              ? primary200
+                              : Colors.transparent,
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text(
+                      '${commande.date.add(Duration(days: commande.duration)).difference(commande.date).inDays} jour${commande.duration > 1 ? 's' : ''}',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                        color:
+                            commande.date
+                                        .add(Duration(days: commande.duration))
+                                        .difference(commande.date)
+                                        .inDays <=
+                                    3
+                                ? Colors.white
+                                : Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 80.0,
+              width: 60,
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 0,
+                    top: -10,
+                    right: 0,
+                    child: Text(
+                      '${commande.date.day}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 49,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: -0,
+                    child: Text(
+                      DateFormat.MMM('fr_FR').format(commande.date),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 29,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

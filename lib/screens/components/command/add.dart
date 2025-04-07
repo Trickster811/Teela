@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongodb;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
@@ -35,27 +35,42 @@ class _AddCommandeState extends State<AddCommande>
   // Mesures Info
   Map<String, List<Map<String, dynamic>>> defaultMesures = {
     'topBody': [
-      {'name': 'Epaule', 'abbr': 'E', 'value': null},
-      {'name': 'Tour de poitrine', 'abbr': 'P', 'value': null},
-      {'name': 'Carrure avant', 'abbr': 'Ca', 'value': null},
-      {'name': 'Carrure arriere', 'abbr': 'Cd', 'value': null},
-      {'name': 'Tour de ventre', 'abbr': 'V', 'value': null},
-      {'name': 'Longueur de la manche', 'abbr': 'L', 'value': null},
-      {'name': 'Tour de la manche', 'abbr': 'Tm', 'value': null},
-      {'name': 'Longueur du vetement', 'abbr': 'Lv', 'value': null},
-      {'name': 'Tour de cou', 'abbr': 'C', 'value': null},
-      {'name': 'Tour de poignet', 'abbr': 'P', 'value': null},
-      {'name': 'Tour de rein', 'abbr': 'R', 'value': null},
-      {'name': 'Longueur du corps', 'abbr': 'Lc', 'value': null},
+      {'name': 'Epaule', 'abbr': 'E', 'value': null, 'state': true},
+      {'name': 'Tour de poitrine', 'abbr': 'P', 'value': null, 'state': true},
+      {'name': 'Carrure avant', 'abbr': 'Ca', 'value': null, 'state': true},
+      {'name': 'Carrure arriere', 'abbr': 'Cd', 'value': null, 'state': true},
+      {'name': 'Tour de ventre', 'abbr': 'V', 'value': null, 'state': true},
+      {
+        'name': 'Longueur de la manche',
+        'abbr': 'L',
+        'value': null,
+        'state': true,
+      },
+      {'name': 'Tour de la manche', 'abbr': 'Tm', 'value': null, 'state': true},
+      {
+        'name': 'Longueur du vetement',
+        'abbr': 'Lv',
+        'value': null,
+        'state': true,
+      },
+      {'name': 'Tour de cou', 'abbr': 'C', 'value': null, 'state': true},
+      {'name': 'Tour de poignet', 'abbr': 'P', 'value': null, 'state': true},
+      {'name': 'Tour de rein', 'abbr': 'R', 'value': null, 'state': true},
+      {'name': 'Longueur du corps', 'abbr': 'Lc', 'value': null, 'state': true},
     ],
     'downBody': [
-      {'name': 'Tour de hanche', 'abbr': 'Lh', 'value': null},
-      {'name': 'Tour de cuisse', 'abbr': 'Tc', 'value': null},
-      {'name': 'Tour de bassin', 'abbr': 'Tb', 'value': null},
-      {'name': 'Longueur du pantalon', 'abbr': 'Lp', 'value': null},
-      {'name': 'Bas du pantalon', 'abbr': "B", 'value': null},
-      {'name': 'Tour de molaire', 'abbr': "M", 'value': null},
-      {'name': 'Tour du pied', 'abbr': 'LpD', 'value': null},
+      {'name': 'Tour de hanche', 'abbr': 'Lh', 'value': null, 'state': true},
+      {'name': 'Tour de cuisse', 'abbr': 'Tc', 'value': null, 'state': true},
+      {'name': 'Tour de bassin', 'abbr': 'Tb', 'value': null, 'state': true},
+      {
+        'name': 'Longueur du pantalon',
+        'abbr': 'Lp',
+        'value': null,
+        'state': true,
+      },
+      {'name': 'Bas du pantalon', 'abbr': "B", 'value': null, 'state': true},
+      {'name': 'Tour de molaire', 'abbr': "M", 'value': null, 'state': true},
+      {'name': 'Tour du pied', 'abbr': 'LpD', 'value': null, 'state': true},
     ],
   };
   Map<String, List<Map<String, dynamic>>> customerMesures = {
@@ -84,120 +99,6 @@ class _AddCommandeState extends State<AddCommande>
   TabController? _controller;
   TabController?
   _controllerTabMesures; // For the sections 'Haut du corps' & 'Bas du corps'
-
-  List<CatalogueModel> listCatalogue = [
-    const CatalogueModel(
-      id: '1',
-      description: 'Des vetements refletants les coutumes',
-      modeles: [
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-        ModeleModel(
-          id: '',
-          title: 'Nom du model',
-          description:
-              'Aenean nec odio vel ante porttitor sagittis in vel erat. Nam a ex tristique sapien dapibus mollis vel nec lacus. Donec et diam a mi accumsan placerat.',
-          duration: SfRangeValues(1, 5),
-          images: [
-            'assets/images/catalogue/img_1.png',
-            'assets/images/catalogue/img_2.png',
-          ],
-          minPrice: 0,
-          maxPrice: 0,
-        ),
-      ],
-      title: 'Modeles traditionels',
-    ),
-  ];
 
   // Manage Catalogue selection
   int documentLimit = 15;
@@ -269,8 +170,10 @@ class _AddCommandeState extends State<AddCommande>
             height: 30,
           ),
         ),
-        title: const Text(
-          'Nouvelle commande',
+        title: Text(
+          widget.commande != null
+              ? 'Mise A Jour commande'
+              : 'Nouvelle commande',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -739,131 +642,114 @@ class _AddCommandeState extends State<AddCommande>
                                                           const EdgeInsets.all(
                                                             10.0,
                                                           ),
-                                                      child: Form(
-                                                        key: addMesureFormKey,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  'Supprimer',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start,
-                                                                  style: TextStyle(
-                                                                    fontSize:
-                                                                        24,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    color:
-                                                                        Theme.of(
-                                                                          context,
-                                                                        ).iconTheme.color,
-                                                                  ),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Supprimer',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style: TextStyle(
+                                                                  fontSize: 24,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  color:
+                                                                      Theme.of(
+                                                                        context,
+                                                                      ).iconTheme.color,
                                                                 ),
-                                                                Text(
-                                                                  'Voulez-vous supprimer cette mesure',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left,
-                                                                  style: TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color:
-                                                                        Theme.of(
-                                                                          context,
-                                                                        ).iconTheme.color,
-                                                                  ),
+                                                              ),
+                                                              Text(
+                                                                'Voulez-vous supprimer cette mesure',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color:
+                                                                      Theme.of(
+                                                                        context,
+                                                                      ).iconTheme.color,
                                                                 ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 20.0,
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                GestureDetector(
-                                                                  onTap: () {
-                                                                    setState(() {
-                                                                      customerMesures['topBody']!
-                                                                          .remove(
-                                                                            mesure,
-                                                                          );
-                                                                      defaultMesures['topBody']!.add(
-                                                                        mesure.update(
-                                                                          'value',
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 20.0,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    customerMesures['topBody']!
+                                                                        .remove(
+                                                                          mesure,
+                                                                        );
+                                                                    defaultMesures['topBody']![defaultMesures['topBody']!.indexWhere(
+                                                                          (
+                                                                            item,
+                                                                          ) =>
+                                                                              item['name'] ==
+                                                                              mesure['name'],
+                                                                        )]
+                                                                        .update(
+                                                                          'state',
                                                                           (
                                                                             value,
                                                                           ) =>
-                                                                              null,
-                                                                        ),
-                                                                      );
-                                                                    });
+                                                                              true,
+                                                                        );
                                                                     Navigator.pop(
                                                                       context,
                                                                     );
-                                                                  },
-                                                                  child: Container(
-                                                                    padding: const EdgeInsets.symmetric(
-                                                                      vertical:
-                                                                          10.0,
-                                                                      horizontal:
-                                                                          10.0,
-                                                                    ),
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    decoration: BoxDecoration(
-                                                                      color:
-                                                                          primary200,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                            5.0,
-                                                                          ),
-                                                                    ),
-                                                                    child: const Text(
-                                                                      'Valider',
-                                                                      style: TextStyle(
-                                                                        color:
-                                                                            Colors.white,
-                                                                        fontSize:
-                                                                            16.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                      ),
-                                                                    ),
+                                                                  });
+                                                                },
+                                                                child: Container(
+                                                                  padding: const EdgeInsets.symmetric(
+                                                                    vertical:
+                                                                        10.0,
+                                                                    horizontal:
+                                                                        10.0,
                                                                   ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  height: 10.0,
-                                                                ),
-                                                                GestureDetector(
-                                                                  onTap:
-                                                                      () => Navigator.pop(
-                                                                        context,
-                                                                      ),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  decoration: BoxDecoration(
+                                                                    color:
+                                                                        primary200,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          5.0,
+                                                                        ),
+                                                                  ),
                                                                   child: const Text(
-                                                                    'Annuler',
+                                                                    'Valider',
                                                                     style: TextStyle(
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                      fontSize:
+                                                                          16.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w500,
@@ -872,10 +758,29 @@ class _AddCommandeState extends State<AddCommande>
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 10.0,
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap:
+                                                                    () => Navigator.pop(
+                                                                      context,
+                                                                    ),
+                                                                child: const Text(
+                                                                  'Annuler',
+                                                                  style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),
@@ -911,7 +816,9 @@ class _AddCommandeState extends State<AddCommande>
                                     ),
                                     const SizedBox(height: 20.0),
                                     for (Map<String, dynamic> mesure
-                                        in defaultMesures['topBody']!) ...[
+                                        in defaultMesures['topBody']!.where(
+                                          (item) => item['state'],
+                                        )) ...[
                                       mesureItemBuilder(
                                         addTo: 'topBody',
                                         context: context,
@@ -929,7 +836,7 @@ class _AddCommandeState extends State<AddCommande>
                                     for (Map<String, dynamic> mesure
                                         in customerMesures['downBody']!) ...[
                                       mesureItemBuilder(
-                                        addTo: 'topBody',
+                                        addTo: 'downBody',
                                         context: context,
                                         mesure: mesure,
                                         onLongPress:
@@ -1013,10 +920,25 @@ class _AddCommandeState extends State<AddCommande>
                                                                           .remove(
                                                                             mesure,
                                                                           );
+
+                                                                      defaultMesures['downBody']![defaultMesures['downBody']!.indexWhere(
+                                                                            (
+                                                                              item,
+                                                                            ) =>
+                                                                                item['name'] ==
+                                                                                mesure['name'],
+                                                                          )]
+                                                                          .update(
+                                                                            'state',
+                                                                            (
+                                                                              value,
+                                                                            ) =>
+                                                                                true,
+                                                                          );
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
                                                                     });
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
                                                                   },
                                                                   child: Container(
                                                                     padding: const EdgeInsets.symmetric(
@@ -1125,7 +1047,9 @@ class _AddCommandeState extends State<AddCommande>
                                     ),
                                     const SizedBox(height: 20.0),
                                     for (Map<String, dynamic> mesure
-                                        in defaultMesures['downBody']!) ...[
+                                        in defaultMesures['downBody']!.where(
+                                          (item) => item['state'],
+                                        )) ...[
                                       mesureItemBuilder(
                                         addTo: 'downBody',
                                         context: context,
@@ -2043,7 +1967,7 @@ class _AddCommandeState extends State<AddCommande>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(DateFormat.yMMMd().format(dueDate)),
+                                Text(DateFormat.yMMMd('fr_FR').format(dueDate)),
                                 GestureDetector(
                                   onTap:
                                       () => showCupertinoModalPopup(
@@ -2178,13 +2102,17 @@ class _AddCommandeState extends State<AddCommande>
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
-          if (onGoingProcess || !addCommandeFormKey.currentState!.validate()) {
-            return;
-          }
           if (_controller!.index != 3) {
             _controller!.animateTo(_controller!.index + 1);
             return;
           }
+
+          if (onGoingProcess ||
+              !addCommandeFormKey.currentState!.validate() ||
+              selectedModele == null) {
+            return;
+          }
+
           setState(() {
             onGoingProcess = true;
           });
@@ -2232,7 +2160,7 @@ class _AddCommandeState extends State<AddCommande>
   }) {
     return GestureDetector(
       onTap: () {
-        _controllerMesureValue.text = mesure['value'] ?? '0.0';
+        _controllerMesureValue.text = mesure['value'] ?? '0';
         showModalBottomSheet(
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
@@ -2316,12 +2244,14 @@ class _AddCommandeState extends State<AddCommande>
                                         'value':
                                             _controllerMesureValue.text.trim(),
                                       });
-                                      defaultMesures[addTo]!.remove(mesure);
+                                      defaultMesures[addTo]![defaultMesures[addTo]!
+                                              .indexOf(mesure)]
+                                          .update('state', (value) => false);
                                       _controllerMesureValue.clear();
                                     });
                                   } else {
                                     setState(() {
-                                      customerMesures['topBody']![customerMesures['topBody']!
+                                      customerMesures[addTo]![customerMesures[addTo]!
                                               .indexOf(mesure)]
                                           .update(
                                             'value',
@@ -2622,7 +2552,7 @@ class _AddCommandeState extends State<AddCommande>
         // startAfter: CatalogueTeela.ownerCatalogues.isNotEmpty
         //     ? CatalogueTeela.ownerCatalogues.last['id']
         //     : null,
-        owner: Auth.user!['_id'].toString(),
+        owner: mongodb.ObjectId.parse(Auth.user!['_id']),
       );
       ownerCatalogue = CatalogueTeela.ownerCatalogues;
       // CatalogueTeela.ownerCatalogues = ownerCatalogue = catalogueSnap;
@@ -2631,9 +2561,12 @@ class _AddCommandeState extends State<AddCommande>
           _hasNextCatalogue = false;
         });
       }
-    } on PostgrestException catch (errno) {
-      debugPrint(errno.code.toString());
-      LocalPreferences.showFlashMessage(errno.message.toString(), Colors.red);
+    } catch (errno) {
+      debugPrint(errno.toString());
+      LocalPreferences.showFlashMessage(
+        'Une erreur s\'est produite',
+        Colors.red,
+      );
       setState(() {
         _hasNextCatalogue = false;
       });
@@ -2648,7 +2581,7 @@ class _AddCommandeState extends State<AddCommande>
   }) async {
     // Upload images if they were picked from internal storage
     List<String> downloadLinks = [];
-    for (dynamic image in images) {
+    for (dynamic image in imagesToUpload) {
       if (image is! String) {
         final photosLink = await FileManager.uploadFile(
           image: image,
@@ -2674,6 +2607,12 @@ class _AddCommandeState extends State<AddCommande>
       }
       // Upload description image if exist __start__
       List<String> descriptionImgagesLinks = [];
+      List<String> modeleImage = [];
+      if (selectedModele!.images[0] is File) {
+        modeleImage = await uploadPhotos(
+          imagesToUpload: selectedModele!.images,
+        );
+      }
       if (images.isNotEmpty) {
         descriptionImgagesLinks = await uploadPhotos(imagesToUpload: images);
       }
@@ -2688,13 +2627,17 @@ class _AddCommandeState extends State<AddCommande>
           'images': descriptionImgagesLinks,
         },
         'duration': dueDate.difference(DateTime.now()).inDays,
-        'modele': selectedModele!.id,
+        'modele':
+            selectedModele!.images[0] is File
+                ? modeleImage[0]
+                : selectedModele!.id,
         'price': _controllerPrice.text.trim(),
         'versements':
             _controllerVersement.text.trim() == ''
                 ? {}
-                : {'1': _controllerVersement.text.trim()},
+                : {'1': int.tryParse(_controllerVersement.text.trim())},
         'status': 1,
+        'user': mongodb.ObjectId.parse(Auth.user!['_id']),
       };
       if (widget.commande != null) {
         await CommandeTeela.updateCommande(
@@ -2706,7 +2649,6 @@ class _AddCommandeState extends State<AddCommande>
           Colors.blue,
         );
       } else {
-        print(commandeDetails);
         await CommandeTeela.createCommande(data: commandeDetails);
         LocalPreferences.showFlashMessage(
           'Modele créé avec succès',
@@ -2718,13 +2660,11 @@ class _AddCommandeState extends State<AddCommande>
         onGoingProcess = false;
         Navigator.pop(context);
       });
-    } on PostgrestException catch (e) {
-      setState(() {
-        onGoingProcess = false;
-      });
-      LocalPreferences.showFlashMessage(e.message, Colors.red);
-      debugPrint(e.toString());
     } catch (erno) {
+      LocalPreferences.showFlashMessage(
+        'Une erreur est survenue\nVeuillez verifier votre connexion internet',
+        Colors.red,
+      );
       setState(() {
         onGoingProcess = false;
       });

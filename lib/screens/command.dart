@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongodb;
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:teela/screens/components/catalogue/search.dart';
-import 'package:teela/screens/components/command/details.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/data.dart';
@@ -44,11 +40,11 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
       setState(() {});
     });
     scrollController.addListener(scrollListener);
-    if (CommandeTeela.ownerCommandes.isEmpty) {
-      retrieveCommande();
-    } else {
-      _hasNextCommande = false;
-    }
+    // if (CommandeTeela.ownerCommandes.isEmpty) {
+    retrieveCommande();
+    // } else {
+    // _hasNextCommande = false;
+    // }
   }
 
   @override
@@ -72,38 +68,65 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          onTap:
-              () => showSearch(
-                context: context,
-                delegate: Search(searchKey: 'Catalogue'),
-              ),
-          readOnly: true,
-          decoration: InputDecoration(
-            prefixIcon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: SvgPicture.asset(
-                'assets/icons/search.5.svg',
-                colorFilter: const ColorFilter.mode(
-                  neutral700,
-                  BlendMode.srcIn,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 100.0,
+              child: TextField(
+                onTap:
+                    () => showSearch(
+                      context: context,
+                      delegate: Search(searchKey: 'Modeles'),
+                    ),
+                readOnly: true,
+                decoration: InputDecoration(
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                    child: SvgPicture.asset(
+                      'assets/icons/search.5.svg',
+                      colorFilter: const ColorFilter.mode(
+                        neutral700,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.only(right: 10.0),
+                  filled: true,
+                  fillColor: neutral200,
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: neutral200),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    gapPadding: 0,
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: const BorderSide(color: neutral200),
+                  ),
+                  hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+                  hintText: 'Rechercher...',
                 ),
               ),
             ),
-            contentPadding: const EdgeInsets.only(right: 10.0),
-            filled: true,
-            fillColor: neutral200,
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: neutral200),
+            GestureDetector(
+              onTap: () async {
+                CommandeTeela.ownerCommandes = [];
+                setState(() {
+                  internetAccess = true;
+                  _hasNextCommande = true;
+                });
+                retrieveCommande();
+              },
+              child: Container(
+                height: 50.0,
+                width: 50.0,
+                decoration: BoxDecoration(
+                  color: neutral200,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: const Icon(Icons.cached_rounded),
+              ),
             ),
-            focusedBorder: OutlineInputBorder(
-              gapPadding: 0,
-              borderRadius: BorderRadius.circular(5.0),
-              borderSide: const BorderSide(color: neutral200),
-            ),
-            hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-            hintText: 'Rechercher...',
-          ),
+          ],
         ),
         const SizedBox(height: 5.0),
         TabBar(
@@ -341,284 +364,172 @@ class _CommandState extends State<Command> with SingleTickerProviderStateMixin {
               child: TabBarView(
                 controller: _controller,
                 children: [
-                  Column(
-                    children: [
-                      for (Map<String, dynamic> commande in ownerCommande.where(
-                        (item) => item['status'] == 1,
-                      )) ...[
-                        commandeItemBuilder(
-                          context: context,
-                          commande: CommandeModel(
-                            customerMesures: commande['customerMesures'],
-                            customerName: commande['customerName'],
-                            customerPhone: commande['customerPhone'],
-                            date: DateTime.parse(commande['date']),
-                            details: commande['details'],
-                            duration: commande['duration'],
-                            id: commande['_id'],
-                            modele: ModeleModel(
-                              description: commande['Modele']['description'],
-                              duration: SfRangeValues(
-                                commande['Modele']['duration'][0],
-                                commande['Modele']['duration'][0],
+                  SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: [
+                        for (Map<String, dynamic> commande in ownerCommande
+                            .where((item) => item['status'] == 1)) ...[
+                          ItemBuilder.commandeItemBuilder(
+                            context: context,
+                            commande: CommandeModel(
+                              customerMesures: commande['customerMesures'],
+                              customerName: commande['customerName'],
+                              customerPhone: commande['customerPhone'],
+                              date: DateTime.parse(commande['date']),
+                              details: commande['details'],
+                              duration: commande['duration'],
+                              id: commande['_id'],
+                              modele: ModeleModel(
+                                description: commande['Modele']['description'],
+                                duration: SfRangeValues(
+                                  commande['Modele']['duration'][0],
+                                  commande['Modele']['duration'][1],
+                                ),
+                                id: commande['Modele']['_id'],
+                                images: commande['Modele']['images'],
+                                maxPrice:
+                                    int.tryParse(
+                                      commande['Modele']['max_price']
+                                          .toString(),
+                                    )!,
+                                minPrice:
+                                    int.tryParse(
+                                      commande['Modele']['min_price']
+                                          .toString(),
+                                    )!,
+                                title: commande['Modele']['title'],
                               ),
-                              id: commande['Modele']['_id'],
-                              images: commande['Modele']['images'],
-                              maxPrice:
-                                  int.tryParse(
-                                    commande['Modele']['max_price'],
-                                  )!,
-                              minPrice:
-                                  int.tryParse(
-                                    commande['Modele']['min_price'],
-                                  )!,
-                              title: commande['Modele']['title'],
+                              price: int.tryParse(commande['price'])!,
+                              versements: commande['versements'],
+                              status: commande['status'],
                             ),
-                            price: int.tryParse(commande['price'])!,
-                            versements: commande['versements'],
-                            status: commande['status'],
                           ),
-                        ),
-                        const SizedBox(height: 20.0),
+                          const SizedBox(height: 20.0),
+                        ],
+                        if (_hasNextCommande)
+                          const Center(
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                       ],
-                      if (_hasNextCommande)
-                        const Center(
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
-                  Column(
-                    children: [
-                      for (Map<String, dynamic> commande in ownerCommande.where(
-                        (item) => item['status'] == 2,
-                      )) ...[
-                        commandeItemBuilder(
-                          context: context,
-                          commande: CommandeModel(
-                            customerMesures: commande['customerMesures'],
-                            customerName: commande['customerName'],
-                            customerPhone: commande['customerPhone'],
-                            date: DateTime.parse(commande['date']),
-                            details: commande['details'],
-                            duration: commande['duration'],
-                            id: commande['_id'],
-                            modele: ModeleModel(
-                              description: commande['Modele']['description'],
-                              duration: SfRangeValues(
-                                commande['Modele']['duration'][0],
-                                commande['Modele']['duration'][0],
+                  SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: [
+                        for (Map<String, dynamic> commande in ownerCommande
+                            .where((item) => item['status'] == 2)) ...[
+                          ItemBuilder.commandeItemBuilder(
+                            context: context,
+                            commande: CommandeModel(
+                              customerMesures: commande['customerMesures'],
+                              customerName: commande['customerName'],
+                              customerPhone: commande['customerPhone'],
+                              date: DateTime.parse(commande['date']),
+                              details: commande['details'],
+                              duration: commande['duration'],
+                              id: commande['_id'],
+                              modele: ModeleModel(
+                                description: commande['Modele']['description'],
+                                duration: SfRangeValues(
+                                  commande['Modele']['duration'][0],
+                                  commande['Modele']['duration'][1],
+                                ),
+                                id: commande['Modele']['_id'],
+                                images: commande['Modele']['images'],
+                                maxPrice:
+                                    int.tryParse(
+                                      commande['Modele']['max_price']
+                                          .toString(),
+                                    )!,
+                                minPrice:
+                                    int.tryParse(
+                                      commande['Modele']['min_price']
+                                          .toString(),
+                                    )!,
+                                title: commande['Modele']['title'],
                               ),
-                              id: commande['Modele']['_id'],
-                              images: commande['Modele']['images'],
-                              maxPrice:
-                                  int.tryParse(
-                                    commande['Modele']['max_price'],
-                                  )!,
-                              minPrice:
-                                  int.tryParse(
-                                    commande['Modele']['min_price'],
-                                  )!,
-                              title: commande['Modele']['title'],
+                              price: int.tryParse(commande['price'])!,
+                              versements: commande['versements'],
+                              status: commande['status'],
                             ),
-                            price: int.tryParse(commande['price'])!,
-                            versements: commande['versements'],
-                            status: commande['status'],
                           ),
-                        ),
-                        const SizedBox(height: 20.0),
+                          const SizedBox(height: 20.0),
+                        ],
+                        if (_hasNextCommande)
+                          const Center(
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                       ],
-                      if (_hasNextCommande)
-                        const Center(
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
-                  Column(
-                    children: [
-                      for (Map<String, dynamic> commande in ownerCommande.where(
-                        (item) => item['status'] == 3,
-                      )) ...[
-                        commandeItemBuilder(
-                          context: context,
-                          commande: CommandeModel(
-                            customerMesures: commande['customerMesures'],
-                            customerName: commande['customerName'],
-                            customerPhone: commande['customerPhone'],
-                            date: DateTime.parse(commande['date']),
-                            details: commande['details'],
-                            duration: commande['duration'],
-                            id: commande['_id'],
-                            modele: ModeleModel(
-                              description: commande['Modele']['description'],
-                              duration: SfRangeValues(
-                                commande['Modele']['duration'][0],
-                                commande['Modele']['duration'][0],
+                  SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: [
+                        for (Map<String, dynamic> commande in ownerCommande
+                            .where((item) => item['status'] == 3)) ...[
+                          ItemBuilder.commandeItemBuilder(
+                            context: context,
+                            commande: CommandeModel(
+                              customerMesures: commande['customerMesures'],
+                              customerName: commande['customerName'],
+                              customerPhone: commande['customerPhone'],
+                              date: DateTime.parse(commande['date']),
+                              details: commande['details'],
+                              duration: commande['duration'],
+                              id: commande['_id'],
+                              modele: ModeleModel(
+                                description: commande['Modele']['description'],
+                                duration: SfRangeValues(
+                                  commande['Modele']['duration'][0],
+                                  commande['Modele']['duration'][1],
+                                ),
+                                id: commande['Modele']['_id'],
+                                images: commande['Modele']['images'],
+                                maxPrice:
+                                    int.tryParse(
+                                      commande['Modele']['max_price']
+                                          .toString(),
+                                    )!,
+                                minPrice:
+                                    int.tryParse(
+                                      commande['Modele']['min_price']
+                                          .toString(),
+                                    )!,
+                                title: commande['Modele']['title'],
                               ),
-                              id: commande['Modele']['_id'],
-                              images: commande['Modele']['images'],
-                              maxPrice:
-                                  int.tryParse(
-                                    commande['Modele']['max_price'],
-                                  )!,
-                              minPrice:
-                                  int.tryParse(
-                                    commande['Modele']['min_price'],
-                                  )!,
-                              title: commande['Modele']['title'],
+                              price: int.tryParse(commande['price'])!,
+                              versements: commande['versements'],
+                              status: commande['status'],
                             ),
-                            price: int.tryParse(commande['price'])!,
-                            versements: commande['versements'],
-                            status: commande['status'],
                           ),
-                        ),
-                        const SizedBox(height: 20.0),
+                          const SizedBox(height: 20.0),
+                        ],
+                        if (_hasNextCommande)
+                          const Center(
+                            child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                       ],
-                      if (_hasNextCommande)
-                        const Center(
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
       ],
-    );
-  }
-
-  GestureDetector commandeItemBuilder({
-    required BuildContext context,
-    required CommandeModel commande,
-  }) {
-    return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailsCommande(commande: commande),
-            ),
-          ),
-      child: SizedBox(
-        height: 80.0,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 80.0,
-              width: 80.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: ItemBuilder.imageCardBuilder(
-                  commande.modele.images[Random().nextInt(
-                    commande.modele.images.length,
-                  )],
-                  // 'https://img.freepik.com/free-photo/portrait-stylish-adult-male-looking-away_23-2148466055.jpg?t=st=1738419204~exp=1738422804~hmac=f8441cfa1e1fc3eb8720246d815d69a1b9a5cce90a8410b3de3c07b15ea7ecf3&w=360',
-                ),
-              ),
-            ),
-            const SizedBox(width: 10.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    commande.modele.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    commande.customerName,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      color:
-                          commande.date
-                                      .add(Duration(days: commande.duration))
-                                      .difference(commande.date)
-                                      .inDays <=
-                                  3
-                              ? primary200
-                              : Colors.transparent,
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Text(
-                      '${commande.date.add(Duration(days: commande.duration)).difference(commande.date).inDays} jour${commande.duration > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            commande.date
-                                        .add(Duration(days: commande.duration))
-                                        .difference(commande.date)
-                                        .inDays <=
-                                    3
-                                ? Colors.white
-                                : Theme.of(context).iconTheme.color,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 80.0,
-              width: 60,
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 0,
-                    top: -10,
-                    right: 0,
-                    child: Text(
-                      '${commande.date.add(Duration(days: commande.duration)).day}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 49,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: -10,
-                    child: Text(
-                      DateFormat.MMM().format(
-                        commande.date.add(Duration(days: commande.duration)),
-                      ),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 29,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

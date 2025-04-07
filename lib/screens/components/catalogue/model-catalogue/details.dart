@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:teela/screens/components/catalogue/model-catalogue/add.dart';
+import 'package:teela/screens/components/command/add.dart';
 import 'package:teela/utils/app.dart';
 import 'package:teela/utils/color_scheme.dart';
 import 'package:teela/utils/model.dart';
 
 class DetailsModele extends StatelessWidget {
-  final CatalogueModel catalogue;
+  final CatalogueModel? catalogue;
   final ModeleModel modele;
   const DetailsModele({
     super.key,
@@ -89,7 +90,10 @@ class DetailsModele extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder:
-                                              (context) => const Placeholder(),
+                                              (context) => AddModele(
+                                                catalogue: catalogue!,
+                                                modele: modele,
+                                              ),
                                         ),
                                       );
                                     },
@@ -287,26 +291,27 @@ class DetailsModele extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: GestureDetector(
-        onTap:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) =>
-                        AddModele(catalogue: catalogue, modele: modele),
-              ),
-            ),
-        child: Container(
-          height: 50.0,
-          width: 50.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0),
-            color: primary200,
-          ),
-          child: const Icon(Icons.add, size: 30.0, color: Colors.white),
-        ),
-      ),
+      floatingActionButton:
+          catalogue != null
+              ? GestureDetector(
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddCommande(commande: null),
+                      ),
+                    ),
+                child: Container(
+                  height: 50.0,
+                  width: 50.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: primary200,
+                  ),
+                  child: const Icon(Icons.add, size: 30.0, color: Colors.white),
+                ),
+              )
+              : const SizedBox(),
     );
   }
 }

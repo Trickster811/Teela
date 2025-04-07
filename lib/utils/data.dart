@@ -12,7 +12,7 @@ class DatabaseConnection {
   static Future init() async {
     if (!await Internet.checkInternetAccess()) {
       LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
-      return;
+      return await init();
     }
     //
     try {
@@ -21,7 +21,7 @@ class DatabaseConnection {
       );
       await teelaDBToken.open(secure: true);
     } catch (e) {
-      await init();
+      return await init();
     }
     // inspect(teelaDBToken);
     // await teelaDBToken.collection('users').insert({'a': 4});
@@ -196,7 +196,9 @@ class CatalogueTeela {
     required Map<String, dynamic> data,
     required Object id,
   }) async {
-    return await db.collection('Catalogue').update(where.eq('_id', id), data);
+    return await db.collection('Catalogue').update(where.eq('_id', id), {
+      r'$set': data,
+    });
   }
 
   static Future deleteCatalogue({required Object id}) async {
@@ -217,58 +219,92 @@ class CommandeTeela {
   static List<Map<String, dynamic>> ownerCommandes = [];
 
   //Set of all Commande
-  static Future<List<Map<String, dynamic>>> retrieveMultiCommande({
+  static Future retrieveMultiCommande({
     required int limit,
     int? startAfter,
     Object? owner,
   }) async {
     List<Map<String, dynamic>> refCommande;
+    try {
+      if (owner == null) {
+        refCommande =
+            await db
+                .collection('Commande')
+                .find(where.limit(limit))
+                .skip(commandes.length)
+                .toList();
 
-    if (owner == null) {
-      refCommande =
-          await db
-              .collection('Commande')
-              .find(where.limit(limit))
-              .skip(commandes.length)
-              .toList();
-      // find('*,Modele(*)').toList();
-      // .range(startAfter + 1, startAfter + limit);
-      commandes.addAll(refCommande.where((item) => !commandes.contains(item)));
-    } else {
-      refCommande =
-          await db
-              .collection('Commande')
-              .find(where.limit(limit))
-              .skip(commandes.length)
-              .toList();
-      for (var element in refCommande) {
-        Map<String, dynamic>? model = await ModeleTeela.retrieveModele(
-          modeleId: element['modele'],
+        for (var element in refCommande) {
+          Map<String, dynamic>? model = await ModeleTeela.retrieveModele(
+            modeleId: element['modele'],
+          );
+          refCommande[refCommande.indexOf(element)]['Modele'] = model;
+        }
+        // .range(startAfter + 1, startAfter + limit);
+        commandes.addAll(
+          refCommande.where((item) => !commandes.contains(item)),
         );
-        refCommande[refCommande.indexOf(element)]['Modele'] = model;
-      }
-      // refCommande = await supabase
-      //     .from('Commande')
-      //     .select('*,Modele(*, Catalogue(*))')
-      //     .eq('Modele.Catalogue.user', owner);
-      // .range(startAfter + 1, startAfter + limit);
+      } else {
+        refCommande =
+            await db
+                .collection('Commande')
+                .find(where.eq('user', owner).limit(limit).sortBy('date'))
+                .skip(ownerCommandes.length)
+                .toList();
 
-      ownerCommandes.addAll(
-        refCommande.where((item) => !ownerCommandes.contains(item)),
-      );
+        for (var element in refCommande) {
+          Map<String, dynamic>? model;
+
+          if (!element['modele'].toString().contains('http')) {
+            model = await ModeleTeela.retrieveModele(
+              modeleId: element['modele'],
+            );
+          } else {
+            model = {
+              '_id': ObjectId.parse('000000000000000000000000'),
+              'description': 'RAS',
+              'duration': [1, 1],
+              'images': [element['modele']],
+              'max_price': 1,
+              'min_price': 1,
+              'title': 'Modele Anonyme',
+            };
+          }
+          refCommande[refCommande.indexOf(element)]['Modele'] = model;
+        }
+
+        ownerCommandes.addAll(
+          refCommande.where((item) => !ownerCommandes.contains(item)),
+        );
+      }
+      return refCommande;
+    } catch (erno) {
+      debugPrint(erno.toString());
     }
-    return refCommande;
   }
 
   static Future createCommande({required Map<String, dynamic> data}) async {
-    return await db.collection('Commande').insert(data);
+    try {
+      return await db.collection('Commande').insert(data);
+    } catch (erno) {
+      print(erno);
+    }
   }
 
   static Future updateCommande({
     required Map<String, dynamic> data,
     required Object id,
   }) async {
-    return await db.collection('Commande').updateOne(where.eq('_id', id), data);
+    try {
+      return await db
+          .collection('Commande')
+          .updateOne(
+            where.eq('_id', id),
+            modify.set(data.keys.first, data.values.first),
+          );
+    } catch (erno) {
+      print('hello $erno');
+    }
   }
 
   static Future deleteCommande({required Object id}) async {
@@ -325,7 +361,9 @@ class ModeleTeela {
     required Map<String, dynamic> data,
     required Object id,
   }) async {
-    return await db.collection('Modele').updateOne(where.eq('_id', id), data);
+    return await db.collection('Modele').updateOne(where.eq('_id', id), {
+      r'$set': data,
+    });
   }
 
   static Future deleteModele({required Object id}) async {

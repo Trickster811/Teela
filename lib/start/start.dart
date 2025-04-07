@@ -27,15 +27,44 @@ class _StartState extends State<Start> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        scrolledUnderElevation: 0.0,
-        automaticallyImplyLeading: false,
-        title: Text(
-          appPages[currentPage]['title'],
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-      ),
+      appBar:
+          currentPage == 0
+              ? AppBar(
+                scrolledUnderElevation: 0.0,
+                automaticallyImplyLeading: false,
+                title: SvgPicture.asset('assets/images/Teela.svg'),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      'assets/icons/solar_chart-2-linear.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).iconTheme.color!,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: SvgPicture.asset(
+                      'assets/icons/notification.3.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).iconTheme.color!,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+              : AppBar(
+                scrolledUnderElevation: 0.0,
+                automaticallyImplyLeading: false,
+                title: Text(
+                  appPages[currentPage]['title'],
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                centerTitle: true,
+              ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: appPages[currentPage]['route'],

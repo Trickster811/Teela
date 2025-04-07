@@ -120,96 +120,135 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
                       ],
                     ),
                     const SizedBox(height: 30.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          direction: Axis.vertical,
-                          spacing: 15.0,
-                          children: [
-                            for (ModeleModel item in widget
-                                .catalogueModel
-                                .modeles
-                                .getRange(
-                                  0,
-                                  (widget.catalogueModel.modeles.length / 2)
-                                      .round(),
-                                ))
-                              modeleBuilder(
-                                context: context,
-                                item: item,
-                                itemIndex: widget.catalogueModel.modeles
-                                    .indexOf(item),
+                    widget.catalogueModel.modeles.isEmpty
+                        ? SizedBox(
+                          height: MediaQuery.of(context).size.height * .6,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 65,
+                                width: 65,
+                                child: GridView.count(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 1.0,
+                                  padding: const EdgeInsets.all(4.0),
+                                  mainAxisSpacing: 4.0,
+                                  crossAxisSpacing: 4.0,
+                                  children: [
+                                    Container(color: neutral500),
+                                    Container(color: neutral500),
+                                    Container(color: neutral500),
+                                    Container(color: Colors.transparent),
+                                    Container(color: neutral500),
+                                    Container(color: Colors.transparent),
+                                    Container(color: Colors.transparent),
+                                    Container(color: neutral500),
+                                    Container(color: neutral500),
+                                  ],
+                                ),
                               ),
+                              Text(
+                                "Aucun modele disponible pour ce Catalogue\n Vous avez la possibilite de creer de nouveaux modeles directement a partir du bouton en bas a droite",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: neutral500,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              direction: Axis.vertical,
+                              spacing: 15.0,
+                              children: [
+                                for (ModeleModel item in widget
+                                    .catalogueModel
+                                    .modeles
+                                    .getRange(
+                                      0,
+                                      (widget.catalogueModel.modeles.length / 2)
+                                          .round(),
+                                    ))
+                                  modeleBuilder(
+                                    context: context,
+                                    item: item,
+                                    itemIndex: widget.catalogueModel.modeles
+                                        .indexOf(item),
+                                  ),
+                              ],
+                            ),
+                            Wrap(
+                              direction: Axis.vertical,
+                              spacing: 15.0,
+                              children: [
+                                for (ModeleModel item in widget
+                                    .catalogueModel
+                                    .modeles
+                                    .getRange(
+                                      (widget.catalogueModel.modeles.length / 2)
+                                          .round(),
+                                      widget.catalogueModel.modeles.length,
+                                    ))
+                                  modeleBuilder(
+                                    context: context,
+                                    item: item,
+                                    itemIndex: widget.catalogueModel.modeles
+                                        .indexOf(item),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
-                        Wrap(
-                          direction: Axis.vertical,
-                          spacing: 15.0,
-                          children: [
-                            for (ModeleModel item in widget
-                                .catalogueModel
-                                .modeles
-                                .getRange(
-                                  (widget.catalogueModel.modeles.length / 2)
-                                      .round(),
-                                  widget.catalogueModel.modeles.length,
-                                ))
-                              modeleBuilder(
-                                context: context,
-                                item: item,
-                                itemIndex: widget.catalogueModel.modeles
-                                    .indexOf(item),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
             ),
-            Positioned(
-              top: 90.0,
-              left: 10.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: const Text(
-                      '02 realise${2 > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      color: primary200,
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: const Text(
-                      '04 en attente${4 > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Positioned(
+            //   top: 90.0,
+            //   left: 10.0,
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Container(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            //         decoration: BoxDecoration(
+            //           color: Colors.white,
+            //           border: Border.all(),
+            //           borderRadius: BorderRadius.circular(10.0),
+            //         ),
+            //         child: const Text(
+            //           '02 realise${2 > 1 ? 's' : ''}',
+            //           style: TextStyle(
+            //             fontSize: 12.0,
+            //             fontWeight: FontWeight.w600,
+            //           ),
+            //         ),
+            //       ),
+            //       const SizedBox(height: 10.0),
+            //       Container(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            //         decoration: BoxDecoration(
+            //           color: primary200,
+            //           border: Border.all(),
+            //           borderRadius: BorderRadius.circular(10.0),
+            //         ),
+            //         child: const Text(
+            //           '04 en attente${4 > 1 ? 's' : ''}',
+            //           style: TextStyle(
+            //             fontSize: 12.0,
+            //             fontWeight: FontWeight.w600,
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -401,7 +440,7 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
                       ),
                 ),
             child: SizedBox(
-              height: Random().nextInt(250) + 100,
+              height: Random().nextInt(250) + 200,
               width: MediaQuery.of(context).size.width * .5 - 30.0,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
@@ -473,6 +512,10 @@ class _DetailsCatalogueState extends State<DetailsCatalogue> {
           widget.catalogueModel.modeles.removeAt(dropInProgress!);
           dropInProgress = null;
         });
+        LocalPreferences.showFlashMessage(
+          'Modele supprime avec succes',
+          Colors.green,
+        );
       }
     } catch (errno) {
       debugPrint(errno.toString());

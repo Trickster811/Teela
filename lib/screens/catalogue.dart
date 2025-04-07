@@ -40,11 +40,14 @@ class _CatalogueState extends State<Catalogue> {
   void initState() {
     super.initState();
     scrollController.addListener(scrollListener);
-    if (CatalogueTeela.ownerCatalogues.isEmpty) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       retrieveCatalogue();
-    } else {
-      _hasNextCatalogue = false;
-    }
+    });
+
+    // Also listen for when we return to this screen
+    ModalRoute.of(context)?.addPostFrameCallback((_) {
+      retrieveCatalogue();
+    });
   }
 
   @override
@@ -68,6 +71,10 @@ class _CatalogueState extends State<Catalogue> {
       onRefresh: () async {
         CatalogueTeela.ownerCatalogues = [];
         ModeleTeela.modeles = [];
+        setState(() {
+          internetAccess = true;
+          _hasNextCatalogue = true;
+        });
         retrieveCatalogue();
         await Future.delayed(const Duration(milliseconds: 1000));
       },
@@ -623,9 +630,6 @@ class _CatalogueState extends State<Catalogue> {
   Future dropCatalogue({required Object catalogueId}) async {
     if (!await Internet.checkInternetAccess()) {
       LocalPreferences.showFlashMessage('Pas d\'internet', Colors.red);
-      setState(() {
-        internetAccess = false;
-      });
       return;
     }
     try {
@@ -634,6 +638,10 @@ class _CatalogueState extends State<Catalogue> {
       );
       if (response.isSuccess) {
         CatalogueTeela.ownerCatalogues.removeAt(dropInProgress!);
+        LocalPreferences.showFlashMessage(
+          'Catalogue supprime avec succes',
+          Colors.green,
+        );
         setState(() {
           dropInProgress = null;
         });
